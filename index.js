@@ -1,7 +1,16 @@
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJS = (cb, mod) => function __require() {
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -14,1685 +23,125 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
+// node_modules/tinyduration/dist/index.js
+var require_dist = __commonJS({
+  "node_modules/tinyduration/dist/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.serialize = exports2.parse = exports2.MultipleFractionsError = exports2.InvalidDurationError = void 0;
+    var DEFAULT_PARSE_CONFIG = {
+      allowMultipleFractions: true
+    };
+    var units = [
+      { unit: "years", symbol: "Y" },
+      { unit: "months", symbol: "M" },
+      { unit: "weeks", symbol: "W" },
+      { unit: "days", symbol: "D" },
+      { unit: "hours", symbol: "H" },
+      { unit: "minutes", symbol: "M" },
+      { unit: "seconds", symbol: "S" }
+    ];
+    var r = (name, unit) => `((?<${name}>-?\\d*[\\.,]?\\d+)${unit})?`;
+    var durationRegex = new RegExp([
+      "(?<negative>-)?P",
+      r("years", "Y"),
+      r("months", "M"),
+      r("weeks", "W"),
+      r("days", "D"),
+      "(T",
+      r("hours", "H"),
+      r("minutes", "M"),
+      r("seconds", "S"),
+      ")?"
+      // end optional time
+    ].join(""));
+    function parseNum(s2) {
+      if (s2 === "" || s2 === void 0 || s2 === null) {
+        return void 0;
+      }
+      return parseFloat(s2.replace(",", "."));
+    }
+    exports2.InvalidDurationError = new Error("Invalid duration");
+    exports2.MultipleFractionsError = new Error("Multiple fractions specified");
+    function parse(durationStr, config = DEFAULT_PARSE_CONFIG) {
+      const match = durationRegex.exec(durationStr);
+      if (!match || !match.groups) {
+        throw exports2.InvalidDurationError;
+      }
+      let empty = true;
+      let decimalFractionCount = 0;
+      const values = {};
+      for (const { unit } of units) {
+        if (match.groups[unit]) {
+          empty = false;
+          values[unit] = parseNum(match.groups[unit]);
+          if (!config.allowMultipleFractions && !Number.isInteger(values[unit])) {
+            decimalFractionCount++;
+            if (decimalFractionCount > 1) {
+              throw exports2.MultipleFractionsError;
+            }
+          }
+        }
+      }
+      if (empty) {
+        throw exports2.InvalidDurationError;
+      }
+      const duration = values;
+      if (match.groups.negative) {
+        duration.negative = true;
+      }
+      return duration;
+    }
+    exports2.parse = parse;
+    var s = (number, component) => {
+      if (!number) {
+        return void 0;
+      }
+      let numberAsString = number.toString();
+      const exponentIndex = numberAsString.indexOf("e");
+      if (exponentIndex > -1) {
+        const magnitude = parseInt(numberAsString.slice(exponentIndex + 2), 10);
+        numberAsString = number.toFixed(magnitude + exponentIndex - 2);
+      }
+      return numberAsString + component;
+    };
+    function serialize(duration) {
+      if (!duration.years && !duration.months && !duration.weeks && !duration.days && !duration.hours && !duration.minutes && !duration.seconds) {
+        return "PT0S";
+      }
+      return [
+        duration.negative && "-",
+        "P",
+        s(duration.years, "Y"),
+        s(duration.months, "M"),
+        s(duration.weeks, "W"),
+        s(duration.days, "D"),
+        (duration.hours || duration.minutes || duration.seconds) && "T",
+        s(duration.hours, "H"),
+        s(duration.minutes, "M"),
+        s(duration.seconds, "S")
+      ].filter(Boolean).join("");
+    }
+    exports2.serialize = serialize;
+  }
+});
+
 // index.ts
-var keycloak_cjs_exports = {};
-__export(keycloak_cjs_exports, {
+var index_exports = {};
+__export(index_exports, {
   Keycloak: () => lib_default
 });
-module.exports = __toCommonJS(keycloak_cjs_exports);
-
-// node_modules/lodash-es/_freeGlobal.js
-var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
-var freeGlobal_default = freeGlobal;
-
-// node_modules/lodash-es/_root.js
-var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-var root = freeGlobal_default || freeSelf || Function("return this")();
-var root_default = root;
-
-// node_modules/lodash-es/_Symbol.js
-var Symbol2 = root_default.Symbol;
-var Symbol_default = Symbol2;
-
-// node_modules/lodash-es/_getRawTag.js
-var objectProto = Object.prototype;
-var hasOwnProperty = objectProto.hasOwnProperty;
-var nativeObjectToString = objectProto.toString;
-var symToStringTag = Symbol_default ? Symbol_default.toStringTag : void 0;
-function getRawTag(value) {
-  var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-  try {
-    value[symToStringTag] = void 0;
-    var unmasked = true;
-  } catch (e) {
-  }
-  var result = nativeObjectToString.call(value);
-  if (unmasked) {
-    if (isOwn) {
-      value[symToStringTag] = tag;
-    } else {
-      delete value[symToStringTag];
-    }
-  }
-  return result;
-}
-var getRawTag_default = getRawTag;
-
-// node_modules/lodash-es/_objectToString.js
-var objectProto2 = Object.prototype;
-var nativeObjectToString2 = objectProto2.toString;
-function objectToString(value) {
-  return nativeObjectToString2.call(value);
-}
-var objectToString_default = objectToString;
-
-// node_modules/lodash-es/_baseGetTag.js
-var nullTag = "[object Null]";
-var undefinedTag = "[object Undefined]";
-var symToStringTag2 = Symbol_default ? Symbol_default.toStringTag : void 0;
-function baseGetTag(value) {
-  if (value == null) {
-    return value === void 0 ? undefinedTag : nullTag;
-  }
-  return symToStringTag2 && symToStringTag2 in Object(value) ? getRawTag_default(value) : objectToString_default(value);
-}
-var baseGetTag_default = baseGetTag;
-
-// node_modules/lodash-es/isObjectLike.js
-function isObjectLike(value) {
-  return value != null && typeof value == "object";
-}
-var isObjectLike_default = isObjectLike;
-
-// node_modules/lodash-es/isSymbol.js
-var symbolTag = "[object Symbol]";
-function isSymbol(value) {
-  return typeof value == "symbol" || isObjectLike_default(value) && baseGetTag_default(value) == symbolTag;
-}
-var isSymbol_default = isSymbol;
-
-// node_modules/lodash-es/_arrayMap.js
-function arrayMap(array, iteratee) {
-  var index = -1, length = array == null ? 0 : array.length, result = Array(length);
-  while (++index < length) {
-    result[index] = iteratee(array[index], index, array);
-  }
-  return result;
-}
-var arrayMap_default = arrayMap;
-
-// node_modules/lodash-es/isArray.js
-var isArray = Array.isArray;
-var isArray_default = isArray;
-
-// node_modules/lodash-es/_baseToString.js
-var INFINITY = 1 / 0;
-var symbolProto = Symbol_default ? Symbol_default.prototype : void 0;
-var symbolToString = symbolProto ? symbolProto.toString : void 0;
-function baseToString(value) {
-  if (typeof value == "string") {
-    return value;
-  }
-  if (isArray_default(value)) {
-    return arrayMap_default(value, baseToString) + "";
-  }
-  if (isSymbol_default(value)) {
-    return symbolToString ? symbolToString.call(value) : "";
-  }
-  var result = value + "";
-  return result == "0" && 1 / value == -INFINITY ? "-0" : result;
-}
-var baseToString_default = baseToString;
-
-// node_modules/lodash-es/isObject.js
-function isObject(value) {
-  var type = typeof value;
-  return value != null && (type == "object" || type == "function");
-}
-var isObject_default = isObject;
-
-// node_modules/lodash-es/identity.js
-function identity(value) {
-  return value;
-}
-var identity_default = identity;
-
-// node_modules/lodash-es/isFunction.js
-var asyncTag = "[object AsyncFunction]";
-var funcTag = "[object Function]";
-var genTag = "[object GeneratorFunction]";
-var proxyTag = "[object Proxy]";
-function isFunction(value) {
-  if (!isObject_default(value)) {
-    return false;
-  }
-  var tag = baseGetTag_default(value);
-  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
-}
-var isFunction_default = isFunction;
-
-// node_modules/lodash-es/_coreJsData.js
-var coreJsData = root_default["__core-js_shared__"];
-var coreJsData_default = coreJsData;
-
-// node_modules/lodash-es/_isMasked.js
-var maskSrcKey = function() {
-  var uid = /[^.]+$/.exec(coreJsData_default && coreJsData_default.keys && coreJsData_default.keys.IE_PROTO || "");
-  return uid ? "Symbol(src)_1." + uid : "";
-}();
-function isMasked(func) {
-  return !!maskSrcKey && maskSrcKey in func;
-}
-var isMasked_default = isMasked;
-
-// node_modules/lodash-es/_toSource.js
-var funcProto = Function.prototype;
-var funcToString = funcProto.toString;
-function toSource(func) {
-  if (func != null) {
-    try {
-      return funcToString.call(func);
-    } catch (e) {
-    }
-    try {
-      return func + "";
-    } catch (e) {
-    }
-  }
-  return "";
-}
-var toSource_default = toSource;
-
-// node_modules/lodash-es/_baseIsNative.js
-var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-var funcProto2 = Function.prototype;
-var objectProto3 = Object.prototype;
-var funcToString2 = funcProto2.toString;
-var hasOwnProperty2 = objectProto3.hasOwnProperty;
-var reIsNative = RegExp(
-  "^" + funcToString2.call(hasOwnProperty2).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
-);
-function baseIsNative(value) {
-  if (!isObject_default(value) || isMasked_default(value)) {
-    return false;
-  }
-  var pattern = isFunction_default(value) ? reIsNative : reIsHostCtor;
-  return pattern.test(toSource_default(value));
-}
-var baseIsNative_default = baseIsNative;
-
-// node_modules/lodash-es/_getValue.js
-function getValue(object, key) {
-  return object == null ? void 0 : object[key];
-}
-var getValue_default = getValue;
-
-// node_modules/lodash-es/_getNative.js
-function getNative(object, key) {
-  var value = getValue_default(object, key);
-  return baseIsNative_default(value) ? value : void 0;
-}
-var getNative_default = getNative;
-
-// node_modules/lodash-es/_WeakMap.js
-var WeakMap = getNative_default(root_default, "WeakMap");
-var WeakMap_default = WeakMap;
-
-// node_modules/lodash-es/_baseCreate.js
-var objectCreate = Object.create;
-var baseCreate = function() {
-  function object() {
-  }
-  return function(proto) {
-    if (!isObject_default(proto)) {
-      return {};
-    }
-    if (objectCreate) {
-      return objectCreate(proto);
-    }
-    object.prototype = proto;
-    var result = new object();
-    object.prototype = void 0;
-    return result;
-  };
-}();
-var baseCreate_default = baseCreate;
-
-// node_modules/lodash-es/_apply.js
-function apply(func, thisArg, args) {
-  switch (args.length) {
-    case 0:
-      return func.call(thisArg);
-    case 1:
-      return func.call(thisArg, args[0]);
-    case 2:
-      return func.call(thisArg, args[0], args[1]);
-    case 3:
-      return func.call(thisArg, args[0], args[1], args[2]);
-  }
-  return func.apply(thisArg, args);
-}
-var apply_default = apply;
-
-// node_modules/lodash-es/_copyArray.js
-function copyArray(source, array) {
-  var index = -1, length = source.length;
-  array || (array = Array(length));
-  while (++index < length) {
-    array[index] = source[index];
-  }
-  return array;
-}
-var copyArray_default = copyArray;
-
-// node_modules/lodash-es/_shortOut.js
-var HOT_COUNT = 800;
-var HOT_SPAN = 16;
-var nativeNow = Date.now;
-function shortOut(func) {
-  var count = 0, lastCalled = 0;
-  return function() {
-    var stamp = nativeNow(), remaining = HOT_SPAN - (stamp - lastCalled);
-    lastCalled = stamp;
-    if (remaining > 0) {
-      if (++count >= HOT_COUNT) {
-        return arguments[0];
-      }
-    } else {
-      count = 0;
-    }
-    return func.apply(void 0, arguments);
-  };
-}
-var shortOut_default = shortOut;
-
-// node_modules/lodash-es/constant.js
-function constant(value) {
-  return function() {
-    return value;
-  };
-}
-var constant_default = constant;
-
-// node_modules/lodash-es/_defineProperty.js
-var defineProperty = function() {
-  try {
-    var func = getNative_default(Object, "defineProperty");
-    func({}, "", {});
-    return func;
-  } catch (e) {
-  }
-}();
-var defineProperty_default = defineProperty;
-
-// node_modules/lodash-es/_baseSetToString.js
-var baseSetToString = !defineProperty_default ? identity_default : function(func, string) {
-  return defineProperty_default(func, "toString", {
-    "configurable": true,
-    "enumerable": false,
-    "value": constant_default(string),
-    "writable": true
-  });
-};
-var baseSetToString_default = baseSetToString;
-
-// node_modules/lodash-es/_setToString.js
-var setToString = shortOut_default(baseSetToString_default);
-var setToString_default = setToString;
-
-// node_modules/lodash-es/_arrayEach.js
-function arrayEach(array, iteratee) {
-  var index = -1, length = array == null ? 0 : array.length;
-  while (++index < length) {
-    if (iteratee(array[index], index, array) === false) {
-      break;
-    }
-  }
-  return array;
-}
-var arrayEach_default = arrayEach;
-
-// node_modules/lodash-es/_isIndex.js
-var MAX_SAFE_INTEGER = 9007199254740991;
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-function isIndex(value, length) {
-  var type = typeof value;
-  length = length == null ? MAX_SAFE_INTEGER : length;
-  return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
-}
-var isIndex_default = isIndex;
-
-// node_modules/lodash-es/_baseAssignValue.js
-function baseAssignValue(object, key, value) {
-  if (key == "__proto__" && defineProperty_default) {
-    defineProperty_default(object, key, {
-      "configurable": true,
-      "enumerable": true,
-      "value": value,
-      "writable": true
-    });
-  } else {
-    object[key] = value;
-  }
-}
-var baseAssignValue_default = baseAssignValue;
-
-// node_modules/lodash-es/eq.js
-function eq(value, other) {
-  return value === other || value !== value && other !== other;
-}
-var eq_default = eq;
-
-// node_modules/lodash-es/_assignValue.js
-var objectProto4 = Object.prototype;
-var hasOwnProperty3 = objectProto4.hasOwnProperty;
-function assignValue(object, key, value) {
-  var objValue = object[key];
-  if (!(hasOwnProperty3.call(object, key) && eq_default(objValue, value)) || value === void 0 && !(key in object)) {
-    baseAssignValue_default(object, key, value);
-  }
-}
-var assignValue_default = assignValue;
-
-// node_modules/lodash-es/_copyObject.js
-function copyObject(source, props, object, customizer) {
-  var isNew = !object;
-  object || (object = {});
-  var index = -1, length = props.length;
-  while (++index < length) {
-    var key = props[index];
-    var newValue = customizer ? customizer(object[key], source[key], key, object, source) : void 0;
-    if (newValue === void 0) {
-      newValue = source[key];
-    }
-    if (isNew) {
-      baseAssignValue_default(object, key, newValue);
-    } else {
-      assignValue_default(object, key, newValue);
-    }
-  }
-  return object;
-}
-var copyObject_default = copyObject;
-
-// node_modules/lodash-es/_overRest.js
-var nativeMax = Math.max;
-function overRest(func, start, transform) {
-  start = nativeMax(start === void 0 ? func.length - 1 : start, 0);
-  return function() {
-    var args = arguments, index = -1, length = nativeMax(args.length - start, 0), array = Array(length);
-    while (++index < length) {
-      array[index] = args[start + index];
-    }
-    index = -1;
-    var otherArgs = Array(start + 1);
-    while (++index < start) {
-      otherArgs[index] = args[index];
-    }
-    otherArgs[start] = transform(array);
-    return apply_default(func, this, otherArgs);
-  };
-}
-var overRest_default = overRest;
-
-// node_modules/lodash-es/isLength.js
-var MAX_SAFE_INTEGER2 = 9007199254740991;
-function isLength(value) {
-  return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER2;
-}
-var isLength_default = isLength;
-
-// node_modules/lodash-es/isArrayLike.js
-function isArrayLike(value) {
-  return value != null && isLength_default(value.length) && !isFunction_default(value);
-}
-var isArrayLike_default = isArrayLike;
-
-// node_modules/lodash-es/_isPrototype.js
-var objectProto5 = Object.prototype;
-function isPrototype(value) {
-  var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto5;
-  return value === proto;
-}
-var isPrototype_default = isPrototype;
-
-// node_modules/lodash-es/_baseTimes.js
-function baseTimes(n, iteratee) {
-  var index = -1, result = Array(n);
-  while (++index < n) {
-    result[index] = iteratee(index);
-  }
-  return result;
-}
-var baseTimes_default = baseTimes;
-
-// node_modules/lodash-es/_baseIsArguments.js
-var argsTag = "[object Arguments]";
-function baseIsArguments(value) {
-  return isObjectLike_default(value) && baseGetTag_default(value) == argsTag;
-}
-var baseIsArguments_default = baseIsArguments;
-
-// node_modules/lodash-es/isArguments.js
-var objectProto6 = Object.prototype;
-var hasOwnProperty4 = objectProto6.hasOwnProperty;
-var propertyIsEnumerable = objectProto6.propertyIsEnumerable;
-var isArguments = baseIsArguments_default(function() {
-  return arguments;
-}()) ? baseIsArguments_default : function(value) {
-  return isObjectLike_default(value) && hasOwnProperty4.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
-};
-var isArguments_default = isArguments;
-
-// node_modules/lodash-es/stubFalse.js
-function stubFalse() {
-  return false;
-}
-var stubFalse_default = stubFalse;
-
-// node_modules/lodash-es/isBuffer.js
-var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
-var freeModule = freeExports && typeof module == "object" && module && !module.nodeType && module;
-var moduleExports = freeModule && freeModule.exports === freeExports;
-var Buffer2 = moduleExports ? root_default.Buffer : void 0;
-var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
-var isBuffer = nativeIsBuffer || stubFalse_default;
-var isBuffer_default = isBuffer;
-
-// node_modules/lodash-es/_baseIsTypedArray.js
-var argsTag2 = "[object Arguments]";
-var arrayTag = "[object Array]";
-var boolTag = "[object Boolean]";
-var dateTag = "[object Date]";
-var errorTag = "[object Error]";
-var funcTag2 = "[object Function]";
-var mapTag = "[object Map]";
-var numberTag = "[object Number]";
-var objectTag = "[object Object]";
-var regexpTag = "[object RegExp]";
-var setTag = "[object Set]";
-var stringTag = "[object String]";
-var weakMapTag = "[object WeakMap]";
-var arrayBufferTag = "[object ArrayBuffer]";
-var dataViewTag = "[object DataView]";
-var float32Tag = "[object Float32Array]";
-var float64Tag = "[object Float64Array]";
-var int8Tag = "[object Int8Array]";
-var int16Tag = "[object Int16Array]";
-var int32Tag = "[object Int32Array]";
-var uint8Tag = "[object Uint8Array]";
-var uint8ClampedTag = "[object Uint8ClampedArray]";
-var uint16Tag = "[object Uint16Array]";
-var uint32Tag = "[object Uint32Array]";
-var typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag2] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag2] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
-function baseIsTypedArray(value) {
-  return isObjectLike_default(value) && isLength_default(value.length) && !!typedArrayTags[baseGetTag_default(value)];
-}
-var baseIsTypedArray_default = baseIsTypedArray;
-
-// node_modules/lodash-es/_baseUnary.js
-function baseUnary(func) {
-  return function(value) {
-    return func(value);
-  };
-}
-var baseUnary_default = baseUnary;
-
-// node_modules/lodash-es/_nodeUtil.js
-var freeExports2 = typeof exports == "object" && exports && !exports.nodeType && exports;
-var freeModule2 = freeExports2 && typeof module == "object" && module && !module.nodeType && module;
-var moduleExports2 = freeModule2 && freeModule2.exports === freeExports2;
-var freeProcess = moduleExports2 && freeGlobal_default.process;
-var nodeUtil = function() {
-  try {
-    var types = freeModule2 && freeModule2.require && freeModule2.require("util").types;
-    if (types) {
-      return types;
-    }
-    return freeProcess && freeProcess.binding && freeProcess.binding("util");
-  } catch (e) {
-  }
-}();
-var nodeUtil_default = nodeUtil;
-
-// node_modules/lodash-es/isTypedArray.js
-var nodeIsTypedArray = nodeUtil_default && nodeUtil_default.isTypedArray;
-var isTypedArray = nodeIsTypedArray ? baseUnary_default(nodeIsTypedArray) : baseIsTypedArray_default;
-var isTypedArray_default = isTypedArray;
-
-// node_modules/lodash-es/_arrayLikeKeys.js
-var objectProto7 = Object.prototype;
-var hasOwnProperty5 = objectProto7.hasOwnProperty;
-function arrayLikeKeys(value, inherited) {
-  var isArr = isArray_default(value), isArg = !isArr && isArguments_default(value), isBuff = !isArr && !isArg && isBuffer_default(value), isType = !isArr && !isArg && !isBuff && isTypedArray_default(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes_default(value.length, String) : [], length = result.length;
-  for (var key in value) {
-    if ((inherited || hasOwnProperty5.call(value, key)) && !(skipIndexes && // Safari 9 has enumerable `arguments.length` in strict mode.
-    (key == "length" || // Node.js 0.10 has enumerable non-index properties on buffers.
-    isBuff && (key == "offset" || key == "parent") || // PhantomJS 2 has enumerable non-index properties on typed arrays.
-    isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || // Skip index properties.
-    isIndex_default(key, length)))) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-var arrayLikeKeys_default = arrayLikeKeys;
-
-// node_modules/lodash-es/_overArg.js
-function overArg(func, transform) {
-  return function(arg) {
-    return func(transform(arg));
-  };
-}
-var overArg_default = overArg;
-
-// node_modules/lodash-es/_nativeKeys.js
-var nativeKeys = overArg_default(Object.keys, Object);
-var nativeKeys_default = nativeKeys;
-
-// node_modules/lodash-es/_baseKeys.js
-var objectProto8 = Object.prototype;
-var hasOwnProperty6 = objectProto8.hasOwnProperty;
-function baseKeys(object) {
-  if (!isPrototype_default(object)) {
-    return nativeKeys_default(object);
-  }
-  var result = [];
-  for (var key in Object(object)) {
-    if (hasOwnProperty6.call(object, key) && key != "constructor") {
-      result.push(key);
-    }
-  }
-  return result;
-}
-var baseKeys_default = baseKeys;
-
-// node_modules/lodash-es/keys.js
-function keys(object) {
-  return isArrayLike_default(object) ? arrayLikeKeys_default(object) : baseKeys_default(object);
-}
-var keys_default = keys;
-
-// node_modules/lodash-es/_nativeKeysIn.js
-function nativeKeysIn(object) {
-  var result = [];
-  if (object != null) {
-    for (var key in Object(object)) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-var nativeKeysIn_default = nativeKeysIn;
-
-// node_modules/lodash-es/_baseKeysIn.js
-var objectProto9 = Object.prototype;
-var hasOwnProperty7 = objectProto9.hasOwnProperty;
-function baseKeysIn(object) {
-  if (!isObject_default(object)) {
-    return nativeKeysIn_default(object);
-  }
-  var isProto = isPrototype_default(object), result = [];
-  for (var key in object) {
-    if (!(key == "constructor" && (isProto || !hasOwnProperty7.call(object, key)))) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-var baseKeysIn_default = baseKeysIn;
-
-// node_modules/lodash-es/keysIn.js
-function keysIn(object) {
-  return isArrayLike_default(object) ? arrayLikeKeys_default(object, true) : baseKeysIn_default(object);
-}
-var keysIn_default = keysIn;
-
-// node_modules/lodash-es/_isKey.js
-var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
-var reIsPlainProp = /^\w*$/;
-function isKey(value, object) {
-  if (isArray_default(value)) {
-    return false;
-  }
-  var type = typeof value;
-  if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol_default(value)) {
-    return true;
-  }
-  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
-}
-var isKey_default = isKey;
-
-// node_modules/lodash-es/_nativeCreate.js
-var nativeCreate = getNative_default(Object, "create");
-var nativeCreate_default = nativeCreate;
-
-// node_modules/lodash-es/_hashClear.js
-function hashClear() {
-  this.__data__ = nativeCreate_default ? nativeCreate_default(null) : {};
-  this.size = 0;
-}
-var hashClear_default = hashClear;
-
-// node_modules/lodash-es/_hashDelete.js
-function hashDelete(key) {
-  var result = this.has(key) && delete this.__data__[key];
-  this.size -= result ? 1 : 0;
-  return result;
-}
-var hashDelete_default = hashDelete;
-
-// node_modules/lodash-es/_hashGet.js
-var HASH_UNDEFINED = "__lodash_hash_undefined__";
-var objectProto10 = Object.prototype;
-var hasOwnProperty8 = objectProto10.hasOwnProperty;
-function hashGet(key) {
-  var data = this.__data__;
-  if (nativeCreate_default) {
-    var result = data[key];
-    return result === HASH_UNDEFINED ? void 0 : result;
-  }
-  return hasOwnProperty8.call(data, key) ? data[key] : void 0;
-}
-var hashGet_default = hashGet;
-
-// node_modules/lodash-es/_hashHas.js
-var objectProto11 = Object.prototype;
-var hasOwnProperty9 = objectProto11.hasOwnProperty;
-function hashHas(key) {
-  var data = this.__data__;
-  return nativeCreate_default ? data[key] !== void 0 : hasOwnProperty9.call(data, key);
-}
-var hashHas_default = hashHas;
-
-// node_modules/lodash-es/_hashSet.js
-var HASH_UNDEFINED2 = "__lodash_hash_undefined__";
-function hashSet(key, value) {
-  var data = this.__data__;
-  this.size += this.has(key) ? 0 : 1;
-  data[key] = nativeCreate_default && value === void 0 ? HASH_UNDEFINED2 : value;
-  return this;
-}
-var hashSet_default = hashSet;
-
-// node_modules/lodash-es/_Hash.js
-function Hash(entries) {
-  var index = -1, length = entries == null ? 0 : entries.length;
-  this.clear();
-  while (++index < length) {
-    var entry = entries[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-Hash.prototype.clear = hashClear_default;
-Hash.prototype["delete"] = hashDelete_default;
-Hash.prototype.get = hashGet_default;
-Hash.prototype.has = hashHas_default;
-Hash.prototype.set = hashSet_default;
-var Hash_default = Hash;
-
-// node_modules/lodash-es/_listCacheClear.js
-function listCacheClear() {
-  this.__data__ = [];
-  this.size = 0;
-}
-var listCacheClear_default = listCacheClear;
-
-// node_modules/lodash-es/_assocIndexOf.js
-function assocIndexOf(array, key) {
-  var length = array.length;
-  while (length--) {
-    if (eq_default(array[length][0], key)) {
-      return length;
-    }
-  }
-  return -1;
-}
-var assocIndexOf_default = assocIndexOf;
-
-// node_modules/lodash-es/_listCacheDelete.js
-var arrayProto = Array.prototype;
-var splice = arrayProto.splice;
-function listCacheDelete(key) {
-  var data = this.__data__, index = assocIndexOf_default(data, key);
-  if (index < 0) {
-    return false;
-  }
-  var lastIndex = data.length - 1;
-  if (index == lastIndex) {
-    data.pop();
-  } else {
-    splice.call(data, index, 1);
-  }
-  --this.size;
-  return true;
-}
-var listCacheDelete_default = listCacheDelete;
-
-// node_modules/lodash-es/_listCacheGet.js
-function listCacheGet(key) {
-  var data = this.__data__, index = assocIndexOf_default(data, key);
-  return index < 0 ? void 0 : data[index][1];
-}
-var listCacheGet_default = listCacheGet;
-
-// node_modules/lodash-es/_listCacheHas.js
-function listCacheHas(key) {
-  return assocIndexOf_default(this.__data__, key) > -1;
-}
-var listCacheHas_default = listCacheHas;
-
-// node_modules/lodash-es/_listCacheSet.js
-function listCacheSet(key, value) {
-  var data = this.__data__, index = assocIndexOf_default(data, key);
-  if (index < 0) {
-    ++this.size;
-    data.push([key, value]);
-  } else {
-    data[index][1] = value;
-  }
-  return this;
-}
-var listCacheSet_default = listCacheSet;
-
-// node_modules/lodash-es/_ListCache.js
-function ListCache(entries) {
-  var index = -1, length = entries == null ? 0 : entries.length;
-  this.clear();
-  while (++index < length) {
-    var entry = entries[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-ListCache.prototype.clear = listCacheClear_default;
-ListCache.prototype["delete"] = listCacheDelete_default;
-ListCache.prototype.get = listCacheGet_default;
-ListCache.prototype.has = listCacheHas_default;
-ListCache.prototype.set = listCacheSet_default;
-var ListCache_default = ListCache;
-
-// node_modules/lodash-es/_Map.js
-var Map = getNative_default(root_default, "Map");
-var Map_default = Map;
-
-// node_modules/lodash-es/_mapCacheClear.js
-function mapCacheClear() {
-  this.size = 0;
-  this.__data__ = {
-    "hash": new Hash_default(),
-    "map": new (Map_default || ListCache_default)(),
-    "string": new Hash_default()
-  };
-}
-var mapCacheClear_default = mapCacheClear;
-
-// node_modules/lodash-es/_isKeyable.js
-function isKeyable(value) {
-  var type = typeof value;
-  return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
-}
-var isKeyable_default = isKeyable;
-
-// node_modules/lodash-es/_getMapData.js
-function getMapData(map, key) {
-  var data = map.__data__;
-  return isKeyable_default(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
-}
-var getMapData_default = getMapData;
-
-// node_modules/lodash-es/_mapCacheDelete.js
-function mapCacheDelete(key) {
-  var result = getMapData_default(this, key)["delete"](key);
-  this.size -= result ? 1 : 0;
-  return result;
-}
-var mapCacheDelete_default = mapCacheDelete;
-
-// node_modules/lodash-es/_mapCacheGet.js
-function mapCacheGet(key) {
-  return getMapData_default(this, key).get(key);
-}
-var mapCacheGet_default = mapCacheGet;
-
-// node_modules/lodash-es/_mapCacheHas.js
-function mapCacheHas(key) {
-  return getMapData_default(this, key).has(key);
-}
-var mapCacheHas_default = mapCacheHas;
-
-// node_modules/lodash-es/_mapCacheSet.js
-function mapCacheSet(key, value) {
-  var data = getMapData_default(this, key), size = data.size;
-  data.set(key, value);
-  this.size += data.size == size ? 0 : 1;
-  return this;
-}
-var mapCacheSet_default = mapCacheSet;
-
-// node_modules/lodash-es/_MapCache.js
-function MapCache(entries) {
-  var index = -1, length = entries == null ? 0 : entries.length;
-  this.clear();
-  while (++index < length) {
-    var entry = entries[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-MapCache.prototype.clear = mapCacheClear_default;
-MapCache.prototype["delete"] = mapCacheDelete_default;
-MapCache.prototype.get = mapCacheGet_default;
-MapCache.prototype.has = mapCacheHas_default;
-MapCache.prototype.set = mapCacheSet_default;
-var MapCache_default = MapCache;
-
-// node_modules/lodash-es/memoize.js
-var FUNC_ERROR_TEXT = "Expected a function";
-function memoize(func, resolver) {
-  if (typeof func != "function" || resolver != null && typeof resolver != "function") {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  var memoized = function() {
-    var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache = memoized.cache;
-    if (cache.has(key)) {
-      return cache.get(key);
-    }
-    var result = func.apply(this, args);
-    memoized.cache = cache.set(key, result) || cache;
-    return result;
-  };
-  memoized.cache = new (memoize.Cache || MapCache_default)();
-  return memoized;
-}
-memoize.Cache = MapCache_default;
-var memoize_default = memoize;
-
-// node_modules/lodash-es/_memoizeCapped.js
-var MAX_MEMOIZE_SIZE = 500;
-function memoizeCapped(func) {
-  var result = memoize_default(func, function(key) {
-    if (cache.size === MAX_MEMOIZE_SIZE) {
-      cache.clear();
-    }
-    return key;
-  });
-  var cache = result.cache;
-  return result;
-}
-var memoizeCapped_default = memoizeCapped;
-
-// node_modules/lodash-es/_stringToPath.js
-var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-var reEscapeChar = /\\(\\)?/g;
-var stringToPath = memoizeCapped_default(function(string) {
-  var result = [];
-  if (string.charCodeAt(0) === 46) {
-    result.push("");
-  }
-  string.replace(rePropName, function(match, number, quote, subString) {
-    result.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
-  });
-  return result;
-});
-var stringToPath_default = stringToPath;
-
-// node_modules/lodash-es/toString.js
-function toString(value) {
-  return value == null ? "" : baseToString_default(value);
-}
-var toString_default = toString;
-
-// node_modules/lodash-es/_castPath.js
-function castPath(value, object) {
-  if (isArray_default(value)) {
-    return value;
-  }
-  return isKey_default(value, object) ? [value] : stringToPath_default(toString_default(value));
-}
-var castPath_default = castPath;
-
-// node_modules/lodash-es/_toKey.js
-var INFINITY2 = 1 / 0;
-function toKey(value) {
-  if (typeof value == "string" || isSymbol_default(value)) {
-    return value;
-  }
-  var result = value + "";
-  return result == "0" && 1 / value == -INFINITY2 ? "-0" : result;
-}
-var toKey_default = toKey;
-
-// node_modules/lodash-es/_baseGet.js
-function baseGet(object, path) {
-  path = castPath_default(path, object);
-  var index = 0, length = path.length;
-  while (object != null && index < length) {
-    object = object[toKey_default(path[index++])];
-  }
-  return index && index == length ? object : void 0;
-}
-var baseGet_default = baseGet;
-
-// node_modules/lodash-es/_arrayPush.js
-function arrayPush(array, values) {
-  var index = -1, length = values.length, offset = array.length;
-  while (++index < length) {
-    array[offset + index] = values[index];
-  }
-  return array;
-}
-var arrayPush_default = arrayPush;
-
-// node_modules/lodash-es/_isFlattenable.js
-var spreadableSymbol = Symbol_default ? Symbol_default.isConcatSpreadable : void 0;
-function isFlattenable(value) {
-  return isArray_default(value) || isArguments_default(value) || !!(spreadableSymbol && value && value[spreadableSymbol]);
-}
-var isFlattenable_default = isFlattenable;
-
-// node_modules/lodash-es/_baseFlatten.js
-function baseFlatten(array, depth, predicate, isStrict, result) {
-  var index = -1, length = array.length;
-  predicate || (predicate = isFlattenable_default);
-  result || (result = []);
-  while (++index < length) {
-    var value = array[index];
-    if (depth > 0 && predicate(value)) {
-      if (depth > 1) {
-        baseFlatten(value, depth - 1, predicate, isStrict, result);
-      } else {
-        arrayPush_default(result, value);
-      }
-    } else if (!isStrict) {
-      result[result.length] = value;
-    }
-  }
-  return result;
-}
-var baseFlatten_default = baseFlatten;
-
-// node_modules/lodash-es/flatten.js
-function flatten(array) {
-  var length = array == null ? 0 : array.length;
-  return length ? baseFlatten_default(array, 1) : [];
-}
-var flatten_default = flatten;
-
-// node_modules/lodash-es/_flatRest.js
-function flatRest(func) {
-  return setToString_default(overRest_default(func, void 0, flatten_default), func + "");
-}
-var flatRest_default = flatRest;
-
-// node_modules/lodash-es/_getPrototype.js
-var getPrototype = overArg_default(Object.getPrototypeOf, Object);
-var getPrototype_default = getPrototype;
-
-// node_modules/lodash-es/isPlainObject.js
-var objectTag2 = "[object Object]";
-var funcProto3 = Function.prototype;
-var objectProto12 = Object.prototype;
-var funcToString3 = funcProto3.toString;
-var hasOwnProperty10 = objectProto12.hasOwnProperty;
-var objectCtorString = funcToString3.call(Object);
-function isPlainObject(value) {
-  if (!isObjectLike_default(value) || baseGetTag_default(value) != objectTag2) {
-    return false;
-  }
-  var proto = getPrototype_default(value);
-  if (proto === null) {
-    return true;
-  }
-  var Ctor = hasOwnProperty10.call(proto, "constructor") && proto.constructor;
-  return typeof Ctor == "function" && Ctor instanceof Ctor && funcToString3.call(Ctor) == objectCtorString;
-}
-var isPlainObject_default = isPlainObject;
-
-// node_modules/lodash-es/_baseSlice.js
-function baseSlice(array, start, end) {
-  var index = -1, length = array.length;
-  if (start < 0) {
-    start = -start > length ? 0 : length + start;
-  }
-  end = end > length ? length : end;
-  if (end < 0) {
-    end += length;
-  }
-  length = start > end ? 0 : end - start >>> 0;
-  start >>>= 0;
-  var result = Array(length);
-  while (++index < length) {
-    result[index] = array[index + start];
-  }
-  return result;
-}
-var baseSlice_default = baseSlice;
-
-// node_modules/lodash-es/_stackClear.js
-function stackClear() {
-  this.__data__ = new ListCache_default();
-  this.size = 0;
-}
-var stackClear_default = stackClear;
-
-// node_modules/lodash-es/_stackDelete.js
-function stackDelete(key) {
-  var data = this.__data__, result = data["delete"](key);
-  this.size = data.size;
-  return result;
-}
-var stackDelete_default = stackDelete;
-
-// node_modules/lodash-es/_stackGet.js
-function stackGet(key) {
-  return this.__data__.get(key);
-}
-var stackGet_default = stackGet;
-
-// node_modules/lodash-es/_stackHas.js
-function stackHas(key) {
-  return this.__data__.has(key);
-}
-var stackHas_default = stackHas;
-
-// node_modules/lodash-es/_stackSet.js
-var LARGE_ARRAY_SIZE = 200;
-function stackSet(key, value) {
-  var data = this.__data__;
-  if (data instanceof ListCache_default) {
-    var pairs = data.__data__;
-    if (!Map_default || pairs.length < LARGE_ARRAY_SIZE - 1) {
-      pairs.push([key, value]);
-      this.size = ++data.size;
-      return this;
-    }
-    data = this.__data__ = new MapCache_default(pairs);
-  }
-  data.set(key, value);
-  this.size = data.size;
-  return this;
-}
-var stackSet_default = stackSet;
-
-// node_modules/lodash-es/_Stack.js
-function Stack(entries) {
-  var data = this.__data__ = new ListCache_default(entries);
-  this.size = data.size;
-}
-Stack.prototype.clear = stackClear_default;
-Stack.prototype["delete"] = stackDelete_default;
-Stack.prototype.get = stackGet_default;
-Stack.prototype.has = stackHas_default;
-Stack.prototype.set = stackSet_default;
-var Stack_default = Stack;
-
-// node_modules/lodash-es/_baseAssign.js
-function baseAssign(object, source) {
-  return object && copyObject_default(source, keys_default(source), object);
-}
-var baseAssign_default = baseAssign;
-
-// node_modules/lodash-es/_baseAssignIn.js
-function baseAssignIn(object, source) {
-  return object && copyObject_default(source, keysIn_default(source), object);
-}
-var baseAssignIn_default = baseAssignIn;
-
-// node_modules/lodash-es/_cloneBuffer.js
-var freeExports3 = typeof exports == "object" && exports && !exports.nodeType && exports;
-var freeModule3 = freeExports3 && typeof module == "object" && module && !module.nodeType && module;
-var moduleExports3 = freeModule3 && freeModule3.exports === freeExports3;
-var Buffer3 = moduleExports3 ? root_default.Buffer : void 0;
-var allocUnsafe = Buffer3 ? Buffer3.allocUnsafe : void 0;
-function cloneBuffer(buffer, isDeep) {
-  if (isDeep) {
-    return buffer.slice();
-  }
-  var length = buffer.length, result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
-  buffer.copy(result);
-  return result;
-}
-var cloneBuffer_default = cloneBuffer;
-
-// node_modules/lodash-es/_arrayFilter.js
-function arrayFilter(array, predicate) {
-  var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
-  while (++index < length) {
-    var value = array[index];
-    if (predicate(value, index, array)) {
-      result[resIndex++] = value;
-    }
-  }
-  return result;
-}
-var arrayFilter_default = arrayFilter;
-
-// node_modules/lodash-es/stubArray.js
-function stubArray() {
-  return [];
-}
-var stubArray_default = stubArray;
-
-// node_modules/lodash-es/_getSymbols.js
-var objectProto13 = Object.prototype;
-var propertyIsEnumerable2 = objectProto13.propertyIsEnumerable;
-var nativeGetSymbols = Object.getOwnPropertySymbols;
-var getSymbols = !nativeGetSymbols ? stubArray_default : function(object) {
-  if (object == null) {
-    return [];
-  }
-  object = Object(object);
-  return arrayFilter_default(nativeGetSymbols(object), function(symbol) {
-    return propertyIsEnumerable2.call(object, symbol);
-  });
-};
-var getSymbols_default = getSymbols;
-
-// node_modules/lodash-es/_copySymbols.js
-function copySymbols(source, object) {
-  return copyObject_default(source, getSymbols_default(source), object);
-}
-var copySymbols_default = copySymbols;
-
-// node_modules/lodash-es/_getSymbolsIn.js
-var nativeGetSymbols2 = Object.getOwnPropertySymbols;
-var getSymbolsIn = !nativeGetSymbols2 ? stubArray_default : function(object) {
-  var result = [];
-  while (object) {
-    arrayPush_default(result, getSymbols_default(object));
-    object = getPrototype_default(object);
-  }
-  return result;
-};
-var getSymbolsIn_default = getSymbolsIn;
-
-// node_modules/lodash-es/_copySymbolsIn.js
-function copySymbolsIn(source, object) {
-  return copyObject_default(source, getSymbolsIn_default(source), object);
-}
-var copySymbolsIn_default = copySymbolsIn;
-
-// node_modules/lodash-es/_baseGetAllKeys.js
-function baseGetAllKeys(object, keysFunc, symbolsFunc) {
-  var result = keysFunc(object);
-  return isArray_default(object) ? result : arrayPush_default(result, symbolsFunc(object));
-}
-var baseGetAllKeys_default = baseGetAllKeys;
-
-// node_modules/lodash-es/_getAllKeys.js
-function getAllKeys(object) {
-  return baseGetAllKeys_default(object, keys_default, getSymbols_default);
-}
-var getAllKeys_default = getAllKeys;
-
-// node_modules/lodash-es/_getAllKeysIn.js
-function getAllKeysIn(object) {
-  return baseGetAllKeys_default(object, keysIn_default, getSymbolsIn_default);
-}
-var getAllKeysIn_default = getAllKeysIn;
-
-// node_modules/lodash-es/_DataView.js
-var DataView = getNative_default(root_default, "DataView");
-var DataView_default = DataView;
-
-// node_modules/lodash-es/_Promise.js
-var Promise2 = getNative_default(root_default, "Promise");
-var Promise_default = Promise2;
-
-// node_modules/lodash-es/_Set.js
-var Set = getNative_default(root_default, "Set");
-var Set_default = Set;
-
-// node_modules/lodash-es/_getTag.js
-var mapTag2 = "[object Map]";
-var objectTag3 = "[object Object]";
-var promiseTag = "[object Promise]";
-var setTag2 = "[object Set]";
-var weakMapTag2 = "[object WeakMap]";
-var dataViewTag2 = "[object DataView]";
-var dataViewCtorString = toSource_default(DataView_default);
-var mapCtorString = toSource_default(Map_default);
-var promiseCtorString = toSource_default(Promise_default);
-var setCtorString = toSource_default(Set_default);
-var weakMapCtorString = toSource_default(WeakMap_default);
-var getTag = baseGetTag_default;
-if (DataView_default && getTag(new DataView_default(new ArrayBuffer(1))) != dataViewTag2 || Map_default && getTag(new Map_default()) != mapTag2 || Promise_default && getTag(Promise_default.resolve()) != promiseTag || Set_default && getTag(new Set_default()) != setTag2 || WeakMap_default && getTag(new WeakMap_default()) != weakMapTag2) {
-  getTag = function(value) {
-    var result = baseGetTag_default(value), Ctor = result == objectTag3 ? value.constructor : void 0, ctorString = Ctor ? toSource_default(Ctor) : "";
-    if (ctorString) {
-      switch (ctorString) {
-        case dataViewCtorString:
-          return dataViewTag2;
-        case mapCtorString:
-          return mapTag2;
-        case promiseCtorString:
-          return promiseTag;
-        case setCtorString:
-          return setTag2;
-        case weakMapCtorString:
-          return weakMapTag2;
-      }
-    }
-    return result;
-  };
-}
-var getTag_default = getTag;
-
-// node_modules/lodash-es/_initCloneArray.js
-var objectProto14 = Object.prototype;
-var hasOwnProperty11 = objectProto14.hasOwnProperty;
-function initCloneArray(array) {
-  var length = array.length, result = new array.constructor(length);
-  if (length && typeof array[0] == "string" && hasOwnProperty11.call(array, "index")) {
-    result.index = array.index;
-    result.input = array.input;
-  }
-  return result;
-}
-var initCloneArray_default = initCloneArray;
-
-// node_modules/lodash-es/_Uint8Array.js
-var Uint8Array2 = root_default.Uint8Array;
-var Uint8Array_default = Uint8Array2;
-
-// node_modules/lodash-es/_cloneArrayBuffer.js
-function cloneArrayBuffer(arrayBuffer) {
-  var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
-  new Uint8Array_default(result).set(new Uint8Array_default(arrayBuffer));
-  return result;
-}
-var cloneArrayBuffer_default = cloneArrayBuffer;
-
-// node_modules/lodash-es/_cloneDataView.js
-function cloneDataView(dataView, isDeep) {
-  var buffer = isDeep ? cloneArrayBuffer_default(dataView.buffer) : dataView.buffer;
-  return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
-}
-var cloneDataView_default = cloneDataView;
-
-// node_modules/lodash-es/_cloneRegExp.js
-var reFlags = /\w*$/;
-function cloneRegExp(regexp) {
-  var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
-  result.lastIndex = regexp.lastIndex;
-  return result;
-}
-var cloneRegExp_default = cloneRegExp;
-
-// node_modules/lodash-es/_cloneSymbol.js
-var symbolProto2 = Symbol_default ? Symbol_default.prototype : void 0;
-var symbolValueOf = symbolProto2 ? symbolProto2.valueOf : void 0;
-function cloneSymbol(symbol) {
-  return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
-}
-var cloneSymbol_default = cloneSymbol;
-
-// node_modules/lodash-es/_cloneTypedArray.js
-function cloneTypedArray(typedArray, isDeep) {
-  var buffer = isDeep ? cloneArrayBuffer_default(typedArray.buffer) : typedArray.buffer;
-  return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
-}
-var cloneTypedArray_default = cloneTypedArray;
-
-// node_modules/lodash-es/_initCloneByTag.js
-var boolTag2 = "[object Boolean]";
-var dateTag2 = "[object Date]";
-var mapTag3 = "[object Map]";
-var numberTag2 = "[object Number]";
-var regexpTag2 = "[object RegExp]";
-var setTag3 = "[object Set]";
-var stringTag2 = "[object String]";
-var symbolTag2 = "[object Symbol]";
-var arrayBufferTag2 = "[object ArrayBuffer]";
-var dataViewTag3 = "[object DataView]";
-var float32Tag2 = "[object Float32Array]";
-var float64Tag2 = "[object Float64Array]";
-var int8Tag2 = "[object Int8Array]";
-var int16Tag2 = "[object Int16Array]";
-var int32Tag2 = "[object Int32Array]";
-var uint8Tag2 = "[object Uint8Array]";
-var uint8ClampedTag2 = "[object Uint8ClampedArray]";
-var uint16Tag2 = "[object Uint16Array]";
-var uint32Tag2 = "[object Uint32Array]";
-function initCloneByTag(object, tag, isDeep) {
-  var Ctor = object.constructor;
-  switch (tag) {
-    case arrayBufferTag2:
-      return cloneArrayBuffer_default(object);
-    case boolTag2:
-    case dateTag2:
-      return new Ctor(+object);
-    case dataViewTag3:
-      return cloneDataView_default(object, isDeep);
-    case float32Tag2:
-    case float64Tag2:
-    case int8Tag2:
-    case int16Tag2:
-    case int32Tag2:
-    case uint8Tag2:
-    case uint8ClampedTag2:
-    case uint16Tag2:
-    case uint32Tag2:
-      return cloneTypedArray_default(object, isDeep);
-    case mapTag3:
-      return new Ctor();
-    case numberTag2:
-    case stringTag2:
-      return new Ctor(object);
-    case regexpTag2:
-      return cloneRegExp_default(object);
-    case setTag3:
-      return new Ctor();
-    case symbolTag2:
-      return cloneSymbol_default(object);
-  }
-}
-var initCloneByTag_default = initCloneByTag;
-
-// node_modules/lodash-es/_initCloneObject.js
-function initCloneObject(object) {
-  return typeof object.constructor == "function" && !isPrototype_default(object) ? baseCreate_default(getPrototype_default(object)) : {};
-}
-var initCloneObject_default = initCloneObject;
-
-// node_modules/lodash-es/_baseIsMap.js
-var mapTag4 = "[object Map]";
-function baseIsMap(value) {
-  return isObjectLike_default(value) && getTag_default(value) == mapTag4;
-}
-var baseIsMap_default = baseIsMap;
-
-// node_modules/lodash-es/isMap.js
-var nodeIsMap = nodeUtil_default && nodeUtil_default.isMap;
-var isMap = nodeIsMap ? baseUnary_default(nodeIsMap) : baseIsMap_default;
-var isMap_default = isMap;
-
-// node_modules/lodash-es/_baseIsSet.js
-var setTag4 = "[object Set]";
-function baseIsSet(value) {
-  return isObjectLike_default(value) && getTag_default(value) == setTag4;
-}
-var baseIsSet_default = baseIsSet;
-
-// node_modules/lodash-es/isSet.js
-var nodeIsSet = nodeUtil_default && nodeUtil_default.isSet;
-var isSet = nodeIsSet ? baseUnary_default(nodeIsSet) : baseIsSet_default;
-var isSet_default = isSet;
-
-// node_modules/lodash-es/_baseClone.js
-var CLONE_DEEP_FLAG = 1;
-var CLONE_FLAT_FLAG = 2;
-var CLONE_SYMBOLS_FLAG = 4;
-var argsTag3 = "[object Arguments]";
-var arrayTag2 = "[object Array]";
-var boolTag3 = "[object Boolean]";
-var dateTag3 = "[object Date]";
-var errorTag2 = "[object Error]";
-var funcTag3 = "[object Function]";
-var genTag2 = "[object GeneratorFunction]";
-var mapTag5 = "[object Map]";
-var numberTag3 = "[object Number]";
-var objectTag4 = "[object Object]";
-var regexpTag3 = "[object RegExp]";
-var setTag5 = "[object Set]";
-var stringTag3 = "[object String]";
-var symbolTag3 = "[object Symbol]";
-var weakMapTag3 = "[object WeakMap]";
-var arrayBufferTag3 = "[object ArrayBuffer]";
-var dataViewTag4 = "[object DataView]";
-var float32Tag3 = "[object Float32Array]";
-var float64Tag3 = "[object Float64Array]";
-var int8Tag3 = "[object Int8Array]";
-var int16Tag3 = "[object Int16Array]";
-var int32Tag3 = "[object Int32Array]";
-var uint8Tag3 = "[object Uint8Array]";
-var uint8ClampedTag3 = "[object Uint8ClampedArray]";
-var uint16Tag3 = "[object Uint16Array]";
-var uint32Tag3 = "[object Uint32Array]";
-var cloneableTags = {};
-cloneableTags[argsTag3] = cloneableTags[arrayTag2] = cloneableTags[arrayBufferTag3] = cloneableTags[dataViewTag4] = cloneableTags[boolTag3] = cloneableTags[dateTag3] = cloneableTags[float32Tag3] = cloneableTags[float64Tag3] = cloneableTags[int8Tag3] = cloneableTags[int16Tag3] = cloneableTags[int32Tag3] = cloneableTags[mapTag5] = cloneableTags[numberTag3] = cloneableTags[objectTag4] = cloneableTags[regexpTag3] = cloneableTags[setTag5] = cloneableTags[stringTag3] = cloneableTags[symbolTag3] = cloneableTags[uint8Tag3] = cloneableTags[uint8ClampedTag3] = cloneableTags[uint16Tag3] = cloneableTags[uint32Tag3] = true;
-cloneableTags[errorTag2] = cloneableTags[funcTag3] = cloneableTags[weakMapTag3] = false;
-function baseClone(value, bitmask, customizer, key, object, stack) {
-  var result, isDeep = bitmask & CLONE_DEEP_FLAG, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG;
-  if (customizer) {
-    result = object ? customizer(value, key, object, stack) : customizer(value);
-  }
-  if (result !== void 0) {
-    return result;
-  }
-  if (!isObject_default(value)) {
-    return value;
-  }
-  var isArr = isArray_default(value);
-  if (isArr) {
-    result = initCloneArray_default(value);
-    if (!isDeep) {
-      return copyArray_default(value, result);
-    }
-  } else {
-    var tag = getTag_default(value), isFunc = tag == funcTag3 || tag == genTag2;
-    if (isBuffer_default(value)) {
-      return cloneBuffer_default(value, isDeep);
-    }
-    if (tag == objectTag4 || tag == argsTag3 || isFunc && !object) {
-      result = isFlat || isFunc ? {} : initCloneObject_default(value);
-      if (!isDeep) {
-        return isFlat ? copySymbolsIn_default(value, baseAssignIn_default(result, value)) : copySymbols_default(value, baseAssign_default(result, value));
-      }
-    } else {
-      if (!cloneableTags[tag]) {
-        return object ? value : {};
-      }
-      result = initCloneByTag_default(value, tag, isDeep);
-    }
-  }
-  stack || (stack = new Stack_default());
-  var stacked = stack.get(value);
-  if (stacked) {
-    return stacked;
-  }
-  stack.set(value, result);
-  if (isSet_default(value)) {
-    value.forEach(function(subValue) {
-      result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
-    });
-  } else if (isMap_default(value)) {
-    value.forEach(function(subValue, key2) {
-      result.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
-    });
-  }
-  var keysFunc = isFull ? isFlat ? getAllKeysIn_default : getAllKeys_default : isFlat ? keysIn_default : keys_default;
-  var props = isArr ? void 0 : keysFunc(value);
-  arrayEach_default(props || value, function(subValue, key2) {
-    if (props) {
-      key2 = subValue;
-      subValue = value[key2];
-    }
-    assignValue_default(result, key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
-  });
-  return result;
-}
-var baseClone_default = baseClone;
-
-// node_modules/lodash-es/_baseHasIn.js
-function baseHasIn(object, key) {
-  return object != null && key in Object(object);
-}
-var baseHasIn_default = baseHasIn;
-
-// node_modules/lodash-es/_hasPath.js
-function hasPath(object, path, hasFunc) {
-  path = castPath_default(path, object);
-  var index = -1, length = path.length, result = false;
-  while (++index < length) {
-    var key = toKey_default(path[index]);
-    if (!(result = object != null && hasFunc(object, key))) {
-      break;
-    }
-    object = object[key];
-  }
-  if (result || ++index != length) {
-    return result;
-  }
-  length = object == null ? 0 : object.length;
-  return !!length && isLength_default(length) && isIndex_default(key, length) && (isArray_default(object) || isArguments_default(object));
-}
-var hasPath_default = hasPath;
-
-// node_modules/lodash-es/hasIn.js
-function hasIn(object, path) {
-  return object != null && hasPath_default(object, path, baseHasIn_default);
-}
-var hasIn_default = hasIn;
-
-// node_modules/lodash-es/last.js
-function last(array) {
-  var length = array == null ? 0 : array.length;
-  return length ? array[length - 1] : void 0;
-}
-var last_default = last;
-
-// node_modules/lodash-es/_parent.js
-function parent(object, path) {
-  return path.length < 2 ? object : baseGet_default(object, baseSlice_default(path, 0, -1));
-}
-var parent_default = parent;
-
-// node_modules/lodash-es/isUndefined.js
-function isUndefined(value) {
-  return value === void 0;
-}
-var isUndefined_default = isUndefined;
-
-// node_modules/lodash-es/_baseUnset.js
-function baseUnset(object, path) {
-  path = castPath_default(path, object);
-  object = parent_default(object, path);
-  return object == null || delete object[toKey_default(last_default(path))];
-}
-var baseUnset_default = baseUnset;
-
-// node_modules/lodash-es/_customOmitClone.js
-function customOmitClone(value) {
-  return isPlainObject_default(value) ? void 0 : value;
-}
-var customOmitClone_default = customOmitClone;
-
-// node_modules/lodash-es/omit.js
-var CLONE_DEEP_FLAG2 = 1;
-var CLONE_FLAT_FLAG2 = 2;
-var CLONE_SYMBOLS_FLAG2 = 4;
-var omit = flatRest_default(function(object, paths) {
-  var result = {};
-  if (object == null) {
-    return result;
-  }
-  var isDeep = false;
-  paths = arrayMap_default(paths, function(path) {
-    path = castPath_default(path, object);
-    isDeep || (isDeep = path.length > 1);
-    return path;
-  });
-  copyObject_default(object, getAllKeysIn_default(object), result);
-  if (isDeep) {
-    result = baseClone_default(result, CLONE_DEEP_FLAG2 | CLONE_FLAT_FLAG2 | CLONE_SYMBOLS_FLAG2, customOmitClone_default);
-  }
-  var length = paths.length;
-  while (length--) {
-    baseUnset_default(result, paths[length]);
-  }
-  return result;
-});
-var omit_default = omit;
-
-// node_modules/lodash-es/_baseSet.js
-function baseSet(object, path, value, customizer) {
-  if (!isObject_default(object)) {
-    return object;
-  }
-  path = castPath_default(path, object);
-  var index = -1, length = path.length, lastIndex = length - 1, nested = object;
-  while (nested != null && ++index < length) {
-    var key = toKey_default(path[index]), newValue = value;
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      return object;
-    }
-    if (index != lastIndex) {
-      var objValue = nested[key];
-      newValue = customizer ? customizer(objValue, key, nested) : void 0;
-      if (newValue === void 0) {
-        newValue = isObject_default(objValue) ? objValue : isIndex_default(path[index + 1]) ? [] : {};
-      }
-    }
-    assignValue_default(nested, key, newValue);
-    nested = nested[key];
-  }
-  return object;
-}
-var baseSet_default = baseSet;
-
-// node_modules/lodash-es/_basePickBy.js
-function basePickBy(object, paths, predicate) {
-  var index = -1, length = paths.length, result = {};
-  while (++index < length) {
-    var path = paths[index], value = baseGet_default(object, path);
-    if (predicate(value, path)) {
-      baseSet_default(result, castPath_default(path, object), value);
-    }
-  }
-  return result;
-}
-var basePickBy_default = basePickBy;
-
-// node_modules/lodash-es/_basePick.js
-function basePick(object, paths) {
-  return basePickBy_default(object, paths, function(value, path) {
-    return hasIn_default(object, path);
-  });
-}
-var basePick_default = basePick;
-
-// node_modules/lodash-es/pick.js
-var pick = flatRest_default(function(object, paths) {
-  return object == null ? {} : basePick_default(object, paths);
-});
-var pick_default = pick;
-
-// node_modules/url-join/lib/url-join.js
-function normalize(strArray) {
-  var resultArray = [];
-  if (strArray.length === 0) {
-    return "";
-  }
-  if (typeof strArray[0] !== "string") {
-    throw new TypeError("Url must be a string. Received " + strArray[0]);
-  }
-  if (strArray[0].match(/^[^/:]+:\/*$/) && strArray.length > 1) {
-    var first = strArray.shift();
-    strArray[0] = first + strArray[0];
-  }
-  if (strArray[0].match(/^file:\/\/\//)) {
-    strArray[0] = strArray[0].replace(/^([^/:]+):\/*/, "$1:///");
-  } else {
-    strArray[0] = strArray[0].replace(/^([^/:]+):\/*/, "$1://");
-  }
-  for (var i = 0; i < strArray.length; i++) {
-    var component = strArray[i];
-    if (typeof component !== "string") {
-      throw new TypeError("Url must be a string. Received " + component);
-    }
-    if (component === "") {
-      continue;
-    }
-    if (i > 0) {
-      component = component.replace(/^[\/]+/, "");
-    }
-    if (i < strArray.length - 1) {
-      component = component.replace(/[\/]+$/, "");
-    } else {
-      component = component.replace(/[\/]+$/, "/");
-    }
-    resultArray.push(component);
-  }
-  var str = resultArray.join("/");
-  str = str.replace(/\/(\?|&|#[^!])/g, "$1");
-  var parts = str.split("?");
-  str = parts.shift() + (parts.length > 0 ? "?" : "") + parts.join("&");
-  return str;
-}
-function urlJoin() {
-  var input;
-  if (typeof arguments[0] === "object") {
-    input = arguments[0];
-  } else {
-    input = [].slice.call(arguments);
-  }
-  return normalize(input);
-}
+module.exports = __toCommonJS(index_exports);
 
 // node_modules/url-template/lib/url-template.js
 function encodeReserved(str) {
@@ -1813,6 +262,7 @@ function parseTemplate(template) {
 }
 
 // node_modules/@keycloak/keycloak-admin-client/lib/utils/fetchWithError.js
+var ERROR_FIELDS = ["error", "errorMessage"];
 var NetworkError = class extends Error {
   response;
   responseData;
@@ -1826,7 +276,8 @@ async function fetchWithError(input, init) {
   const response = await fetch(input, init);
   if (!response.ok) {
     const responseData = await parseResponse(response);
-    throw new NetworkError("Network response was not OK.", {
+    const message = getErrorMessage(responseData);
+    throw new NetworkError(message, {
       response,
       responseData
     });
@@ -1840,56 +291,92 @@ async function parseResponse(response) {
   const data = await response.text();
   try {
     return JSON.parse(data);
-  } catch (error) {
+  } catch {
+    return data;
   }
-  return data;
+}
+function getErrorMessage(data) {
+  if (typeof data !== "object" || data === null) {
+    return "Unable to determine error message.";
+  }
+  for (const key of ERROR_FIELDS) {
+    const value = data[key];
+    if (typeof value === "string") {
+      return value;
+    }
+  }
+  return "Network response was not OK.";
+}
+
+// node_modules/@keycloak/keycloak-admin-client/lib/utils/joinPath.js
+var PATH_SEPARATOR = "/";
+function joinPath(...paths) {
+  const normalizedPaths = paths.map((path, index) => {
+    const isFirst = index === 0;
+    const isLast = index === paths.length - 1;
+    if (!isFirst && path.startsWith(PATH_SEPARATOR)) {
+      path = path.slice(1);
+    }
+    if (!isLast && path.endsWith(PATH_SEPARATOR)) {
+      path = path.slice(0, -1);
+    }
+    return path;
+  }, []);
+  return normalizedPaths.join(PATH_SEPARATOR);
 }
 
 // node_modules/@keycloak/keycloak-admin-client/lib/utils/stringifyQueryParams.js
 function stringifyQueryParams(params) {
-  return new URLSearchParams(Object.entries(params).filter((param) => {
-    const [, value] = param;
-    if (typeof value === "undefined" || value === null) {
-      return false;
+  const searchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === void 0 || value === null) {
+      continue;
     }
     if (typeof value === "string" && value.length === 0) {
-      return false;
+      continue;
     }
     if (Array.isArray(value) && value.length === 0) {
-      return false;
+      continue;
     }
-    return true;
-  })).toString();
+    if (Array.isArray(value)) {
+      value.forEach((item) => searchParams.append(key, item.toString()));
+    } else {
+      searchParams.append(key, value.toString());
+    }
+  }
+  return searchParams.toString();
 }
 
 // node_modules/@keycloak/keycloak-admin-client/lib/resources/agent.js
 var SLASH = "/";
+var pick = (value, keys) => Object.fromEntries(Object.entries(value).filter(([key]) => keys.includes(key)));
+var omit = (value, keys) => Object.fromEntries(Object.entries(value).filter(([key]) => !keys.includes(key)));
 var Agent = class {
-  client;
-  basePath;
-  getBaseParams;
-  getBaseUrl;
+  #client;
+  #basePath;
+  #getBaseParams;
+  #getBaseUrl;
   constructor({ client, path = "/", getUrlParams = () => ({}), getBaseUrl = () => client.baseUrl }) {
-    this.client = client;
-    this.getBaseParams = getUrlParams;
-    this.getBaseUrl = getBaseUrl;
-    this.basePath = path;
+    this.#client = client;
+    this.#getBaseParams = getUrlParams;
+    this.#getBaseUrl = getBaseUrl;
+    this.#basePath = path;
   }
   request({ method, path = "", urlParamKeys = [], queryParamKeys = [], catchNotFound = false, keyTransform, payloadKey, returnResourceIdInLocationHeader, ignoredKeys, headers }) {
     return async (payload = {}, options) => {
-      const baseParams = this.getBaseParams?.() ?? {};
-      const queryParams = queryParamKeys.length > 0 ? pick_default(payload, queryParamKeys) : void 0;
+      const baseParams = this.#getBaseParams?.() ?? {};
+      const queryParams = queryParamKeys.length > 0 ? pick(payload, queryParamKeys) : void 0;
       const allUrlParamKeys = [...Object.keys(baseParams), ...urlParamKeys];
-      const urlParams = { ...baseParams, ...pick_default(payload, allUrlParamKeys) };
+      const urlParams = { ...baseParams, ...pick(payload, allUrlParamKeys) };
       if (!(payload instanceof FormData)) {
         const omittedKeys = ignoredKeys ? [...allUrlParamKeys, ...queryParamKeys].filter((key) => !ignoredKeys.includes(key)) : [...allUrlParamKeys, ...queryParamKeys];
-        payload = omit_default(payload, omittedKeys);
+        payload = omit(payload, omittedKeys);
       }
       if (keyTransform) {
-        this.transformKey(payload, keyTransform);
-        this.transformKey(queryParams, keyTransform);
+        this.#transformKey(payload, keyTransform);
+        this.#transformKey(queryParams, keyTransform);
       }
-      return this.requestWithParams({
+      return this.#requestWithParams({
         method,
         path,
         payload,
@@ -1897,7 +384,7 @@ var Agent = class {
         queryParams,
         // catchNotFound precedence: global > local > default
         catchNotFound,
-        ...this.client.getGlobalRequestArgOptions() ?? options ?? {},
+        ...this.#client.getGlobalRequestArgOptions() ?? options ?? {},
         payloadKey,
         returnResourceIdInLocationHeader,
         headers
@@ -1906,17 +393,17 @@ var Agent = class {
   }
   updateRequest({ method, path = "", urlParamKeys = [], queryParamKeys = [], catchNotFound = false, keyTransform, payloadKey, returnResourceIdInLocationHeader, headers }) {
     return async (query = {}, payload = {}) => {
-      const baseParams = this.getBaseParams?.() ?? {};
-      const queryParams = queryParamKeys ? pick_default(query, queryParamKeys) : void 0;
+      const baseParams = this.#getBaseParams?.() ?? {};
+      const queryParams = queryParamKeys.length > 0 ? pick(query, queryParamKeys) : void 0;
       const allUrlParamKeys = [...Object.keys(baseParams), ...urlParamKeys];
       const urlParams = {
         ...baseParams,
-        ...pick_default(query, allUrlParamKeys)
+        ...pick(query, allUrlParamKeys)
       };
       if (keyTransform) {
-        this.transformKey(queryParams, keyTransform);
+        this.#transformKey(queryParams, keyTransform);
       }
-      return this.requestWithParams({
+      return this.#requestWithParams({
         method,
         path,
         payload,
@@ -1929,15 +416,11 @@ var Agent = class {
       });
     };
   }
-  async requestWithParams({ method, path, payload, urlParams, queryParams, catchNotFound, payloadKey, returnResourceIdInLocationHeader, headers }) {
-    const newPath = urlJoin(this.basePath, path);
-    const pathTemplate = parseTemplate(newPath);
-    const parsedPath = pathTemplate.expand(urlParams);
-    const url = new URL(`${this.getBaseUrl?.() ?? ""}${parsedPath}`);
-    const requestOptions = { ...this.client.getRequestOptions() };
+  async #requestWithParams({ method, path, payload, urlParams, queryParams, catchNotFound, payloadKey, returnResourceIdInLocationHeader, headers }) {
+    const requestOptions = { ...this.#client.getRequestOptions() };
     const requestHeaders = new Headers([
       ...new Headers(requestOptions.headers).entries(),
-      ["authorization", `Bearer ${await this.client.getAccessToken()}`],
+      ["authorization", `Bearer ${await this.#client.getAccessToken()}`],
       ["accept", "application/json, text/plain, */*"],
       ...new Headers(headers).entries()
     ]);
@@ -1949,27 +432,31 @@ var Agent = class {
     } else if (payload instanceof FormData) {
       requestOptions.body = payload;
     } else {
-      requestOptions.body = JSON.stringify(payloadKey ? payload[payloadKey] : payload);
+      requestOptions.body = payloadKey && typeof payload[payloadKey] === "string" ? payload[payloadKey] : JSON.stringify(payloadKey ? payload[payloadKey] : payload);
     }
-    if (!requestHeaders.has("content-type") && !(payload instanceof FormData)) {
+    if (requestOptions.body && !requestHeaders.has("content-type") && !(payload instanceof FormData)) {
       requestHeaders.set("content-type", "application/json");
     }
     if (queryParams) {
       Object.assign(searchParams, queryParams);
     }
+    const url = new URL(this.#getBaseUrl());
+    const pathTemplate = parseTemplate(joinPath(this.#basePath, path));
+    url.pathname = joinPath(url.pathname, pathTemplate.expand(urlParams));
     url.search = stringifyQueryParams(searchParams);
     try {
       const res = await fetchWithError(url, {
         ...requestOptions,
         headers: requestHeaders,
-        method
+        method,
+        ...this.#client.timeout ? { signal: AbortSignal.timeout(this.#client.timeout) } : {}
       });
       if (returnResourceIdInLocationHeader) {
         const locationHeader = res.headers.get("location");
         if (typeof locationHeader !== "string") {
           throw new Error(`location header is not found in request: ${res.url}`);
         }
-        const resourceId = last_default(locationHeader.split(SLASH));
+        const resourceId = locationHeader.split(SLASH).pop();
         if (!resourceId) {
           throw new Error(`resourceId is not found in Location header from request: ${res.url}`);
         }
@@ -1977,9 +464,9 @@ var Agent = class {
         return { [field]: resourceId };
       }
       if (Object.entries(headers || []).find(([key, value]) => key.toLowerCase() === "accept" && value === "application/octet-stream")) {
-        return res.arrayBuffer();
+        return await res.arrayBuffer();
       }
-      return parseResponse(res);
+      return await parseResponse(res);
     } catch (err) {
       if (err instanceof NetworkError && err.response.status === 404 && catchNotFound) {
         return null;
@@ -1987,13 +474,13 @@ var Agent = class {
       throw err;
     }
   }
-  transformKey(payload, keyMapping) {
+  #transformKey(payload, keyMapping) {
     if (!payload) {
       return;
     }
-    Object.keys(keyMapping).some((key) => {
-      if (isUndefined_default(payload[key])) {
-        return false;
+    Object.keys(keyMapping).forEach((key) => {
+      if (typeof payload[key] === "undefined") {
+        return;
       }
       const newKey = keyMapping[key];
       payload[newKey] = payload[key];
@@ -2004,19 +491,19 @@ var Agent = class {
 
 // node_modules/@keycloak/keycloak-admin-client/lib/resources/resource.js
 var Resource = class {
-  agent;
+  #agent;
   constructor(client, settings = {}) {
-    this.agent = new Agent({
+    this.#agent = new Agent({
       client,
       ...settings
     });
   }
   makeRequest = (args) => {
-    return this.agent.request(args);
+    return this.#agent.request(args);
   };
   // update request will take three types: query, payload and response
   makeUpdateRequest = (args) => {
-    return this.agent.updateRequest(args);
+    return this.#agent.updateRequest(args);
   };
 };
 
@@ -2187,6 +674,30 @@ var AuthenticationManagement = class extends Resource {
     path: "/executions/{id}/raise-priority",
     urlParamKeys: ["id"]
   });
+  // Get required actions provider's configuration description
+  getRequiredActionConfigDescription = this.makeRequest({
+    method: "GET",
+    path: "/required-actions/{alias}/config-description",
+    urlParamKeys: ["alias"]
+  });
+  // Get the configuration of the RequiredAction provider in the current Realm.
+  getRequiredActionConfig = this.makeRequest({
+    method: "GET",
+    path: "/required-actions/{alias}/config",
+    urlParamKeys: ["alias"]
+  });
+  // Remove the configuration from the RequiredAction provider in the current Realm.
+  removeRequiredActionConfig = this.makeRequest({
+    method: "DELETE",
+    path: "/required-actions/{alias}/config",
+    urlParamKeys: ["alias"]
+  });
+  // Update the configuration from the RequiredAction provider in the current Realm.
+  updateRequiredActionConfig = this.makeUpdateRequest({
+    method: "PUT",
+    path: "/required-actions/{alias}/config",
+    urlParamKeys: ["alias"]
+  });
   getConfigDescription = this.makeRequest({
     method: "GET",
     path: "config-description/{providerId}",
@@ -2230,6 +741,18 @@ var Cache = class extends Resource {
     method: "POST",
     path: "/clear-user-cache"
   });
+  clearKeysCache = this.makeRequest({
+    method: "POST",
+    path: "/clear-keys-cache"
+  });
+  clearCrlCache = this.makeRequest({
+    method: "POST",
+    path: "/clear-crl-cache"
+  });
+  clearRealmCache = this.makeRequest({
+    method: "POST",
+    path: "/clear-realm-cache"
+  });
   constructor(client) {
     super(client, {
       path: "/admin/realms/{realm}",
@@ -2268,7 +791,11 @@ var ClientPolicies = class extends Resource {
   /* Client Policies */
   listPolicies = this.makeRequest({
     method: "GET",
-    path: "/policies"
+    path: "/policies",
+    queryParamKeys: ["include-global-policies"],
+    keyTransform: {
+      includeGlobalPolicies: "include-global-policies"
+    }
   });
   updatePolicy = this.makeRequest({
     method: "PUT",
@@ -2276,8 +803,6498 @@ var ClientPolicies = class extends Resource {
   });
 };
 
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/parseNodeFactoryRegistry.js
+var ParseNodeFactoryRegistry = class {
+  constructor() {
+    this.jsonContentType = "application/json";
+    this.contentTypeAssociatedFactories = /* @__PURE__ */ new Map();
+  }
+  getValidContentType() {
+    throw new Error("The registry supports multiple content types. Get the registered factory instead.");
+  }
+  /**
+   * Creates a {@link ParseNode} from the given {@link ArrayBuffer} and content type.
+   * @param contentType the content type of the {@link ArrayBuffer}.
+   * @param content the {@link ArrayBuffer} to read from.
+   * @returns a {@link ParseNode} that can deserialize the given {@link ArrayBuffer}.
+   */
+  getRootParseNode(contentType, content) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    }
+    if (!content) {
+      throw new Error("content cannot be undefined or empty");
+    }
+    const vendorSpecificContentType = contentType.split(";")[0];
+    let factory = this.contentTypeAssociatedFactories.get(vendorSpecificContentType);
+    if (factory) {
+      return factory.getRootParseNode(vendorSpecificContentType, content);
+    }
+    const cleanedContentType = vendorSpecificContentType.replace(/[^/]+\+/gi, "");
+    factory = this.contentTypeAssociatedFactories.get(cleanedContentType);
+    if (factory) {
+      return factory.getRootParseNode(cleanedContentType, content);
+    }
+    throw new Error(`Content type ${cleanedContentType} does not have a factory registered to be parsed`);
+  }
+  /**
+   * Registers the default deserializer to the registry.
+   * @param type the class of the factory to be registered.
+   * @param backingStoreFactory The backing store factory to use.
+   */
+  registerDefaultDeserializer(type, backingStoreFactory) {
+    if (!type)
+      throw new Error("Type is required");
+    const deserializer = new type(backingStoreFactory);
+    this.contentTypeAssociatedFactories.set(deserializer.getValidContentType(), deserializer);
+  }
+  /**
+   * Deserializes a buffer into a parsable object
+   * @param bufferOrString the value to serialize
+   * @param factory the factory for the model type
+   * @returns the deserialized parsable object
+   */
+  deserializeFromJson(bufferOrString, factory) {
+    return this.deserialize(this.jsonContentType, bufferOrString, factory);
+  }
+  /**
+   * Deserializes a buffer into a collection of parsable object
+   * @param bufferOrString the value to serialize
+   * @param factory the factory for the model type
+   * @returns the deserialized collection of parsable objects
+   */
+  deserializeCollectionFromJson(bufferOrString, factory) {
+    return this.deserializeCollection(this.jsonContentType, bufferOrString, factory);
+  }
+  /**
+   * Deserializes a buffer into a parsable object
+   * @param contentType the content type to serialize to
+   * @param bufferOrString the value to serialize
+   * @param factory the factory for the model type
+   * @returns the deserialized parsable object
+   */
+  deserialize(contentType, bufferOrString, factory) {
+    if (typeof bufferOrString === "string") {
+      bufferOrString = this.getBufferFromString(bufferOrString);
+    }
+    const reader = this.getParseNode(contentType, bufferOrString, factory);
+    return reader.getObjectValue(factory);
+  }
+  /**
+   * Deserializes a buffer into a parsable object
+   * @param contentType the content type to serialize to
+   * @param buffer the value to deserialize
+   * @param factory the factory for the model type
+   * @returns the deserialized parsable object
+   */
+  getParseNode(contentType, buffer, factory) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    }
+    if (!buffer) {
+      throw new Error("buffer cannot be undefined");
+    }
+    if (!factory) {
+      throw new Error("factory cannot be undefined");
+    }
+    return this.getRootParseNode(contentType, buffer);
+  }
+  /**
+   * Deserializes a buffer into a collection of parsable object
+   * @param contentType the content type to serialize to
+   * @param bufferOrString the value to serialize
+   * @param factory the factory for the model type
+   * @returns the deserialized collection of parsable objects
+   */
+  deserializeCollection(contentType, bufferOrString, factory) {
+    if (typeof bufferOrString === "string") {
+      bufferOrString = this.getBufferFromString(bufferOrString);
+    }
+    const reader = this.getParseNode(contentType, bufferOrString, factory);
+    return reader.getCollectionOfObjectValues(factory);
+  }
+  /**
+   * Deserializes a buffer into a a collection of parsable object
+   * @param value the string to get a buffer from
+   * @returns the ArrayBuffer representation of the string
+   */
+  getBufferFromString(value) {
+    const encoder = new TextEncoder();
+    return encoder.encode(value).buffer;
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/parseNodeProxyFactory.js
+var ParseNodeProxyFactory = class {
+  getValidContentType() {
+    return this._concrete.getValidContentType();
+  }
+  /**
+   * Creates a new proxy factory that wraps the specified concrete factory while composing the before and after callbacks.
+   * @param _concrete the concrete factory to wrap
+   * @param _onBefore the callback to invoke before the deserialization of any model object.
+   * @param _onAfter the callback to invoke after the deserialization of any model object.
+   */
+  constructor(_concrete, _onBefore, _onAfter) {
+    this._concrete = _concrete;
+    this._onBefore = _onBefore;
+    this._onAfter = _onAfter;
+    if (!_concrete) {
+      throw new Error("_concrete cannot be undefined");
+    }
+  }
+  getRootParseNode(contentType, content) {
+    const node = this._concrete.getRootParseNode(contentType, content);
+    const originalBefore = node.onBeforeAssignFieldValues;
+    const originalAfter = node.onAfterAssignFieldValues;
+    node.onBeforeAssignFieldValues = (value) => {
+      if (this._onBefore)
+        this._onBefore(value);
+      if (originalBefore)
+        originalBefore(value);
+    };
+    node.onAfterAssignFieldValues = (value) => {
+      if (this._onAfter)
+        this._onAfter(value);
+      if (originalAfter)
+        originalAfter(value);
+    };
+    return node;
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/serializationWriterFactoryRegistry.js
+var SerializationWriterFactoryRegistry = class {
+  constructor() {
+    this.jsonContentType = "application/json";
+    this.contentTypeAssociatedFactories = /* @__PURE__ */ new Map();
+  }
+  getValidContentType() {
+    throw new Error("The registry supports multiple content types. Get the registered factory instead.");
+  }
+  getSerializationWriter(contentType) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    }
+    const vendorSpecificContentType = contentType.split(";")[0];
+    let factory = this.contentTypeAssociatedFactories.get(vendorSpecificContentType);
+    if (factory) {
+      return factory.getSerializationWriter(vendorSpecificContentType);
+    }
+    const cleanedContentType = vendorSpecificContentType.replace(/[^/]+\+/gi, "");
+    factory = this.contentTypeAssociatedFactories.get(cleanedContentType);
+    if (factory) {
+      return factory.getSerializationWriter(cleanedContentType);
+    }
+    throw new Error(`Content type ${cleanedContentType} does not have a factory registered to be serialized`);
+  }
+  /**
+   * Registers the default serializer to the registry.
+   * @param type the class of the factory to be registered.
+   */
+  registerDefaultSerializer(type) {
+    if (!type)
+      throw new Error("Type is required");
+    const serializer = new type();
+    this.contentTypeAssociatedFactories.set(serializer.getValidContentType(), serializer);
+  }
+  /**
+   * Serializes a parsable object into a buffer
+   * @param value the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a buffer containing the serialized value
+   */
+  serializeToJson(value, serializationFunction) {
+    return this.serialize(this.jsonContentType, value, serializationFunction);
+  }
+  /**
+   * Serializes a parsable object into a string representation
+   * @param value the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a string representing the serialized value
+   */
+  serializeToJsonAsString(value, serializationFunction) {
+    return this.serializeToString(this.jsonContentType, value, serializationFunction);
+  }
+  /**
+   * Serializes a collection of parsable objects into a buffer
+   * @param values the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a string representing the serialized value
+   */
+  serializeCollectionToJson(values, serializationFunction) {
+    return this.serializeCollection(this.jsonContentType, values, serializationFunction);
+  }
+  /**
+   * Serializes a collection of parsable objects into a string representation
+   * @param values the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a string representing the serialized value
+   */
+  serializeCollectionToJsonAsString(values, serializationFunction) {
+    return this.serializeCollectionToString(this.jsonContentType, values, serializationFunction);
+  }
+  /**
+   * Serializes a parsable object into a buffer
+   * @param contentType the content type to serialize to
+   * @param value the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a buffer containing the serialized value
+   */
+  serialize(contentType, value, serializationFunction) {
+    const writer = this.getSerializationFactoryWriter(contentType, value, serializationFunction);
+    writer.writeObjectValue(void 0, value, serializationFunction);
+    return writer.getSerializedContent();
+  }
+  /**
+   * Serializes a parsable object into a string representation
+   * @param contentType the content type to serialize to
+   * @param value the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a string representing the serialized value
+   */
+  serializeToString(contentType, value, serializationFunction) {
+    const buffer = this.serialize(contentType, value, serializationFunction);
+    return this.getStringValueFromBuffer(buffer);
+  }
+  /**
+   * Serializes a collection of parsable objects into a buffer
+   * @param contentType the content type to serialize to
+   * @param values the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a string representing the serialized value
+   */
+  serializeCollection(contentType, values, serializationFunction) {
+    const writer = this.getSerializationFactoryWriter(contentType, values, serializationFunction);
+    writer.writeCollectionOfObjectValues(void 0, values, serializationFunction);
+    return writer.getSerializedContent();
+  }
+  /**
+   * Serializes a collection of parsable objects into a string representation
+   * @param contentType the content type to serialize to
+   * @param values the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns a string representing the serialized value
+   */
+  serializeCollectionToString(contentType, values, serializationFunction) {
+    const buffer = this.serializeCollection(contentType, values, serializationFunction);
+    return this.getStringValueFromBuffer(buffer);
+  }
+  /**
+   * Gets a serialization writer for a given content type
+   * @param contentType the content type to serialize to
+   * @param value the value to serialize
+   * @param serializationFunction the serialization function for the model type
+   * @returns the serialization writer for the given content type
+   */
+  getSerializationFactoryWriter(contentType, value, serializationFunction) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    }
+    if (!value) {
+      throw new Error("value cannot be undefined");
+    }
+    if (!serializationFunction) {
+      throw new Error("serializationFunction cannot be undefined");
+    }
+    return this.getSerializationWriter(contentType);
+  }
+  /**
+   * Gets a string value from a buffer
+   * @param buffer the buffer to get a string from
+   * @returns the string representation of the buffer
+   */
+  getStringValueFromBuffer(buffer) {
+    const decoder = new TextDecoder();
+    return decoder.decode(buffer);
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/serializationWriterProxyFactory.js
+var SerializationWriterProxyFactory = class {
+  getValidContentType() {
+    return this._concrete.getValidContentType();
+  }
+  /**
+   * Creates a new proxy factory that wraps the specified concrete factory while composing the before and after callbacks.
+   * @param _concrete the concrete factory to wrap
+   * @param _onBefore the callback to invoke before the serialization of any model object.
+   * @param _onAfter the callback to invoke after the serialization of any model object.
+   * @param _onStart the callback to invoke when the serialization of a model object starts
+   */
+  constructor(_concrete, _onBefore, _onAfter, _onStart) {
+    this._concrete = _concrete;
+    this._onBefore = _onBefore;
+    this._onAfter = _onAfter;
+    this._onStart = _onStart;
+    if (!_concrete) {
+      throw new Error("_concrete cannot be undefined");
+    }
+  }
+  getSerializationWriter(contentType) {
+    const writer = this._concrete.getSerializationWriter(contentType);
+    const originalBefore = writer.onBeforeObjectSerialization;
+    const originalAfter = writer.onAfterObjectSerialization;
+    const originalStart = writer.onStartObjectSerialization;
+    writer.onBeforeObjectSerialization = (value) => {
+      if (this._onBefore)
+        this._onBefore(value);
+      if (originalBefore)
+        originalBefore(value);
+    };
+    writer.onAfterObjectSerialization = (value) => {
+      if (this._onAfter)
+        this._onAfter(value);
+      if (originalAfter)
+        originalAfter(value);
+    };
+    writer.onStartObjectSerialization = (value, writer_) => {
+      if (this._onStart)
+        this._onStart(value, writer_);
+      if (originalStart)
+        originalStart(value, writer_);
+    };
+    return writer;
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedNode.js
+var createUntypedNodeFromDiscriminatorValue = (_parseNode) => {
+  return deserializeIntoUntypedNode;
+};
+var isUntypedNode = (node) => {
+  const potentialNode = node;
+  return (potentialNode === null || potentialNode === void 0 ? void 0 : potentialNode.getValue) !== void 0;
+};
+var deserializeIntoUntypedNode = (untypedNode = {}) => {
+  return {
+    value: (_n) => {
+      untypedNode.value = null;
+    },
+    getValue: (_n) => {
+      untypedNode.getValue = () => untypedNode.value;
+    }
+  };
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedNumber.js
+function isUntypedNumber(node) {
+  const proposedNode = node;
+  return proposedNode && typeof proposedNode.value === "number";
+}
+function createUntypedNumber(value) {
+  return {
+    value,
+    getValue: () => value
+  };
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedArray.js
+var isUntypedArray = (node) => {
+  const proposedNode = node;
+  return proposedNode && proposedNode.value instanceof Array && proposedNode.value.every((item) => isUntypedNode(item));
+};
+var createUntypedArray = (value) => {
+  return {
+    value,
+    getValue: () => value
+  };
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedNull.js
+function isUntypedNull(node) {
+  return node.value === null;
+}
+function createUntypedNull() {
+  return {
+    value: null,
+    getValue: () => null
+  };
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedObject.js
+var isUntypedObject = (node) => {
+  const proposedNode = node;
+  return proposedNode && proposedNode.value instanceof Object && proposedNode.value instanceof Array === false && Object.values(proposedNode.value).every((item) => isUntypedNode(item));
+};
+var createUntypedObject = (value) => {
+  return {
+    value,
+    getValue: () => value
+  };
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedString.js
+function isUntypedString(node) {
+  const proposedNode = node;
+  return proposedNode && typeof proposedNode.value === "string";
+}
+function createUntypedString(value) {
+  return {
+    value,
+    getValue: () => value
+  };
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/serialization/untypedBoolean.js
+function isUntypedBoolean(node) {
+  const proposedNode = node;
+  return proposedNode && typeof proposedNode.value === "boolean";
+}
+function createUntypedBoolean(value) {
+  return {
+    value,
+    getValue: () => value
+  };
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/store/backingStoreParseNodeFactory.js
+var BackingStoreParseNodeFactory = class extends ParseNodeProxyFactory {
+  /**
+   * Initializes a new instance of the BackingStoreParseNodeFactory class given the concrete implementation.
+   * @param concrete the concrete implementation of the ParseNodeFactory
+   */
+  constructor(concrete) {
+    super(concrete, (value) => {
+      const backedModel = value;
+      if (backedModel === null || backedModel === void 0 ? void 0 : backedModel.backingStore) {
+        backedModel.backingStore.initializationCompleted = false;
+      }
+    }, (value) => {
+      const backedModel = value;
+      if (backedModel === null || backedModel === void 0 ? void 0 : backedModel.backingStore) {
+        backedModel.backingStore.initializationCompleted = true;
+      }
+    });
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/store/backingStoreSerializationWriterProxyFactory.js
+var BackingStoreSerializationWriterProxyFactory = class extends SerializationWriterProxyFactory {
+  /**
+   * Initializes a new instance of the BackingStoreSerializationWriterProxyFactory class given a concrete implementation of SerializationWriterFactory.
+   * @param concrete a concrete implementation of SerializationWriterFactory to wrap.
+   */
+  constructor(concrete) {
+    super(concrete, (value) => {
+      const backedModel = value;
+      if (backedModel === null || backedModel === void 0 ? void 0 : backedModel.backingStore) {
+        backedModel.backingStore.returnOnlyChangedValues = true;
+      }
+    }, (value) => {
+      const backedModel = value;
+      if (backedModel === null || backedModel === void 0 ? void 0 : backedModel.backingStore) {
+        backedModel.backingStore.returnOnlyChangedValues = false;
+        backedModel.backingStore.initializationCompleted = true;
+      }
+    }, (value, writer) => {
+      const backedModel = value;
+      if (backedModel === null || backedModel === void 0 ? void 0 : backedModel.backingStore) {
+        const keys = backedModel.backingStore.enumerateKeysForValuesChangedToNull();
+        for (const key of keys) {
+          writer.writeNullValue(key);
+        }
+      }
+    });
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/utils/enumUtils.js
+var reverseRecord = (input) => {
+  const entries = Object.entries(input).map(([key, value]) => [value, key]);
+  return Object.fromEntries(entries);
+};
+var getEnumValueFromStringValue = (stringValue, originalType) => {
+  const reversed = reverseRecord(originalType);
+  return originalType[reversed[stringValue]];
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/utils/guidUtils.js
+var guidValidator = /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i;
+var parseGuidString = (source) => {
+  if (source && guidValidator.test(source)) {
+    return source;
+  }
+  return void 0;
+};
+var createGuid = () => [gen(2), gen(1), gen(1), gen(1), gen(3)].join("-");
+var gen = (count) => {
+  let out = "";
+  for (let i = 0; i < count; i++) {
+    out += ((1 + Math.random()) * 65536 | 0).toString(16).substring(1);
+  }
+  return out;
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/utils/inNodeEnv.js
+var inNodeEnv = () => {
+  try {
+    return !!Buffer && !!process;
+  } catch (err) {
+    return !(err instanceof ReferenceError);
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/store/inMemoryBackingStore.js
+var InMemoryBackingStore = class {
+  constructor() {
+    this.subscriptions = /* @__PURE__ */ new Map();
+    this.store = /* @__PURE__ */ new Map();
+    this.returnOnlyChangedValues = false;
+    this._initializationCompleted = true;
+  }
+  get(key) {
+    const wrapper = this.store.get(key);
+    if (wrapper && (this.returnOnlyChangedValues && wrapper.changed || !this.returnOnlyChangedValues)) {
+      return wrapper.value;
+    }
+    return void 0;
+  }
+  set(key, value) {
+    const oldValueWrapper = this.store.get(key);
+    const oldValue = oldValueWrapper === null || oldValueWrapper === void 0 ? void 0 : oldValueWrapper.value;
+    if (oldValueWrapper) {
+      oldValueWrapper.value = value;
+      oldValueWrapper.changed = this.initializationCompleted;
+    } else {
+      this.store.set(key, {
+        changed: this.initializationCompleted,
+        value
+      });
+    }
+    this.subscriptions.forEach((sub) => {
+      sub(key, oldValue, value);
+    });
+  }
+  enumerate() {
+    let filterableArray = [...this.store.entries()];
+    if (this.returnOnlyChangedValues) {
+      filterableArray = filterableArray.filter(([_, v]) => v.changed);
+    }
+    return filterableArray.map(([key, value]) => {
+      return { key, value };
+    });
+  }
+  enumerateKeysForValuesChangedToNull() {
+    const keys = [];
+    for (const [key, entry] of this.store) {
+      if (entry.changed && !entry.value) {
+        keys.push(key);
+      }
+    }
+    return keys;
+  }
+  subscribe(callback, subscriptionId) {
+    if (!callback) {
+      throw new Error("callback cannot be undefined");
+    }
+    subscriptionId = subscriptionId !== null && subscriptionId !== void 0 ? subscriptionId : createGuid();
+    this.subscriptions.set(subscriptionId, callback);
+    return subscriptionId;
+  }
+  unsubscribe(subscriptionId) {
+    this.subscriptions.delete(subscriptionId);
+  }
+  clear() {
+    this.store.clear();
+  }
+  set initializationCompleted(value) {
+    this._initializationCompleted = value;
+    this.store.forEach((v) => {
+      v.changed = !value;
+    });
+  }
+  get initializationCompleted() {
+    return this._initializationCompleted;
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/store/inMemoryBackingStoreFactory.js
+var InMemoryBackingStoreFactory = class {
+  createBackingStore() {
+    return new InMemoryBackingStore();
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/store/backedModelProxy.js
+var createBackedModelProxyHandler = (backingStoreFactory) => {
+  const backingStore = backingStoreFactory.createBackingStore();
+  const handler = {
+    get: (_target, prop) => {
+      if (prop === "backingStore") {
+        return backingStore;
+      }
+      return backingStore.get(prop.toString());
+    },
+    set: (target, prop, value, receiver) => {
+      if (prop === "backingStore") {
+        console.warn(`BackingStore - Ignoring attempt to set 'backingStore' property`);
+        return true;
+      }
+      Reflect.set(target, prop, value, receiver);
+      backingStore.set(prop.toString(), value);
+      return true;
+    }
+  };
+  return handler;
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/store/backingStoreUtils.js
+var BackingStoreKey = "backingStoreEnabled";
+function isBackingStoreEnabled(fields) {
+  return Object.keys(fields).includes(BackingStoreKey);
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/apiClientBuilder.js
+function enableBackingStoreForSerializationWriterFactory(serializationWriterFactoryRegistry, parseNodeFactoryRegistry, original) {
+  if (!original)
+    throw new Error("Original must be specified");
+  let result = original;
+  if (original instanceof SerializationWriterFactoryRegistry) {
+    enableBackingStoreForSerializationRegistry(original);
+  } else {
+    result = new BackingStoreSerializationWriterProxyFactory(original);
+  }
+  enableBackingStoreForSerializationRegistry(serializationWriterFactoryRegistry);
+  enableBackingStoreForParseNodeRegistry(parseNodeFactoryRegistry);
+  return result;
+}
+function enableBackingStoreForParseNodeFactory(parseNodeFactoryRegistry, original) {
+  if (!original)
+    throw new Error("Original must be specified");
+  let result = original;
+  if (original instanceof ParseNodeFactoryRegistry) {
+    enableBackingStoreForParseNodeRegistry(original);
+  } else {
+    result = new BackingStoreParseNodeFactory(original);
+  }
+  enableBackingStoreForParseNodeRegistry(parseNodeFactoryRegistry);
+  return result;
+}
+function enableBackingStoreForParseNodeRegistry(registry) {
+  for (const [k, v] of registry.contentTypeAssociatedFactories) {
+    if (!(v instanceof BackingStoreParseNodeFactory || v instanceof ParseNodeFactoryRegistry)) {
+      registry.contentTypeAssociatedFactories.set(k, new BackingStoreParseNodeFactory(v));
+    }
+  }
+}
+function enableBackingStoreForSerializationRegistry(registry) {
+  for (const [k, v] of registry.contentTypeAssociatedFactories) {
+    if (!(v instanceof BackingStoreSerializationWriterProxyFactory || v instanceof SerializationWriterFactoryRegistry)) {
+      registry.contentTypeAssociatedFactories.set(k, new BackingStoreSerializationWriterProxyFactory(v));
+    }
+  }
+}
+
+// node_modules/@opentelemetry/api/dist/version.mjs
+var VERSION = "1.10.0";
+
+// node_modules/@opentelemetry/api/dist/internal/semver.mjs
+var re = /^(\d+)\.(\d+)\.(\d+)(-(.+))?$/;
+function _makeCompatibilityCheck(ownVersion) {
+  const acceptedVersions = /* @__PURE__ */ new Set([ownVersion]);
+  const rejectedVersions = /* @__PURE__ */ new Set();
+  const myVersionMatch = ownVersion.match(re);
+  if (!myVersionMatch) return () => false;
+  const ownVersionParsed = {
+    major: +myVersionMatch[1],
+    minor: +myVersionMatch[2],
+    patch: +myVersionMatch[3],
+    prerelease: myVersionMatch[4]
+  };
+  if (ownVersionParsed.prerelease != null) return function isExactmatch(globalVersion) {
+    return globalVersion === ownVersion;
+  };
+  function _reject(v) {
+    rejectedVersions.add(v);
+    return false;
+  }
+  function _accept(v) {
+    acceptedVersions.add(v);
+    return true;
+  }
+  return function isCompatible2(globalVersion) {
+    if (acceptedVersions.has(globalVersion)) return true;
+    if (rejectedVersions.has(globalVersion)) return false;
+    const globalVersionMatch = globalVersion.match(re);
+    if (!globalVersionMatch) return _reject(globalVersion);
+    const globalVersionParsed = {
+      major: +globalVersionMatch[1],
+      minor: +globalVersionMatch[2],
+      patch: +globalVersionMatch[3],
+      prerelease: globalVersionMatch[4]
+    };
+    if (globalVersionParsed.prerelease != null) return _reject(globalVersion);
+    if (ownVersionParsed.major !== globalVersionParsed.major) return _reject(globalVersion);
+    if (ownVersionParsed.major === 0) {
+      if (ownVersionParsed.minor === globalVersionParsed.minor && ownVersionParsed.patch <= globalVersionParsed.patch) return _accept(globalVersion);
+      return _reject(globalVersion);
+    }
+    if (ownVersionParsed.minor <= globalVersionParsed.minor) return _accept(globalVersion);
+    return _reject(globalVersion);
+  };
+}
+var isCompatible = _makeCompatibilityCheck(VERSION);
+
+// node_modules/@opentelemetry/api/dist/internal/global-utils.mjs
+var major = VERSION.split(".")[0];
+var GLOBAL_OPENTELEMETRY_API_KEY = /* @__PURE__ */ Symbol.for(`opentelemetry.js.api.${major}`);
+var _global = typeof globalThis === "object" ? globalThis : typeof self === "object" ? self : typeof window === "object" ? window : typeof global === "object" ? global : {};
+function _makeGlobalApi() {
+  return Object.defineProperty({}, "version", {
+    value: VERSION,
+    enumerable: true,
+    writable: false,
+    configurable: false
+  });
+}
+function registerGlobal(type, instance, diag, allowOverride = false) {
+  var _global$GLOBAL_OPENTE;
+  const api = _global[GLOBAL_OPENTELEMETRY_API_KEY] = (_global$GLOBAL_OPENTE = _global[GLOBAL_OPENTELEMETRY_API_KEY]) !== null && _global$GLOBAL_OPENTE !== void 0 ? _global$GLOBAL_OPENTE : _makeGlobalApi();
+  if (!allowOverride && api[type]) {
+    const err = /* @__PURE__ */ new Error(`@opentelemetry/api: Attempted duplicate registration of API: ${type}`);
+    diag.error(err.stack || err.message);
+    return false;
+  }
+  if (api.version !== "1.10.0") {
+    const err = /* @__PURE__ */ new Error(`@opentelemetry/api: Registration of version v${api.version} for ${type} does not match previously registered API v${VERSION}`);
+    diag.error(err.stack || err.message);
+    return false;
+  }
+  api[type] = instance;
+  diag.debug(`@opentelemetry/api: Registered a global for ${type} v${VERSION}.`);
+  return true;
+}
+var _compatibleGlobalApi;
+function getGlobal(type) {
+  const api = _global[GLOBAL_OPENTELEMETRY_API_KEY];
+  if (api == null) return;
+  if (api !== _compatibleGlobalApi) {
+    if (!api.version || !isCompatible(api.version)) return;
+    _compatibleGlobalApi = api;
+  }
+  return api[type];
+}
+function unregisterGlobal(type, diag) {
+  diag.debug(`@opentelemetry/api: Unregistering a global for ${type} v${VERSION}.`);
+  const api = _global[GLOBAL_OPENTELEMETRY_API_KEY];
+  if (api) delete api[type];
+}
+
+// node_modules/@opentelemetry/api/dist/diag/ComponentLogger.mjs
+var DiagComponentLogger = class {
+  constructor(props) {
+    this._namespace = props.namespace || "DiagComponentLogger";
+  }
+  debug(...args) {
+    return logProxy("debug", this._namespace, args);
+  }
+  error(...args) {
+    return logProxy("error", this._namespace, args);
+  }
+  info(...args) {
+    return logProxy("info", this._namespace, args);
+  }
+  warn(...args) {
+    return logProxy("warn", this._namespace, args);
+  }
+  verbose(...args) {
+    return logProxy("verbose", this._namespace, args);
+  }
+};
+function logProxy(funcName, namespace, args) {
+  const logger = getGlobal("diag");
+  if (!logger) return;
+  return logger[funcName](namespace, ...args);
+}
+
+// node_modules/@opentelemetry/api/dist/diag/internal/logLevelLogger.mjs
+function createLogLevelDiagLogger(maxLevel, logger) {
+  if (maxLevel < 0) maxLevel = 0;
+  else if (maxLevel > 9999) maxLevel = 9999;
+  logger = logger || {};
+  function _filterFunc(funcName, theLevel) {
+    const theFunc = logger[funcName];
+    if (typeof theFunc === "function" && maxLevel >= theLevel) return theFunc.bind(logger);
+    return function() {
+    };
+  }
+  return {
+    error: _filterFunc("error", 30),
+    warn: _filterFunc("warn", 50),
+    info: _filterFunc("info", 60),
+    debug: _filterFunc("debug", 70),
+    verbose: _filterFunc("verbose", 80)
+  };
+}
+
+// node_modules/@opentelemetry/api/dist/api/diag.mjs
+var API_NAME = "diag";
+var DiagAPI = class DiagAPI2 {
+  /** Get the singleton instance of the DiagAPI API */
+  static instance() {
+    if (!this._instance) this._instance = new DiagAPI2();
+    return this._instance;
+  }
+  /**
+  * Private internal constructor
+  * @private
+  */
+  constructor() {
+    function _logProxy(funcName) {
+      return function(...args) {
+        const logger = getGlobal("diag");
+        if (!logger) return;
+        return logger[funcName](...args);
+      };
+    }
+    const self2 = this;
+    const setLogger = (logger, optionsOrLogLevel = { logLevel: 60 }) => {
+      var _optionsOrLogLevel$lo;
+      if (logger === self2) {
+        var _err$stack;
+        const err = /* @__PURE__ */ new Error("Cannot use diag as the logger for itself. Please use a DiagLogger implementation like ConsoleDiagLogger or a custom implementation");
+        self2.error((_err$stack = err.stack) !== null && _err$stack !== void 0 ? _err$stack : err.message);
+        return false;
+      }
+      if (typeof optionsOrLogLevel === "number") optionsOrLogLevel = { logLevel: optionsOrLogLevel };
+      const oldLogger = getGlobal("diag");
+      const newLogger = createLogLevelDiagLogger((_optionsOrLogLevel$lo = optionsOrLogLevel.logLevel) !== null && _optionsOrLogLevel$lo !== void 0 ? _optionsOrLogLevel$lo : 60, logger);
+      if (oldLogger && !optionsOrLogLevel.suppressOverrideMessage) {
+        var _Error$stack;
+        const stack = (_Error$stack = (/* @__PURE__ */ new Error()).stack) !== null && _Error$stack !== void 0 ? _Error$stack : "<failed to generate stacktrace>";
+        oldLogger.warn(`Current logger will be overwritten from ${stack}`);
+        newLogger.warn(`Current logger will overwrite one already registered from ${stack}`);
+      }
+      return registerGlobal("diag", newLogger, self2, true);
+    };
+    self2.setLogger = setLogger;
+    self2.disable = () => {
+      unregisterGlobal(API_NAME, self2);
+    };
+    self2.createComponentLogger = (options) => {
+      return new DiagComponentLogger(options);
+    };
+    self2.verbose = _logProxy("verbose");
+    self2.debug = _logProxy("debug");
+    self2.info = _logProxy("info");
+    self2.warn = _logProxy("warn");
+    self2.error = _logProxy("error");
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/context/context.mjs
+function createContextKey(description) {
+  return Symbol.for(description);
+}
+var ROOT_CONTEXT = new class BaseContext {
+  /**
+  * Construct a new context which inherits values from an optional parent context.
+  *
+  * @param parentContext a context from which to inherit values
+  */
+  constructor(parentContext) {
+    const self2 = this;
+    self2._currentContext = parentContext ? new Map(parentContext) : /* @__PURE__ */ new Map();
+    self2.getValue = (key) => self2._currentContext.get(key);
+    self2.setValue = (key, value) => {
+      const context = new BaseContext(self2._currentContext);
+      context._currentContext.set(key, value);
+      return context;
+    };
+    self2.deleteValue = (key) => {
+      const context = new BaseContext(self2._currentContext);
+      context._currentContext.delete(key);
+      return context;
+    };
+  }
+}();
+
+// node_modules/@opentelemetry/api/dist/trace/invalid-span-constants.mjs
+var INVALID_SPANID = "0000000000000000";
+var INVALID_TRACEID = "00000000000000000000000000000000";
+var INVALID_SPAN_CONTEXT = {
+  traceId: INVALID_TRACEID,
+  spanId: INVALID_SPANID,
+  traceFlags: 0
+};
+
+// node_modules/@opentelemetry/api/dist/trace/NonRecordingSpan.mjs
+var NonRecordingSpan = class {
+  constructor(spanContext = INVALID_SPAN_CONTEXT) {
+    this._spanContext = spanContext;
+  }
+  spanContext() {
+    return this._spanContext;
+  }
+  setAttribute(_key, _value) {
+    return this;
+  }
+  setAttributes(_attributes) {
+    return this;
+  }
+  addEvent(_name, _attributes) {
+    return this;
+  }
+  addLink(_link) {
+    return this;
+  }
+  addLinks(_links) {
+    return this;
+  }
+  setStatus(_status) {
+    return this;
+  }
+  updateName(_name) {
+    return this;
+  }
+  end(_endTime) {
+  }
+  isRecording() {
+    return false;
+  }
+  recordException(_exception, _time) {
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/trace/spancontext-utils.mjs
+var isHex = new Uint8Array([
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1
+]);
+function isValidHex(id, length) {
+  if (typeof id !== "string" || id.length !== length) return false;
+  let r = 0;
+  for (let i = 0; i < id.length; i += 4) r += (isHex[id.charCodeAt(i)] | 0) + (isHex[id.charCodeAt(i + 1)] | 0) + (isHex[id.charCodeAt(i + 2)] | 0) + (isHex[id.charCodeAt(i + 3)] | 0);
+  return r === length;
+}
+function isValidTraceId(traceId) {
+  return isValidHex(traceId, 32) && traceId !== "00000000000000000000000000000000";
+}
+function isValidSpanId(spanId) {
+  return isValidHex(spanId, 16) && spanId !== "0000000000000000";
+}
+function isSpanContextValid(spanContext) {
+  return isValidTraceId(spanContext.traceId) && isValidSpanId(spanContext.spanId);
+}
+function wrapSpanContext(spanContext) {
+  return new NonRecordingSpan(spanContext);
+}
+
+// node_modules/@opentelemetry/api/dist/context/NoopContextManager.mjs
+var NoopContextManager = class {
+  active() {
+    return ROOT_CONTEXT;
+  }
+  with(_context, fn, thisArg, ...args) {
+    return fn.call(thisArg, ...args);
+  }
+  bind(_context, target) {
+    return target;
+  }
+  enable() {
+    return this;
+  }
+  disable() {
+    return this;
+  }
+  /** @experimental This API is experimental and may change in minor releases without prior notice. */
+  attach(_context) {
+    return { dispose() {
+    } };
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/api/context.mjs
+var API_NAME2 = "context";
+var NOOP_CONTEXT_MANAGER = new NoopContextManager();
+var NOOP_TOKEN = Object.freeze({ dispose: () => {
+} });
+var ContextAPI = class ContextAPI2 {
+  /** Empty private constructor prevents end users from constructing a new instance of the API */
+  constructor() {
+    this._attachUnsupportedWarned = false;
+  }
+  /** Get the singleton instance of the Context API */
+  static getInstance() {
+    if (!this._instance) this._instance = new ContextAPI2();
+    return this._instance;
+  }
+  /**
+  * Set the current context manager.
+  *
+  * @returns true if the context manager was successfully registered, else false
+  */
+  setGlobalContextManager(contextManager) {
+    return registerGlobal(API_NAME2, contextManager, DiagAPI.instance());
+  }
+  /**
+  * Get the currently active context
+  */
+  active() {
+    return this._getContextManager().active();
+  }
+  /**
+  * Execute a function with an active context
+  *
+  * @param context context to be active during function execution
+  * @param fn function to execute in a context
+  * @param thisArg optional receiver to be used for calling fn
+  * @param args optional arguments forwarded to fn
+  */
+  with(context, fn, thisArg, ...args) {
+    return this._getContextManager().with(context, fn, thisArg, ...args);
+  }
+  /**
+  * Bind a context to a target function or event emitter
+  *
+  * @param context context to bind to the event emitter or function. Defaults to the currently active context
+  * @param target function or event emitter to bind
+  */
+  bind(context, target) {
+    return this._getContextManager().bind(context, target);
+  }
+  /**
+  * Imperatively sets `context` as active, returning a {@link ContextManagementToken} whose
+  * {@link ContextManagementToken.dispose} restores the previous context.
+  *
+  * This is a delicate, low-level API - prefer {@link with}/{@link bind}, which
+  * restore context automatically. Use `attach` only to bridge callback
+  * boundaries that `with` cannot wrap. Call `token.dispose()` when the
+  * operation is done.
+  *
+  * **Caveat for async functions:** If called inside an async function before
+  * the first `await`, the context change may leak into the caller's context
+  * and remain active there. Prefer {@link with} for async code.
+  *
+  * Support is best-effort and varies by the active ContextManager (see
+  * {@link ContextManager.attach}); if it does not implement `attach`, this logs
+  * a warning and returns a no-op token.
+  *
+  * @param context The Context to attach
+  * @returns A {@link ContextManagementToken} whose dispose() restores the previous Context
+  * @since 1.10.0
+  * @experimental This API is experimental and may change in minor releases without prior notice.
+  */
+  attach(context) {
+    const contextManager = this._getContextManager();
+    if (contextManager.attach) return contextManager.attach(context);
+    if (!this._attachUnsupportedWarned) {
+      this._attachUnsupportedWarned = true;
+      DiagAPI.instance().warn("The current ContextManager does not implement attach(). The context will not be attached. Use a ContextManager that supports attach() (e.g. AsyncLocalStorageContextManager) or use with()/bind() instead.");
+    }
+    return NOOP_TOKEN;
+  }
+  _getContextManager() {
+    return getGlobal(API_NAME2) || NOOP_CONTEXT_MANAGER;
+  }
+  /** Disable and remove the global context manager */
+  disable() {
+    this._getContextManager().disable();
+    unregisterGlobal(API_NAME2, DiagAPI.instance());
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/trace/context-utils.mjs
+var SPAN_KEY = createContextKey("OpenTelemetry Context Key SPAN");
+function getSpan(context) {
+  return context.getValue(SPAN_KEY) || void 0;
+}
+function getActiveSpan() {
+  return getSpan(ContextAPI.getInstance().active());
+}
+function setSpan(context, span) {
+  return context.setValue(SPAN_KEY, span);
+}
+function deleteSpan(context) {
+  return context.deleteValue(SPAN_KEY);
+}
+function setSpanContext(context, spanContext) {
+  return setSpan(context, new NonRecordingSpan(spanContext));
+}
+function getSpanContext(context) {
+  var _getSpan;
+  return (_getSpan = getSpan(context)) === null || _getSpan === void 0 ? void 0 : _getSpan.spanContext();
+}
+
+// node_modules/@opentelemetry/api/dist/trace/NoopTracer.mjs
+var contextApi = ContextAPI.getInstance();
+var NoopTracer = class {
+  startSpan(name, options, context = contextApi.active()) {
+    if (Boolean(options === null || options === void 0 ? void 0 : options.root)) return new NonRecordingSpan();
+    const parentFromContext = context && getSpanContext(context);
+    if (isSpanContext(parentFromContext) && isSpanContextValid(parentFromContext)) return new NonRecordingSpan(parentFromContext);
+    else return new NonRecordingSpan();
+  }
+  startActiveSpan(name, arg2, arg3, arg4) {
+    var _ctx;
+    let opts;
+    let ctx;
+    let fn;
+    if (arguments.length < 2) return;
+    else if (arguments.length === 2) fn = arg2;
+    else if (arguments.length === 3) {
+      opts = arg2;
+      fn = arg3;
+    } else {
+      opts = arg2;
+      ctx = arg3;
+      fn = arg4;
+    }
+    const parentContext = (_ctx = ctx) !== null && _ctx !== void 0 ? _ctx : contextApi.active();
+    const span = this.startSpan(name, opts, parentContext);
+    const contextWithSpanSet = setSpan(parentContext, span);
+    return contextApi.with(contextWithSpanSet, fn, void 0, span);
+  }
+};
+function isSpanContext(spanContext) {
+  return spanContext !== null && typeof spanContext === "object" && "spanId" in spanContext && typeof spanContext["spanId"] === "string" && "traceId" in spanContext && typeof spanContext["traceId"] === "string" && "traceFlags" in spanContext && typeof spanContext["traceFlags"] === "number";
+}
+
+// node_modules/@opentelemetry/api/dist/trace/ProxyTracer.mjs
+var NOOP_TRACER = new NoopTracer();
+var ProxyTracer = class {
+  constructor(provider, name, version, options) {
+    this._provider = provider;
+    this.name = name;
+    this.version = version;
+    this.options = options;
+  }
+  startSpan(name, options, context) {
+    return this._getTracer().startSpan(name, options, context);
+  }
+  startActiveSpan(_name, _options, _context, _fn) {
+    const tracer = this._getTracer();
+    return Reflect.apply(tracer.startActiveSpan, tracer, arguments);
+  }
+  /**
+  * Try to get a tracer from the proxy tracer provider.
+  * If the proxy tracer provider has no delegate, return a noop tracer.
+  */
+  _getTracer() {
+    if (this._delegate) return this._delegate;
+    const tracer = this._provider.getDelegateTracer(this.name, this.version, this.options);
+    if (!tracer) return NOOP_TRACER;
+    this._delegate = tracer;
+    return this._delegate;
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/trace/status.mjs
+var SpanStatusCode = /* @__PURE__ */ (function(SpanStatusCode2) {
+  SpanStatusCode2[SpanStatusCode2["UNSET"] = 0] = "UNSET";
+  SpanStatusCode2[SpanStatusCode2["OK"] = 1] = "OK";
+  SpanStatusCode2[SpanStatusCode2["ERROR"] = 2] = "ERROR";
+  return SpanStatusCode2;
+})({});
+
+// node_modules/@opentelemetry/api/dist/trace/NoopTracerProvider.mjs
+var NoopTracerProvider = class {
+  getTracer(_name, _version, _options) {
+    return new NoopTracer();
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/trace/ProxyTracerProvider.mjs
+var NOOP_TRACER_PROVIDER = new NoopTracerProvider();
+var ProxyTracerProvider = class {
+  /**
+  * Get a {@link ProxyTracer}
+  */
+  getTracer(name, version, options) {
+    var _this$getDelegateTrac;
+    return (_this$getDelegateTrac = this.getDelegateTracer(name, version, options)) !== null && _this$getDelegateTrac !== void 0 ? _this$getDelegateTrac : new ProxyTracer(this, name, version, options);
+  }
+  getDelegate() {
+    var _this$_delegate;
+    return (_this$_delegate = this._delegate) !== null && _this$_delegate !== void 0 ? _this$_delegate : NOOP_TRACER_PROVIDER;
+  }
+  /**
+  * Set the delegate tracer provider
+  */
+  setDelegate(delegate) {
+    this._delegate = delegate;
+  }
+  getDelegateTracer(name, version, options) {
+    var _this$_delegate2;
+    return (_this$_delegate2 = this._delegate) === null || _this$_delegate2 === void 0 ? void 0 : _this$_delegate2.getTracer(name, version, options);
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/api/trace.mjs
+var API_NAME3 = "trace";
+var TraceAPI = class TraceAPI2 {
+  /** Empty private constructor prevents end users from constructing a new instance of the API */
+  constructor() {
+    this._proxyTracerProvider = new ProxyTracerProvider();
+    this.wrapSpanContext = wrapSpanContext;
+    this.isSpanContextValid = isSpanContextValid;
+    this.deleteSpan = deleteSpan;
+    this.getSpan = getSpan;
+    this.getActiveSpan = getActiveSpan;
+    this.getSpanContext = getSpanContext;
+    this.setSpan = setSpan;
+    this.setSpanContext = setSpanContext;
+  }
+  /** Get the singleton instance of the Trace API */
+  static getInstance() {
+    if (!this._instance) this._instance = new TraceAPI2();
+    return this._instance;
+  }
+  /**
+  * Set the current global tracer.
+  *
+  * @returns true if the tracer provider was successfully registered, else false
+  */
+  setGlobalTracerProvider(provider) {
+    const success = registerGlobal(API_NAME3, this._proxyTracerProvider, DiagAPI.instance());
+    if (success) this._proxyTracerProvider.setDelegate(provider);
+    return success;
+  }
+  /**
+  * Returns the global tracer provider.
+  */
+  getTracerProvider() {
+    return getGlobal(API_NAME3) || this._proxyTracerProvider;
+  }
+  /**
+  * Returns a tracer from the global tracer provider.
+  */
+  getTracer(name, version) {
+    return this.getTracerProvider().getTracer(name, version);
+  }
+  /** Remove the global tracer provider */
+  disable() {
+    unregisterGlobal(API_NAME3, DiagAPI.instance());
+    this._proxyTracerProvider = new ProxyTracerProvider();
+  }
+};
+
+// node_modules/@opentelemetry/api/dist/trace-api.mjs
+var trace = TraceAPI.getInstance();
+
+// node_modules/@std-uritemplate/std-uritemplate/dist/index.mjs
+var StdUriTemplate = class _StdUriTemplate {
+  static expand(template, substitutions) {
+    return _StdUriTemplate.expandImpl(template, substitutions);
+  }
+  static validateLiteral(c, col) {
+    switch (c) {
+      case "+":
+      case "#":
+      case "/":
+      case ";":
+      case "?":
+      case "&":
+      case " ":
+      case "!":
+      case "=":
+      case "$":
+      case "|":
+      case "*":
+      case ":":
+      case "~":
+      case "-":
+        throw new Error(`Illegal character identified in the token at col: ${col}`);
+      default:
+        break;
+    }
+  }
+  static getMaxChar(buffer, col) {
+    if (!buffer) {
+      return -1;
+    } else {
+      const value = buffer.join("");
+      if (value.length === 0) {
+        return -1;
+      } else {
+        if (value.startsWith("0")) {
+          throw new Error(`Cannot parse max chars at col: ${col}`);
+        }
+        const parsed = parseInt(value, 10);
+        if (isNaN(parsed) || parsed < 1 || parsed > 9999) {
+          throw new Error(`Cannot parse max chars at col: ${col}`);
+        }
+        return parsed;
+      }
+    }
+  }
+  static getOperator(c, token, col) {
+    switch (c) {
+      case "+":
+        return 1;
+      case "#":
+        return 2;
+      case ".":
+        return 3;
+      case "/":
+        return 4;
+      case ";":
+        return 5;
+      case "?":
+        return 6;
+      case "&":
+        return 7;
+      default:
+        _StdUriTemplate.validateLiteral(c, col);
+        token.push(c);
+        return 0;
+    }
+  }
+  static expandImpl(str, substitutions) {
+    const result = [];
+    let token = null;
+    let operator = null;
+    let composite = false;
+    let maxCharBuffer = null;
+    let firstToken = true;
+    for (let i = 0; i < str.length; i++) {
+      const character = str.charAt(i);
+      switch (character) {
+        case "{":
+          token = [];
+          firstToken = true;
+          break;
+        case "}":
+          if (token !== null) {
+            if (maxCharBuffer !== null && maxCharBuffer.length === 0) {
+              throw new Error(`Found an empty prefix at col: ${i}`);
+            }
+            const expanded = _StdUriTemplate.expandToken(operator, token.join(""), composite, _StdUriTemplate.getMaxChar(maxCharBuffer, i), firstToken, substitutions, result, i);
+            if (expanded && firstToken) {
+              firstToken = false;
+            }
+            token = null;
+            operator = null;
+            composite = false;
+            maxCharBuffer = null;
+          } else {
+            throw new Error(`Failed to expand token, invalid at col: ${i}`);
+          }
+          break;
+        case ",":
+          if (token !== null) {
+            if (maxCharBuffer !== null && maxCharBuffer.length === 0) {
+              throw new Error(`Found an empty prefix at col: ${i}`);
+            }
+            const expanded = _StdUriTemplate.expandToken(operator, token.join(""), composite, _StdUriTemplate.getMaxChar(maxCharBuffer, i), firstToken, substitutions, result, i);
+            if (expanded && firstToken) {
+              firstToken = false;
+            }
+            token = [];
+            composite = false;
+            maxCharBuffer = null;
+            break;
+          }
+        // Intentional fall-through for commas outside the {}
+        default:
+          if (token !== null) {
+            if (operator === null) {
+              operator = _StdUriTemplate.getOperator(character, token, i);
+            } else if (maxCharBuffer !== null) {
+              if (character >= "0" && character <= "9") {
+                maxCharBuffer.push(character);
+              } else {
+                throw new Error(`Illegal character identified in the token at col: ${i}`);
+              }
+            } else {
+              if (character === ":") {
+                maxCharBuffer = [];
+              } else if (character === "*") {
+                composite = true;
+              } else {
+                _StdUriTemplate.validateLiteral(character, i);
+                token.push(character);
+              }
+            }
+          } else {
+            const cp = character.codePointAt(0);
+            if (cp > 127 || cp >= 55296 && cp <= 56319) {
+              let toEncode;
+              if (cp >= 55296 && cp <= 56319 && i + 1 < str.length) {
+                toEncode = character + str.charAt(++i);
+              } else {
+                toEncode = character;
+              }
+              result.push(encodeURIComponent(toEncode));
+            } else {
+              result.push(character);
+            }
+          }
+          break;
+      }
+    }
+    if (token === null) {
+      return result.join("");
+    } else {
+      throw new Error("Unterminated token");
+    }
+  }
+  static addPrefix(op, result) {
+    switch (op) {
+      case 2:
+        result.push("#");
+        break;
+      case 3:
+        result.push(".");
+        break;
+      case 4:
+        result.push("/");
+        break;
+      case 5:
+        result.push(";");
+        break;
+      case 6:
+        result.push("?");
+        break;
+      case 7:
+        result.push("&");
+        break;
+      default:
+        return;
+    }
+  }
+  static addSeparator(op, result) {
+    switch (op) {
+      case 3:
+        result.push(".");
+        break;
+      case 4:
+        result.push("/");
+        break;
+      case 5:
+        result.push(";");
+        break;
+      case 6:
+      case 7:
+        result.push("&");
+        break;
+      default:
+        result.push(",");
+        return;
+    }
+  }
+  static addValue(op, token, value, result, maxChar) {
+    switch (op) {
+      case 1:
+      case 2:
+        _StdUriTemplate.addExpandedValue(null, value, result, maxChar, false);
+        break;
+      case 6:
+      case 7:
+        result.push(`${token}=`);
+        _StdUriTemplate.addExpandedValue(null, value, result, maxChar, true);
+        break;
+      case 5:
+        result.push(token);
+        _StdUriTemplate.addExpandedValue("=", value, result, maxChar, true);
+        break;
+      case 3:
+      case 4:
+      case 0:
+        _StdUriTemplate.addExpandedValue(null, value, result, maxChar, true);
+        break;
+    }
+  }
+  static addValueElement(op, token, value, result, maxChar) {
+    switch (op) {
+      case 1:
+      case 2:
+        _StdUriTemplate.addExpandedValue(null, value, result, maxChar, false);
+        break;
+      case 6:
+      case 7:
+      case 5:
+      case 3:
+      case 4:
+      case 0:
+        _StdUriTemplate.addExpandedValue(null, value, result, maxChar, true);
+        break;
+    }
+  }
+  static isSurrogate(cp) {
+    const codeUnit = cp.charCodeAt(0);
+    return codeUnit >= 55296 && codeUnit <= 56319;
+  }
+  static isIprivate(cp) {
+    return 57344 <= cp.charCodeAt(0) && cp.charCodeAt(0) <= 63743;
+  }
+  static isUcschar(cp) {
+    const codePoint = cp.codePointAt(0) || 0;
+    return 160 <= codePoint && codePoint <= 55295 || 63744 <= codePoint && codePoint <= 64975 || 65008 <= codePoint && codePoint <= 65519;
+  }
+  static addExpandedValue(prefix, value, result, maxChar, replaceReserved) {
+    const stringValue = _StdUriTemplate.convertNativeTypes(value);
+    const codePoints = Array.from(stringValue);
+    const max = maxChar !== -1 ? Math.min(maxChar, codePoints.length) : codePoints.length;
+    let reservedBuffer = void 0;
+    if (max > 0 && prefix != null) {
+      result.push(prefix);
+    }
+    for (let i = 0; i < max; i++) {
+      const character = codePoints[i];
+      if (character === "%" && !replaceReserved) {
+        reservedBuffer = [];
+      }
+      let toAppend = character;
+      const cp = character.codePointAt(0) || 0;
+      if (cp > 65535) {
+        toAppend = encodeURIComponent(character);
+      } else if (replaceReserved || _StdUriTemplate.isUcschar(character) || _StdUriTemplate.isIprivate(character)) {
+        if (character === "!") {
+          toAppend = "%21";
+        } else {
+          toAppend = encodeURIComponent(toAppend);
+        }
+      }
+      if (reservedBuffer) {
+        reservedBuffer.push(toAppend);
+        if (reservedBuffer.length === 3) {
+          let isEncoded = false;
+          try {
+            const reserved = reservedBuffer.join("");
+            const decoded = decodeURIComponent(reservedBuffer.join(""));
+            isEncoded = reserved !== decoded;
+          } catch (e) {
+          }
+          if (isEncoded) {
+            result.push(reservedBuffer.join(""));
+          } else {
+            result.push("%25");
+            result.push(reservedBuffer.slice(1).join(""));
+          }
+          reservedBuffer = void 0;
+        }
+      } else {
+        if (character === " ") {
+          result.push("%20");
+        } else if (character === "%") {
+          result.push("%25");
+        } else {
+          result.push(toAppend);
+        }
+      }
+    }
+    if (reservedBuffer) {
+      result.push("%25");
+      result.push(reservedBuffer.slice(1).join(""));
+    }
+  }
+  static isList(value) {
+    return Array.isArray(value) || value instanceof Set;
+  }
+  static isMap(value) {
+    return value instanceof Map || typeof value === "object";
+  }
+  static getSubstitutionType(value, col) {
+    if (value === void 0 || value === null) {
+      return 0;
+    } else if (_StdUriTemplate.isNativeType(value)) {
+      return 1;
+    } else if (_StdUriTemplate.isList(value)) {
+      return 2;
+    } else if (_StdUriTemplate.isMap(value)) {
+      return 3;
+    } else {
+      throw new Error(`Illegal class passed as substitution, found ${typeof value} at col: ${col}`);
+    }
+  }
+  static isEmpty(substType, value) {
+    if (value === void 0 || value === null) {
+      return true;
+    } else {
+      switch (substType) {
+        case 1:
+          return false;
+        case 2:
+          return value.length === 0;
+        case 3:
+          return Object.keys(value).length === 0;
+        default:
+          return true;
+      }
+    }
+  }
+  static isNativeType(value) {
+    return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
+  }
+  static convertNativeTypes(value) {
+    if (typeof value === "string") {
+      return value;
+    } else if (typeof value === "number" || typeof value === "boolean") {
+      return value.toString();
+    } else {
+      throw new Error(`Illegal class passed as substitution, found ${typeof value}`);
+    }
+  }
+  static isHexDigit(c) {
+    return c >= "0" && c <= "9" || c >= "A" && c <= "F" || c >= "a" && c <= "f";
+  }
+  static checkVarname(token, col) {
+    if (token.startsWith(".") || token.endsWith(".")) {
+      throw new Error(`Invalid variable name at col: ${col}`);
+    }
+    if (token.indexOf("..") !== -1) {
+      throw new Error(`Invalid variable name at col: ${col}`);
+    }
+    for (let i = 0; i < token.length; i++) {
+      if (token.charAt(i) === "%") {
+        if (i + 2 >= token.length || !_StdUriTemplate.isHexDigit(token.charAt(i + 1)) || !_StdUriTemplate.isHexDigit(token.charAt(i + 2))) {
+          throw new Error(`Invalid variable name at col: ${col}`);
+        }
+      }
+    }
+  }
+  static expandToken(operator, token, composite, maxChar, firstToken, substitutions, result, col) {
+    if (token.length === 0) {
+      throw new Error(`Found an empty token at col: ${col}`);
+    }
+    _StdUriTemplate.checkVarname(token, col);
+    const value = substitutions[token];
+    const substType = _StdUriTemplate.getSubstitutionType(value, col);
+    if (substType === 0 || _StdUriTemplate.isEmpty(substType, value)) {
+      return false;
+    }
+    if (firstToken) {
+      _StdUriTemplate.addPrefix(operator, result);
+    } else {
+      _StdUriTemplate.addSeparator(operator, result);
+    }
+    switch (substType) {
+      case 1:
+        _StdUriTemplate.addStringValue(operator, token, value, result, maxChar);
+        break;
+      case 2:
+        _StdUriTemplate.addListValue(operator, token, value, result, maxChar, composite);
+        break;
+      case 3:
+        _StdUriTemplate.addMapValue(operator, token, value, result, maxChar, composite);
+        break;
+    }
+    return true;
+  }
+  static addStringValue(operator, token, value, result, maxChar) {
+    _StdUriTemplate.addValue(operator, token, value, result, maxChar);
+  }
+  static addListValue(operator, token, value, result, maxChar, composite) {
+    let first = true;
+    for (const v of value) {
+      if (first) {
+        _StdUriTemplate.addValue(operator, token, v, result, maxChar);
+        first = false;
+      } else {
+        if (composite) {
+          _StdUriTemplate.addSeparator(operator, result);
+          _StdUriTemplate.addValue(operator, token, v, result, maxChar);
+        } else {
+          result.push(",");
+          _StdUriTemplate.addValueElement(operator, token, v, result, maxChar);
+        }
+      }
+    }
+  }
+  static addMapValue(operator, token, value, result, maxChar, composite) {
+    let first = true;
+    if (maxChar !== -1) {
+      throw new Error("Value trimming is not allowed on Maps");
+    }
+    for (const key in value) {
+      const v = value[key];
+      if (composite) {
+        if (!first) {
+          _StdUriTemplate.addSeparator(operator, result);
+        }
+        _StdUriTemplate.addValueElement(operator, token, key, result, maxChar);
+        result.push("=");
+      } else {
+        if (first) {
+          _StdUriTemplate.addValue(operator, token, key, result, maxChar);
+        } else {
+          result.push(",");
+          _StdUriTemplate.addValueElement(operator, token, key, result, maxChar);
+        }
+        result.push(",");
+      }
+      _StdUriTemplate.addValueElement(operator, token, v, result, maxChar);
+      first = false;
+    }
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/dateOnly.js
+var DateOnly = class _DateOnly {
+  /**
+   * Creates a new DateOnly from the given string.
+   * @param root0 The year, month, and day
+   * @param root0.year The year
+   * @param root0.month The month
+   * @param root0.day The day
+   * @returns The new DateOnly
+   * @throws An error if the year is invalid
+   * @throws An error if the month is invalid
+   * @throws An error if the day is invalid
+   */
+  constructor({ year = 0, month = 1, day = 1 }) {
+    this.day = day;
+    this.month = month;
+    this.year = year;
+  }
+  /**
+   * Creates a new DateOnly from the given date.
+   * @param date The date
+   * @returns The new DateOnly
+   * @throws An error if the date is invalid
+   */
+  static fromDate(date) {
+    if (!date) {
+      throw new Error("Date cannot be undefined");
+    }
+    const result = new _DateOnly({
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate()
+    });
+    return result;
+  }
+  /**
+   * Parses a string into a DateOnly. The string can be of the ISO 8601 time only format or a number representing the ticks of a Date.
+   * @param value The value to parse
+   * @returns The parsed DateOnly.
+   * @throws An error if the value is invalid
+   */
+  static parse(value) {
+    if (!value || value.length === 0) {
+      return void 0;
+    }
+    const exec = /^(\d{4,})-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/gi.exec(value);
+    if (exec) {
+      const year = parseInt(exec[1], 10);
+      const month = parseInt(exec[2], 10);
+      const day = parseInt(exec[3], 10);
+      return new _DateOnly({ year, month, day });
+    }
+    const ticks = Date.parse(value);
+    if (!isNaN(ticks)) {
+      const date = new Date(ticks);
+      return this.fromDate(date);
+    }
+    throw new Error(`Value is not a valid date-only representation: ${value}`);
+  }
+  /**
+   *  Returns a string representation of the date in the format YYYY-MM-DD
+   * @returns The date in the format YYYY-MM-DD ISO 8601
+   */
+  toString() {
+    return `${formatSegment(this.year, 4)}-${formatSegment(this.month)}-${formatSegment(this.day)}`;
+  }
+};
+function formatSegment(segment, digits = 2) {
+  return segment.toString().padStart(digits, "0");
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/duration.js
+var import_tinyduration = __toESM(require_dist(), 1);
+var Duration = class _Duration {
+  /**
+   * Creates a new Duration value from the given parameters.
+   * @param root0 The years, months, weeks, days, hours, minutes, seconds, and negative flag
+   * @param root0.years The years
+   * @param root0.months The months
+   * @param root0.weeks The weeks
+   * @param root0.days The days
+   * @param root0.hours The hours
+   * @param root0.minutes The minutes
+   * @param root0.seconds The seconds
+   * @param root0.negative The negative flag
+   * @returns The new Duration
+   * @throws An error if years is invalid
+   * @throws An error if months is invalid
+   * @throws An error if weeks is invalid
+   * @throws An error if days is invalid
+   * @throws An error if hours is invalid
+   * @throws An error if minutes is invalid
+   * @throws An error if seconds is invalid
+   * @throws An error if weeks is used in combination with years or months
+   */
+  constructor({ years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0, negative = false }) {
+    if (years < 0 || years > 9999) {
+      throw new Error("Year must be between 0 and 9999");
+    }
+    if (months < 0) {
+      throw new Error("Month must be greater or equal to 0");
+    }
+    if (weeks < 0) {
+      throw new Error("Week must be greater or equal to 0");
+    }
+    if (days < 0) {
+      throw new Error("Day must be greater or equal to 0");
+    }
+    if (hours < 0) {
+      throw new Error("Hour must be greater or equal to 0");
+    }
+    if (minutes < 0) {
+      throw new Error("Minute must be greater or equal to 0");
+    }
+    if (seconds < 0) {
+      throw new Error("Second must be greater or equal to 0");
+    }
+    if (weeks > 0 && (days > 0 || hours > 0 || minutes > 0 || seconds > 0)) {
+      throw new Error("Cannot have weeks and days or hours or minutes or seconds");
+    }
+    if ((years > 0 || months > 0) && weeks > 0) {
+      throw new Error("Cannot have weeks and months or weeks and years");
+    }
+    this.years = years;
+    this.months = months;
+    this.weeks = weeks;
+    this.days = days;
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = seconds;
+    this.negative = negative;
+  }
+  /**
+   * Parses a string into a Duration. The string can be of the ISO 8601 duration format.
+   * @param value The value to parse
+   * @returns The parsed Duration.
+   * @throws An error if the value is invalid
+   */
+  static parse(value) {
+    var _a2, _b, _c, _d, _e, _f, _g, _h;
+    if (!value || value.length === 0) {
+      return void 0;
+    }
+    const duration = (0, import_tinyduration.parse)(value);
+    return new _Duration({
+      years: (_a2 = duration.years) !== null && _a2 !== void 0 ? _a2 : 0,
+      months: (_b = duration.months) !== null && _b !== void 0 ? _b : 0,
+      weeks: (_c = duration.weeks) !== null && _c !== void 0 ? _c : 0,
+      days: (_d = duration.days) !== null && _d !== void 0 ? _d : 0,
+      hours: (_e = duration.hours) !== null && _e !== void 0 ? _e : 0,
+      minutes: (_f = duration.minutes) !== null && _f !== void 0 ? _f : 0,
+      seconds: (_g = duration.seconds) !== null && _g !== void 0 ? _g : 0,
+      negative: (_h = duration.negative) !== null && _h !== void 0 ? _h : false
+    });
+  }
+  /**
+   * Serializes the duration to a string in the ISO 8601 duration format.
+   * @returns The serialized duration.
+   */
+  toString() {
+    return (0, import_tinyduration.serialize)(this);
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/recordWithCaseInsensitiveKeys.js
+function dictionaryWithCanonicalKeys(canon) {
+  const keysNormalizationMap = /* @__PURE__ */ new Map();
+  return new Proxy({}, {
+    /**
+     * Intercept the get operation on the dictionary object and forward it to the target object using Reflect.get.
+     * @param target The target object.
+     * @param prop The property to get.
+     * @returns The value of the property.
+     */
+    get(target, prop) {
+      const normalKey = canon(prop);
+      return Reflect.get(target, normalKey);
+    },
+    /**
+     * Intercept the set operation on the dictionary object and forward it to the target object using Reflect.set.
+     * @param target The target object.
+     * @param prop The property to set.
+     * @param value The value to set.
+     * @returns A boolean indicating whether the property was set.
+     */
+    set(target, prop, value) {
+      const nonNormalKey = prop.toString();
+      const normalKey = canon(prop);
+      keysNormalizationMap.set(normalKey, nonNormalKey);
+      return Reflect.set(target, normalKey, value);
+    },
+    /**
+     * Intercept the has operation on the dictionary object and forward it to the target object using Reflect.has.
+     * @param _ the target object.
+     * @param prop The property to check.
+     * @returns A boolean indicating whether the property exists.
+     */
+    has(_, prop) {
+      const normalKey = canon(prop);
+      return keysNormalizationMap.has(normalKey);
+    },
+    /**
+     * Intercept the defineProperty operation on the dictionary object and forward it to the target object using Reflect.defineProperty.
+     * @param target The target object.
+     * @param prop The property to define.
+     * @param attribs The attributes of the property.
+     * @returns A boolean indicating whether the property was defined.
+     */
+    defineProperty(target, prop, attribs) {
+      const nonNormalKey = prop.toString();
+      const normalKey = canon(prop);
+      keysNormalizationMap.set(normalKey, nonNormalKey);
+      return Reflect.defineProperty(target, normalKey, attribs);
+    },
+    /**
+     * Intercept the deleteProperty operation on the dictionary object and forward it to the target object using Reflect.deleteProperty.
+     * @param target The target object.
+     * @param prop The property to delete.
+     * @returns A boolean indicating whether the property was deleted.
+     */
+    deleteProperty(target, prop) {
+      const normalKey = canon(prop);
+      keysNormalizationMap.delete(normalKey);
+      return Reflect.deleteProperty(target, normalKey);
+    },
+    /**
+     * Intercept the getOwnPropertyDescriptor operation on the dictionary object and forward it to the target object using Reflect.getOwnPropertyDescriptor.
+     * @param target The target object.
+     * @param prop The property to gets its descriptor.
+     * @returns The property descriptor.
+     */
+    getOwnPropertyDescriptor(target, prop) {
+      return Reflect.getOwnPropertyDescriptor(target, canon(prop));
+    },
+    ownKeys() {
+      return [...keysNormalizationMap.values()];
+    }
+  });
+}
+function createRecordWithCaseInsensitiveKeys() {
+  const record = dictionaryWithCanonicalKeys((p) => typeof p === "string" ? p.toLowerCase() : p.toString().toLowerCase());
+  return record;
+}
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/headers.js
+var Headers2 = class extends Map {
+  /**
+   * Creates a new Headers object.
+   * @param entries An iterable object that contains key-value pairs. Each key-value pair must be an array with two elements: the key of the header, and the value of the header.
+   * @example
+   * ```typescript
+   *  const entries: [string, Set<string>][] = [
+   *    ['header1', new Set(['value1'])],
+   *    ['header2', new Set(['value2', 'value3'])]
+   *  ];
+   *  const headers = new Headers(entries);
+   * ```
+   */
+  constructor(entries) {
+    super();
+    this.headers = createRecordWithCaseInsensitiveKeys();
+    this.singleValueHeaders = /* @__PURE__ */ new Set(["Content-Type", "Content-Encoding", "Content-Length"]);
+    if (entries) {
+      entries.forEach(([key, value]) => {
+        this.headers[key] = value;
+      });
+    }
+  }
+  /**
+   * Sets a header with the specified name and value. If a header with the same name already exists, its value is appended with the specified value.
+   * @param headerName the name of the header to set
+   * @param headerValue the value of the header to set
+   * @returns Headers object
+   */
+  set(headerName, headerValue) {
+    this.add(headerName, ...headerValue);
+    return this;
+  }
+  /**
+   * Gets the values for the header with the specified name.
+   * @param headerName The name of the header to get the values for.
+   * @returns The values for the header with the specified name.
+   * @throws Error if headerName is null or empty
+   */
+  get(headerName) {
+    if (!headerName) {
+      throw new Error("headerName cannot be null or empty");
+    }
+    return this.headers[headerName];
+  }
+  /**
+   * Checks if a header exists.
+   * @param key The name of the header to check for.
+   * @returns whether or not a header with the given name/key exists.
+   */
+  has(key) {
+    return !!key && !!this.headers[key];
+  }
+  /**
+   * Delete the header with the specified name.
+   * @param headerName The name of the header to delete.
+   * @returns Whether or not the header existed and was deleted.
+   * @throws Error if headerName is null or empty
+   */
+  delete(headerName) {
+    if (!headerName) {
+      throw new Error("headerName cannot be null or empty");
+    }
+    if (this.headers[headerName]) {
+      delete this.headers[headerName];
+      return true;
+    }
+    return false;
+  }
+  /**
+   * clear the headers collection
+   */
+  clear() {
+    for (const header in this.headers) {
+      if (Object.prototype.hasOwnProperty.call(this.headers, header)) {
+        delete this.headers[header];
+      }
+    }
+  }
+  /**
+   * execute a provided function once per each header
+   * @param callbackfn A function that accepts up to three arguments. forEach calls the callbackfn function one time for each header in the dictionary.
+   * @param thisArg An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+   */
+  forEach(callbackfn, thisArg) {
+    for (const header in this.headers) {
+      if (Object.prototype.hasOwnProperty.call(this.headers, header)) {
+        callbackfn.call(thisArg, this.headers[header], header, this);
+      }
+    }
+  }
+  /**
+   * Adds values to the header with the specified name.
+   * @param headerName The name of the header to add values to.
+   * @param headerValues The values to add to the header.
+   * @returns Whether or not the values were added to the header.
+   */
+  add(headerName, ...headerValues) {
+    if (!headerName) {
+      console.error("headerName cannot be null or empty");
+      return false;
+    }
+    if (!headerValues) {
+      console.error("headerValues cannot be null");
+      return false;
+    }
+    if (headerValues.length === 0) {
+      return false;
+    }
+    if (this.singleValueHeaders.has(headerName)) {
+      this.headers[headerName] = /* @__PURE__ */ new Set([headerValues[0]]);
+    } else if (this.headers[headerName]) {
+      headerValues.forEach((headerValue) => this.headers[headerName].add(headerValue));
+    } else {
+      this.headers[headerName] = new Set(headerValues);
+    }
+    return true;
+  }
+  /**
+   * Adds values to the header with the specified name if it's not already present
+   * @param headerName The name of the header to add values to.
+   * @param headerValue The values to add to the header.
+   * @returns If the headerValue have been added to the Dictionary.
+   */
+  tryAdd(headerName, headerValue) {
+    if (!headerName) {
+      throw new Error("headerName cannot be null or empty");
+    }
+    if (!headerValue) {
+      throw new Error("headerValue cannot be null");
+    }
+    if (!this.headers[headerName]) {
+      this.headers[headerName] = /* @__PURE__ */ new Set([headerValue]);
+      return true;
+    }
+    return false;
+  }
+  /**
+   * Removes the specified value from the header with the specified name.
+   * @param headerName The name of the header to remove the value from.
+   * @param headerValue The value to remove from the header.
+   * @returns Whether or not the header existed and was removed.
+   * @throws Error if headerName is null or empty
+   * @throws Error if headerValue is null
+   */
+  remove(headerName, headerValue) {
+    if (!headerName) {
+      throw new Error("headerName cannot be null or empty");
+    }
+    if (!headerValue) {
+      throw new Error("headerValue cannot be null");
+    }
+    if (this.headers[headerName]) {
+      const result = this.headers[headerName].delete(headerValue);
+      if (this.headers[headerName].size === 0) {
+        delete this.headers[headerName];
+      }
+      return result;
+    }
+    return false;
+  }
+  /**
+   * Adds all the headers values from the specified headers collection.
+   * @param headers The headers to update the current headers with.
+   * @throws Error if headers is null
+   */
+  addAll(headers) {
+    if (!headers) {
+      throw new Error("headers cannot be null");
+    }
+    for (const header in headers.headers) {
+      if (Object.prototype.hasOwnProperty.call(headers.headers, header)) {
+        headers.headers[header].forEach((value) => this.add(header, value));
+      }
+    }
+  }
+  /**
+   * Adds all headers from the request configuration value to the current headers collection.
+   * Replaces any existing headers with the same key.
+   * @param headers The headers to update the current headers with.
+   * @throws Error if headers is null
+   */
+  addAllRaw(headers) {
+    if (!headers) {
+      throw new Error("headers cannot be null");
+    }
+    for (const header in headers) {
+      if (Object.prototype.hasOwnProperty.call(headers, header)) {
+        const headerValues = headers[header];
+        if (Array.isArray(headerValues)) {
+          this.add(header, ...headerValues);
+        } else {
+          this.add(header, headerValues);
+        }
+      }
+    }
+  }
+  /**
+   * Gets the values for the header with the specified name.
+   * @param key The name of the header to get the values for.
+   * @returns The values for the header with the specified name.
+   * @throws Error if key is null or empty
+   */
+  tryGetValue(key) {
+    if (!key) {
+      throw new Error("key cannot be null or empty");
+    }
+    return this.headers[key] ? Array.from(this.headers[key]) : null;
+  }
+  /**
+   * Override toString method for the headers collection
+   * @returns a string representation of the headers collection
+   */
+  toString() {
+    return JSON.stringify(this.headers, (_key, value) => value instanceof Set ? [...value] : value);
+  }
+  /**
+   * check if the headers collection is empty
+   * @returns a boolean indicating if the headers collection is empty
+   */
+  isEmpty() {
+    return Object.keys(this.headers).length === 0;
+  }
+  /**
+   * get keys of the headers collection
+   * @returns an iterator of keys
+   */
+  keys() {
+    return Object.keys(this.headers)[Symbol.iterator]();
+  }
+  /**
+   * get entries
+   * @returns an iterator of entries
+   */
+  entries() {
+    return Object.entries(this.headers)[Symbol.iterator]();
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/multipartBody.js
+var MultipartBody = class {
+  /**
+   * Instantiates a new MultipartBody.
+   */
+  constructor() {
+    this._parts = {};
+    this._boundary = createGuid().replace(/-/g, "");
+  }
+  /**
+   * Adds or replaces a part with the given name, content type and content.
+   * @param partName the name of the part to add or replace.
+   * @param partContentType the content type of the part to add or replace.
+   * @param content the content of the part to add or replace.
+   * @param serializationCallback the serialization callback to use when serializing the part.
+   * @param fileName the name of the file associated with this part.
+   */
+  addOrReplacePart(partName, partContentType, content, serializationCallback, fileName) {
+    if (!partName)
+      throw new Error("partName cannot be undefined");
+    if (!partContentType) {
+      throw new Error("partContentType cannot be undefined");
+    }
+    if (!content)
+      throw new Error("content cannot be undefined");
+    const normalizePartName = this.normalizePartName(partName);
+    this._parts[normalizePartName] = {
+      contentType: partContentType,
+      content,
+      originalName: partName,
+      fileName,
+      serializationCallback
+    };
+  }
+  /**
+   * Gets the content of the part with the given name.
+   * @param partName the name of the part to get the content for.
+   * @returns the content of the part with the given name.
+   */
+  getPartValue(partName) {
+    if (!partName)
+      throw new Error("partName cannot be undefined");
+    const normalizePartName = this.normalizePartName(partName);
+    const candidate = this._parts[normalizePartName];
+    if (!candidate)
+      return void 0;
+    return candidate.content;
+  }
+  /**
+   * Removes the part with the given name.
+   * @param partName the name of the part to remove.
+   * @returns true if the part was removed, false if it did not exist.
+   */
+  removePart(partName) {
+    if (!partName)
+      throw new Error("partName cannot be undefined");
+    const normalizePartName = this.normalizePartName(partName);
+    if (!this._parts[normalizePartName])
+      return false;
+    delete this._parts[normalizePartName];
+    return true;
+  }
+  /**
+   * Gets the boundary used to separate each part.
+   * @returns the boundary value.
+   */
+  getBoundary() {
+    return this._boundary;
+  }
+  normalizePartName(original) {
+    return original.toLocaleLowerCase();
+  }
+  /**
+   * Lists all the parts in the multipart body.
+   * WARNING: meant for internal use only
+   * @returns the list of parts in the multipart body.
+   */
+  listParts() {
+    return this._parts;
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/timeOnly.js
+var TimeOnly = class _TimeOnly {
+  /**
+   * Creates a new TimeOnly from the given parameters.
+   * @param root0 The hours, minutes, seconds, and milliseconds
+   * @param root0.hours The hours
+   * @param root0.minutes The minutes
+   * @param root0.seconds The seconds
+   * @param root0.picoseconds The milliseconds
+   * @returns The new TimeOnly
+   * @throws An error if the milliseconds are invalid
+   * @throws An error if the seconds are invalid
+   * @throws An error if the minutes are invalid
+   * @throws An error if the hours are invalid
+   * @throws An error if the milliseconds are invalid
+   */
+  constructor({ hours = 0, minutes = 0, seconds = 0, picoseconds = 0 }) {
+    if (hours < 0 || hours > 23) {
+      throw new Error("Hour must be between 0 and 23");
+    }
+    if (minutes < 0 || minutes > 59) {
+      throw new Error("Minute must be between 0 and 59");
+    }
+    if (seconds < 0 || seconds > 59) {
+      throw new Error("Second must be between 0 and 59");
+    }
+    if (picoseconds < 0 || picoseconds > 9999999) {
+      throw new Error("Millisecond must be between 0 and 9999999");
+    }
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = seconds;
+    this.picoseconds = picoseconds;
+  }
+  /**
+   * Creates a new TimeOnly from the given date.
+   * @param date The date
+   * @returns The new TimeOnly
+   * @throws An error if the date is invalid
+   */
+  static fromDate(date) {
+    if (!date) {
+      throw new Error("Date cannot be undefined");
+    }
+    return new _TimeOnly({
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+      seconds: date.getSeconds(),
+      picoseconds: date.getMilliseconds() * 1e4
+    });
+  }
+  /**
+   * Parses a string into a TimeOnly. The string can be of the ISO 8601 time only format or a number representing the ticks of a Date.
+   * @param value The value to parse
+   * @returns The parsed TimeOnly.
+   * @throws An error if the value is invalid
+   */
+  static parse(value) {
+    var _a2, _b, _c, _d;
+    if (!value || value.length === 0) {
+      return void 0;
+    }
+    const ticks = Date.parse(value);
+    if (isNaN(ticks)) {
+      const exec = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(?:[.](\d{1,12}))?$/gi.exec(value);
+      if (exec) {
+        const hours = parseInt((_a2 = exec[1]) !== null && _a2 !== void 0 ? _a2 : "", 10);
+        const minutes = parseInt((_b = exec[2]) !== null && _b !== void 0 ? _b : "", 10);
+        const seconds = parseInt((_c = exec[3]) !== null && _c !== void 0 ? _c : "", 10);
+        const milliseconds = parseInt((_d = exec[4]) !== null && _d !== void 0 ? _d : "0", 10);
+        return new _TimeOnly({
+          hours,
+          minutes,
+          seconds,
+          picoseconds: milliseconds
+        });
+      } else {
+        throw new Error("Value is not a valid time-only representation");
+      }
+    } else {
+      const date = new Date(ticks);
+      return this.fromDate(date);
+    }
+  }
+  /**
+   * Returns a string representation of the time in the format HH:MM:SS.SSSSSSS
+   * @returns The time in the format HH:MM:SS.SSSSSSS
+   * @throws An error if the time is invalid
+   */
+  toString() {
+    return `${formatSegment(this.hours, 2)}:${formatSegment(this.minutes, 2)}:${formatSegment(this.seconds, 2)}.${formatSegment(this.picoseconds, 7)}`;
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/requestInformation.js
+var RequestInformation = class _RequestInformation {
+  /**
+   * Initializes a request information instance with the provided values.
+   * @param httpMethod The HTTP method for the request.
+   * @param urlTemplate The URL template for the request.
+   * @param pathParameters The path parameters for the request.
+   */
+  constructor(httpMethod, urlTemplate, pathParameters) {
+    this.pathParameters = createRecordWithCaseInsensitiveKeys();
+    this.queryParameters = createRecordWithCaseInsensitiveKeys();
+    this.headers = new Headers2();
+    this._requestOptions = createRecordWithCaseInsensitiveKeys();
+    this.setContentFromParsable = (requestAdapter, contentType, value, modelSerializerFunction) => {
+      trace.getTracer(_RequestInformation.tracerKey).startActiveSpan("setContentFromParsable", (span) => {
+        try {
+          const writer = this.getSerializationWriter(requestAdapter, contentType, value);
+          if (value instanceof MultipartBody) {
+            contentType += "; boundary=" + value.getBoundary();
+          }
+          if (!this.headers) {
+            this.headers = new Headers2();
+          }
+          if (Array.isArray(value)) {
+            span.setAttribute(_RequestInformation.requestTypeKey, "object[]");
+            writer.writeCollectionOfObjectValues(void 0, value, modelSerializerFunction);
+          } else {
+            span.setAttribute(_RequestInformation.requestTypeKey, "object");
+            writer.writeObjectValue(void 0, value, modelSerializerFunction);
+          }
+          this.setContentAndContentType(writer, contentType);
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.setContentAndContentType = (writer, contentType) => {
+      if (contentType) {
+        this.headers.tryAdd(_RequestInformation.contentTypeHeader, contentType);
+      }
+      this.content = writer.getSerializedContent();
+    };
+    this.getSerializationWriter = (requestAdapter, contentType, ...values) => {
+      if (!requestAdapter)
+        throw new Error("httpCore cannot be undefined");
+      if (!contentType)
+        throw new Error("contentType cannot be undefined");
+      if (!values || values.length === 0) {
+        throw new Error("values cannot be undefined or empty");
+      }
+      return requestAdapter.getSerializationWriterFactory().getSerializationWriter(contentType);
+    };
+    this.setContentFromScalar = (requestAdapter, contentType, value) => {
+      trace.getTracer(_RequestInformation.tracerKey).startActiveSpan("setContentFromScalar", (span) => {
+        try {
+          const writer = this.getSerializationWriter(requestAdapter, contentType, value);
+          if (!this.headers) {
+            this.headers = new Headers2();
+          }
+          if (Array.isArray(value)) {
+            span.setAttribute(_RequestInformation.requestTypeKey, "[]");
+            writer.writeCollectionOfPrimitiveValues(void 0, value);
+          } else {
+            const valueType = typeof value;
+            span.setAttribute(_RequestInformation.requestTypeKey, valueType);
+            if (!value) {
+              writer.writeNullValue(void 0);
+            } else if (valueType === "boolean") {
+              writer.writeBooleanValue(void 0, value);
+            } else if (valueType === "string") {
+              writer.writeStringValue(void 0, value);
+            } else if (value instanceof Date) {
+              writer.writeDateValue(void 0, value);
+            } else if (value instanceof DateOnly) {
+              writer.writeDateOnlyValue(void 0, value);
+            } else if (value instanceof TimeOnly) {
+              writer.writeTimeOnlyValue(void 0, value);
+            } else if (value instanceof Duration) {
+              writer.writeDurationValue(void 0, value);
+            } else if (valueType === "number") {
+              writer.writeNumberValue(void 0, value);
+            } else if (Array.isArray(value)) {
+              writer.writeCollectionOfPrimitiveValues(void 0, value);
+            } else {
+              throw new Error(`encountered unknown value type during serialization ${valueType}`);
+            }
+          }
+          this.setContentAndContentType(writer, contentType);
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.setStreamContent = (value, contentType) => {
+      if (!contentType) {
+        contentType = _RequestInformation.binaryContentType;
+      }
+      this.headers.tryAdd(_RequestInformation.contentTypeHeader, contentType);
+      this.content = value;
+    };
+    if (httpMethod) {
+      this.httpMethod = httpMethod;
+    }
+    if (urlTemplate) {
+      this.urlTemplate = urlTemplate;
+    }
+    if (pathParameters) {
+      this.pathParameters = pathParameters;
+    }
+  }
+  /**
+   * Gets the URL of the request
+   * @returns the url string
+   */
+  get URL() {
+    const rawUrl = this.pathParameters[_RequestInformation.raw_url_key];
+    if (this.uri) {
+      return this.uri;
+    } else if (rawUrl) {
+      this.URL = rawUrl;
+      return rawUrl;
+    } else if (!this.queryParameters) {
+      throw new Error("queryParameters cannot be undefined");
+    } else if (!this.pathParameters) {
+      throw new Error("pathParameters cannot be undefined");
+    } else if (!this.urlTemplate) {
+      throw new Error("urlTemplate cannot be undefined");
+    } else {
+      const data = {};
+      for (const key in this.queryParameters) {
+        if (this.queryParameters[key] !== null && this.queryParameters[key] !== void 0) {
+          data[key] = this.normalizeValue(this.queryParameters[key]);
+        }
+      }
+      for (const key in this.pathParameters) {
+        if (this.pathParameters[key] !== null && this.pathParameters[key] !== void 0) {
+          data[key] = this.normalizeValue(this.pathParameters[key]);
+        }
+      }
+      return StdUriTemplate.expand(this.urlTemplate, data);
+    }
+  }
+  /** Sets the URL of the request */
+  set URL(url) {
+    if (!url)
+      throw new Error("URL cannot be undefined");
+    this.uri = url;
+    this.queryParameters = {};
+    this.pathParameters = {};
+  }
+  /**
+   * Gets the request options for the request.
+   * @returns the request options.
+   */
+  getRequestOptions() {
+    return this._requestOptions;
+  }
+  /**
+   * Adds the headers for the request.
+   * @param source The source collection to add the headers to
+   */
+  addRequestHeaders(source) {
+    if (source) {
+      this.headers.addAllRaw(source);
+    }
+  }
+  /**
+   * Adds the request options for the request.
+   * @param options the options to add.
+   */
+  addRequestOptions(options) {
+    if (!options || options.length === 0)
+      return;
+    options.forEach((option) => {
+      this._requestOptions[option.getKey()] = option;
+    });
+  }
+  /**
+   * Removes the request options for the request.
+   * @param options the options to remove.
+   */
+  removeRequestOptions(...options) {
+    if (!options || options.length === 0)
+      return;
+    options.forEach((option) => {
+      delete this._requestOptions[option.getKey()];
+    });
+  }
+  normalizeValue(value) {
+    if (value instanceof DateOnly || value instanceof TimeOnly || value instanceof Duration) {
+      return value.toString();
+    }
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+    if (Array.isArray(value)) {
+      return value.map((val) => this.normalizeValue(val));
+    }
+    return value;
+  }
+  /**
+   * Sets the query string parameters from a raw object.
+   * @param q parameters the parameters.
+   * @param p the mapping from code symbol to URI template parameter name.
+   */
+  setQueryStringParametersFromRawObject(q, p) {
+    if (q === null || q === void 0)
+      return;
+    Object.entries(q).forEach(([k, v]) => {
+      let key = k;
+      if (p) {
+        const keyCandidate = p[key];
+        if (keyCandidate) {
+          key = keyCandidate;
+        }
+      }
+      if (typeof v === "boolean" || typeof v === "number" || typeof v === "string" || Array.isArray(v))
+        this.queryParameters[key] = v;
+      else if (v instanceof DateOnly || v instanceof TimeOnly || v instanceof Duration)
+        this.queryParameters[key] = v.toString();
+      else if (v instanceof Date)
+        this.queryParameters[key] = v.toISOString();
+      else if (v === void 0)
+        this.queryParameters[key] = void 0;
+    });
+  }
+  /**
+   * Configure the current request with headers, query parameters and options.
+   * @param config the configuration object to use.
+   * @param queryParametersMapper mapping between code symbols and URI template parameter names.
+   */
+  configure(config, queryParametersMapper) {
+    if (!config)
+      return;
+    this.addRequestHeaders(config.headers);
+    this.setQueryStringParametersFromRawObject(config.queryParameters, queryParametersMapper);
+    this.addRequestOptions(config.options);
+  }
+};
+RequestInformation.raw_url_key = "request-raw-url";
+RequestInformation.binaryContentType = "application/octet-stream";
+RequestInformation.contentTypeHeader = "Content-Type";
+RequestInformation.tracerKey = "@microsoft/kiota-abstractions";
+RequestInformation.requestTypeKey = "com.microsoft.kiota.request.type";
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/getPathParameters.js
+var getPathParameters = (parameters) => {
+  const result = {};
+  if (typeof parameters === "string") {
+    result[RequestInformation.raw_url_key] = parameters;
+  } else if (parameters) {
+    for (const key in parameters) {
+      if (Object.prototype.hasOwnProperty.call(parameters, key)) {
+        result[key] = parameters[key];
+      }
+    }
+  }
+  return result;
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/httpMethod.js
+var HttpMethod;
+(function(HttpMethod2) {
+  HttpMethod2["GET"] = "GET";
+  HttpMethod2["POST"] = "POST";
+  HttpMethod2["PATCH"] = "PATCH";
+  HttpMethod2["DELETE"] = "DELETE";
+  HttpMethod2["OPTIONS"] = "OPTIONS";
+  HttpMethod2["CONNECT"] = "CONNECT";
+  HttpMethod2["TRACE"] = "TRACE";
+  HttpMethod2["HEAD"] = "HEAD";
+  HttpMethod2["PUT"] = "PUT";
+})(HttpMethod || (HttpMethod = {}));
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/apiClientProxifier.js
+var sanitizeMethodName = (methodName) => {
+  if (methodName.startsWith("to")) {
+    return methodName.substring(2).replace("RequestInformation", "").toLowerCase();
+  }
+  return methodName;
+};
+var getRequestMethod = (key) => {
+  switch (sanitizeMethodName(key)) {
+    case "delete":
+      return "delete";
+    case "get":
+      return "get";
+    case "head":
+      return "head";
+    case "options":
+      return "options";
+    case "patch":
+      return "patch";
+    case "post":
+      return "post";
+    case "put":
+      return "put";
+    default:
+      return void 0;
+  }
+};
+var toRequestInformation = (urlTemplate, pathParameters, metadata, requestAdapter, httpMethod, body, bodyMediaType, requestConfiguration) => {
+  const requestInfo = new RequestInformation(httpMethod, urlTemplate, pathParameters);
+  requestInfo.configure(requestConfiguration, metadata.queryParametersMapper);
+  addAcceptHeaderIfPresent(metadata, requestInfo);
+  if (metadata.requestBodySerializer) {
+    if (!body)
+      throw new Error("body cannot be undefined");
+    if (typeof metadata.requestBodySerializer === "function") {
+      requestInfo.setContentFromParsable(requestAdapter, metadata.requestBodyContentType ? metadata.requestBodyContentType : bodyMediaType, body, metadata.requestBodySerializer);
+    } else {
+      requestInfo.setContentFromScalar(requestAdapter, metadata.requestBodyContentType ? metadata.requestBodyContentType : bodyMediaType, body);
+    }
+  } else if (metadata.requestInformationContentSetMethod === "setStreamContent") {
+    if (!body)
+      throw new Error("body cannot be undefined");
+    requestInfo.setStreamContent(body, metadata.requestBodyContentType ? metadata.requestBodyContentType : bodyMediaType);
+  }
+  return requestInfo;
+};
+var addAcceptHeaderIfPresent = (metadata, requestInfo) => {
+  if (metadata.responseBodyContentType) {
+    requestInfo.headers.tryAdd("Accept", metadata.responseBodyContentType);
+  }
+};
+var getRequestMediaTypeUserDefinedValue = (requestMetadata, args) => {
+  if (args.length > 2 && !requestMetadata.requestBodySerializer && requestMetadata.requestInformationContentSetMethod === "setStreamContent" && typeof args[1] === "string") {
+    return args[1];
+  }
+  return void 0;
+};
+var getRequestConfigurationValue = (args) => {
+  if (args.length > 0) {
+    return args[args.length - 1];
+  }
+  return void 0;
+};
+var send = (requestAdapter, requestInfo, metadata) => {
+  switch (metadata.adapterMethodName) {
+    case "send":
+      if (!metadata.responseBodyFactory) {
+        throw new Error("couldn't find response body factory");
+      }
+      return requestAdapter.send(requestInfo, metadata.responseBodyFactory, metadata.errorMappings);
+    case "sendCollection":
+      if (!metadata.responseBodyFactory) {
+        throw new Error("couldn't find response body factory");
+      }
+      return requestAdapter.sendCollection(requestInfo, metadata.responseBodyFactory, metadata.errorMappings);
+    case "sendEnum":
+      if (!metadata.enumObject) {
+        throw new Error("couldn't find response body factory");
+      }
+      return requestAdapter.sendEnum(requestInfo, metadata.enumObject, metadata.errorMappings);
+    case "sendCollectionOfEnum":
+      if (!metadata.enumObject) {
+        throw new Error("couldn't find response body factory");
+      }
+      return requestAdapter.sendCollectionOfEnum(requestInfo, metadata.enumObject, metadata.errorMappings);
+    case "sendCollectionOfPrimitive":
+      if (!metadata.responseBodyFactory) {
+        throw new Error("couldn't find response body factory");
+      }
+      return requestAdapter.sendCollectionOfPrimitive(requestInfo, metadata.responseBodyFactory, metadata.errorMappings);
+    case "sendPrimitive":
+      if (!metadata.responseBodyFactory) {
+        throw new Error("couldn't find response body factory");
+      }
+      return requestAdapter.sendPrimitive(requestInfo, metadata.responseBodyFactory, metadata.errorMappings);
+    case "sendNoResponseContent":
+      return requestAdapter.sendNoResponseContent(requestInfo, metadata.errorMappings);
+    default:
+      throw new Error("couldn't find adapter method");
+  }
+};
+var apiClientProxifier = (requestAdapter, pathParameters, navigationMetadata, requestsMetadata) => {
+  if (!requestAdapter)
+    throw new Error("requestAdapter cannot be undefined");
+  if (!pathParameters)
+    throw new Error("pathParameters cannot be undefined");
+  return new Proxy({}, {
+    get: (_, property) => {
+      const name = String(property);
+      if (name === "withUrl") {
+        return (rawUrl) => {
+          if (!rawUrl)
+            throw new Error("rawUrl cannot be undefined");
+          return apiClientProxifier(requestAdapter, getPathParameters(rawUrl), navigationMetadata, requestsMetadata);
+        };
+      }
+      if (requestsMetadata) {
+        const metadataKey = getRequestMethod(name);
+        if (metadataKey) {
+          const metadata = requestsMetadata[metadataKey];
+          if (metadata) {
+            switch (name) {
+              case "get":
+                return (requestConfiguration) => {
+                  const requestInfo = toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.GET, void 0, void 0, requestConfiguration);
+                  return send(requestAdapter, requestInfo, metadata);
+                };
+              case "patch":
+                return (...args) => {
+                  const requestInfo = toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.PATCH, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                  return send(requestAdapter, requestInfo, metadata);
+                };
+              case "put":
+                return (...args) => {
+                  const requestInfo = toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.PUT, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                  return send(requestAdapter, requestInfo, metadata);
+                };
+              case "delete":
+                return (...args) => {
+                  const requestInfo = toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.DELETE, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                  return send(requestAdapter, requestInfo, metadata);
+                };
+              case "post":
+                return (...args) => {
+                  const requestInfo = toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.POST, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                  return send(requestAdapter, requestInfo, metadata);
+                };
+              case "toGetRequestInformation":
+                return (requestConfiguration) => {
+                  return toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.GET, void 0, void 0, requestConfiguration);
+                };
+              case "toPatchRequestInformation":
+                return (...args) => {
+                  return toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.PATCH, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                };
+              case "toPutRequestInformation":
+                return (...args) => {
+                  return toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.PUT, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                };
+              case "toDeleteRequestInformation":
+                return (...args) => {
+                  return toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.DELETE, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                };
+              case "toPostRequestInformation":
+                return (...args) => {
+                  return toRequestInformation(metadata.uriTemplate, pathParameters, metadata, requestAdapter, HttpMethod.POST, args.length > 0 ? args[0] : void 0, getRequestMediaTypeUserDefinedValue(metadata, args), getRequestConfigurationValue(args));
+                };
+              default:
+                break;
+            }
+          }
+        }
+      }
+      if (navigationMetadata) {
+        const navigationCandidate = navigationMetadata[name];
+        if (navigationCandidate) {
+          if (!navigationCandidate.pathParametersMappings || navigationCandidate.pathParametersMappings.length === 0) {
+            return apiClientProxifier(requestAdapter, getPathParameters(pathParameters), navigationCandidate.navigationMetadata, navigationCandidate.requestsMetadata);
+          }
+          return (...argArray) => {
+            const downWardPathParameters = getPathParameters(pathParameters);
+            if (navigationCandidate.pathParametersMappings && navigationCandidate.pathParametersMappings.length > 0) {
+              for (let i = 0; i < argArray.length; i++) {
+                const element = argArray[i];
+                if (element === void 0 || element === null || element === "") {
+                  throw new Error(`path parameter ${navigationCandidate.pathParametersMappings[i]} cannot be undefined`);
+                } else {
+                  downWardPathParameters[navigationCandidate.pathParametersMappings[i]] = element;
+                }
+              }
+            }
+            return apiClientProxifier(requestAdapter, downWardPathParameters, navigationCandidate.navigationMetadata, navigationCandidate.requestsMetadata);
+          };
+        }
+        if (name === "then") {
+          return void 0;
+        }
+        throw new Error(`couldn't find navigation property ${name} data: ${JSON.stringify(navigationMetadata)}`);
+      }
+    }
+  });
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/apiError.js
+var DefaultApiError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.responseHeaders = {};
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/authentication/apiKeyAuthenticationProvider.js
+var ApiKeyLocation;
+(function(ApiKeyLocation2) {
+  ApiKeyLocation2[ApiKeyLocation2["QueryParameter"] = 0] = "QueryParameter";
+  ApiKeyLocation2[ApiKeyLocation2["Header"] = 1] = "Header";
+})(ApiKeyLocation || (ApiKeyLocation = {}));
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/authentication/baseBearerTokenAuthenticationProvider.js
+var BaseBearerTokenAuthenticationProvider = class _BaseBearerTokenAuthenticationProvider {
+  /**
+   * The constructor for the BaseBearerTokenAuthenticationProvider
+   * @param accessTokenProvider The AccessTokenProvider instance that this provider will use to authenticate requests.
+   */
+  constructor(accessTokenProvider) {
+    this.accessTokenProvider = accessTokenProvider;
+    this.authenticateRequest = async (request, additionalAuthenticationContext) => {
+      var _a2;
+      if (!request) {
+        throw new Error("request info cannot be null");
+      }
+      if ((additionalAuthenticationContext === null || additionalAuthenticationContext === void 0 ? void 0 : additionalAuthenticationContext.claims) && request.headers.has(_BaseBearerTokenAuthenticationProvider.authorizationHeaderKey)) {
+        request.headers.delete(_BaseBearerTokenAuthenticationProvider.authorizationHeaderKey);
+      }
+      if (!((_a2 = request.headers) === null || _a2 === void 0 ? void 0 : _a2.has(_BaseBearerTokenAuthenticationProvider.authorizationHeaderKey))) {
+        const token = await this.accessTokenProvider.getAuthorizationToken(request.URL, additionalAuthenticationContext);
+        if (!request.headers) {
+          request.headers = new Headers2();
+        }
+        if (token) {
+          request.headers.add(_BaseBearerTokenAuthenticationProvider.authorizationHeaderKey, `Bearer ${token}`);
+        }
+      }
+    };
+  }
+};
+BaseBearerTokenAuthenticationProvider.authorizationHeaderKey = "Authorization";
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/nativeResponseHandler.js
+var NativeResponseHandler = class {
+  handleResponse(response, errorMappings) {
+    this.value = response;
+    this.errorMappings = errorMappings;
+    return Promise.resolve(void 0);
+  }
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/nativeResponseWrapper.js
+var _a;
+var NativeResponseWrapper = class {
+};
+_a = NativeResponseWrapper;
+NativeResponseWrapper.CallAndGetNative = async (originalCall, q, h, o) => {
+  const responseHandler = new NativeResponseHandler();
+  await originalCall(q, h, o, responseHandler);
+  return responseHandler.value;
+};
+NativeResponseWrapper.CallAndGetNativeWithBody = async (originalCall, requestBody, q, h, o) => {
+  const responseHandler = new NativeResponseHandler();
+  await originalCall(requestBody, q, h, o, responseHandler);
+  return responseHandler.value;
+};
+
+// node_modules/@microsoft/kiota-abstractions/dist/es/src/responseHandlerOptions.js
+var ResponseHandlerOptionKey = "ResponseHandlerOptionKey";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/customFetchHandler.js
+var CustomFetchHandler = class {
+  constructor(customFetch) {
+    this.customFetch = customFetch;
+  }
+  /**
+   * @inheritdoc
+   */
+  async execute(url, requestInit) {
+    return await this.customFetch(url, requestInit);
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/httpClient.js
+var HttpClient = class {
+  /**
+   *
+   * Creates an instance of a HttpClient which contains the middlewares and fetch implementation for request execution.
+   * @param customFetch - custom fetch function - a Fetch API implementation
+   * @param middlewares - an array of Middleware handlers
+   */
+  constructor(customFetch, ...middlewares) {
+    this.customFetch = customFetch;
+    middlewares = (middlewares === null || middlewares === void 0 ? void 0 : middlewares.length) && middlewares[0] ? middlewares : MiddlewareFactory.getDefaultMiddlewares(customFetch);
+    if (this.customFetch) {
+      middlewares.push(new CustomFetchHandler(customFetch));
+    }
+    this.setMiddleware(...middlewares);
+  }
+  /**
+   * Processes the middleware parameter passed to set this.middleware property
+   * The calling function should validate if middleware is not undefined or not empty.
+   * @param middleware - The middleware passed
+   */
+  setMiddleware(...middleware) {
+    for (let i = 0; i < middleware.length - 1; i++) {
+      middleware[i].next = middleware[i + 1];
+    }
+    this.middleware = middleware[0];
+  }
+  /**
+   * Executes a request and returns a promise resolving the response.
+   * @param url the request url.
+   * @param requestInit the RequestInit object.
+   * @param requestOptions the request options.
+   * @returns the promise resolving the response.
+   */
+  async executeFetch(url, requestInit, requestOptions) {
+    if (this.middleware) {
+      return await this.middleware.execute(url, requestInit, requestOptions);
+    } else if (this.customFetch) {
+      return this.customFetch(url, requestInit);
+    }
+    throw new Error("Please provide middlewares or a custom fetch function to execute the request");
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/observabilityOptions.js
+var ObservabilityOptionKey = "ObservabilityOptionKey";
+var ObservabilityOptionsImpl = class {
+  constructor(originalOptions) {
+    this._originalOptions = originalOptions !== null && originalOptions !== void 0 ? originalOptions : {};
+  }
+  getKey() {
+    return ObservabilityOptionKey;
+  }
+  get includeEUIIAttributes() {
+    return this._originalOptions.includeEUIIAttributes;
+  }
+  set includeEUIIAttributes(value) {
+    this._originalOptions.includeEUIIAttributes = value;
+  }
+  getTracerInstrumentationName() {
+    return "@microsoft/kiota-http-fetchlibrary";
+  }
+};
+function getObservabilityOptionsFromRequest(requestOptions) {
+  if (requestOptions) {
+    const observabilityOptions = requestOptions[ObservabilityOptionKey];
+    if (observabilityOptions instanceof ObservabilityOptionsImpl) {
+      return observabilityOptions;
+    }
+  }
+  return void 0;
+}
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/fetchRequestAdapter.js
+var FetchRequestAdapter = class _FetchRequestAdapter {
+  getSerializationWriterFactory() {
+    return this.serializationWriterFactory;
+  }
+  getParseNodeFactory() {
+    return this.parseNodeFactory;
+  }
+  getBackingStoreFactory() {
+    return this.backingStoreFactory;
+  }
+  /**
+   * Instantiates a new request adapter.
+   * @param authenticationProvider the authentication provider to use.
+   * @param parseNodeFactory the parse node factory to deserialize responses.
+   * @param serializationWriterFactory the serialization writer factory to use to serialize request bodies.
+   * @param httpClient the http client to use to execute requests.
+   * @param observabilityOptions the observability options to use.
+   * @param backingStoreFactory the backing store factory to use.
+   */
+  constructor(authenticationProvider, parseNodeFactory = new ParseNodeFactoryRegistry(), serializationWriterFactory = new SerializationWriterFactoryRegistry(), httpClient = new HttpClient(), observabilityOptions = new ObservabilityOptionsImpl(), backingStoreFactory = new InMemoryBackingStoreFactory()) {
+    this.authenticationProvider = authenticationProvider;
+    this.parseNodeFactory = parseNodeFactory;
+    this.serializationWriterFactory = serializationWriterFactory;
+    this.httpClient = httpClient;
+    this.backingStoreFactory = backingStoreFactory;
+    this.baseUrl = "";
+    this.getResponseContentType = (response) => {
+      var _a2;
+      const header = (_a2 = response.headers.get("content-type")) === null || _a2 === void 0 ? void 0 : _a2.toLowerCase();
+      if (!header)
+        return void 0;
+      const segments = header.split(";");
+      if (segments.length === 0)
+        return void 0;
+      else
+        return segments[0];
+    };
+    this.getResponseHandler = (response) => {
+      const options = response.getRequestOptions();
+      const responseHandlerOption = options[ResponseHandlerOptionKey];
+      return responseHandlerOption === null || responseHandlerOption === void 0 ? void 0 : responseHandlerOption.responseHandler;
+    };
+    this.sendCollectionOfPrimitive = (requestInfo, responseType, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "sendCollectionOfPrimitive", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        } else {
+          try {
+            await this.throwIfFailedResponse(response, errorMappings, span);
+            if (this.shouldReturnUndefined(response))
+              return void 0;
+            switch (responseType) {
+              case "string":
+              case "number":
+              case "boolean":
+              case "Date":
+              case "Duration":
+              case "DateOnly":
+              case "TimeOnly":
+                const rootNode = await this.getRootParseNode(response);
+                return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan(`getCollectionOf${responseType}Value`, (deserializeSpan) => {
+                  try {
+                    span.setAttribute(_FetchRequestAdapter.responseTypeAttributeKey, responseType);
+                    if (responseType === "string") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else if (responseType === "number") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else if (responseType === "boolean") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else if (responseType === "Date") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else if (responseType === "Duration") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else if (responseType === "DateOnly") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else if (responseType === "TimeOnly") {
+                      return rootNode.getCollectionOfPrimitiveValues(responseType);
+                    } else {
+                      throw new Error("unexpected type to deserialize");
+                    }
+                  } finally {
+                    deserializeSpan.end();
+                  }
+                });
+            }
+          } finally {
+            await this.purgeResponseBody(response);
+          }
+        }
+      });
+    };
+    this.sendCollection = (requestInfo, deserialization, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "sendCollection", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        } else {
+          try {
+            await this.throwIfFailedResponse(response, errorMappings, span);
+            if (this.shouldReturnUndefined(response))
+              return void 0;
+            const rootNode = await this.getRootParseNode(response);
+            return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getCollectionOfObjectValues", (deserializeSpan) => {
+              try {
+                const result = rootNode.getCollectionOfObjectValues(deserialization);
+                span.setAttribute(_FetchRequestAdapter.responseTypeAttributeKey, "object[]");
+                return result;
+              } finally {
+                deserializeSpan.end();
+              }
+            });
+          } finally {
+            await this.purgeResponseBody(response);
+          }
+        }
+      });
+    };
+    this.startTracingSpan = (requestInfo, methodName, callback) => {
+      var _a2;
+      const urlTemplate = decodeURIComponent((_a2 = requestInfo.urlTemplate) !== null && _a2 !== void 0 ? _a2 : "");
+      const telemetryPathValue = urlTemplate.replace(/\{\?[^}]+\}/gi, "");
+      return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan(`${methodName} - ${telemetryPathValue}`, async (span) => {
+        try {
+          span.setAttribute("url.uri_template", urlTemplate);
+          return await callback(span);
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.send = (requestInfo, deserializer, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "send", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        } else {
+          try {
+            await this.throwIfFailedResponse(response, errorMappings, span);
+            if (this.shouldReturnUndefined(response))
+              return void 0;
+            const rootNode = await this.getRootParseNode(response);
+            return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getObjectValue", (deserializeSpan) => {
+              try {
+                span.setAttribute(_FetchRequestAdapter.responseTypeAttributeKey, "object");
+                const result = rootNode.getObjectValue(deserializer);
+                return result;
+              } finally {
+                deserializeSpan.end();
+              }
+            });
+          } finally {
+            await this.purgeResponseBody(response);
+          }
+        }
+      });
+    };
+    this.sendPrimitive = (requestInfo, responseType, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "sendPrimitive", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        } else {
+          try {
+            await this.throwIfFailedResponse(response, errorMappings, span);
+            if (this.shouldReturnUndefined(response))
+              return void 0;
+            switch (responseType) {
+              case "ArrayBuffer":
+                if (!response.body) {
+                  return void 0;
+                }
+                return await response.arrayBuffer();
+              case "string":
+              case "number":
+              case "boolean":
+              case "Date":
+                const rootNode = await this.getRootParseNode(response);
+                span.setAttribute(_FetchRequestAdapter.responseTypeAttributeKey, responseType);
+                return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan(`get${responseType}Value`, (deserializeSpan) => {
+                  try {
+                    if (responseType === "string") {
+                      return rootNode.getStringValue();
+                    } else if (responseType === "number") {
+                      return rootNode.getNumberValue();
+                    } else if (responseType === "boolean") {
+                      return rootNode.getBooleanValue();
+                    } else if (responseType === "Date") {
+                      return rootNode.getDateValue();
+                    } else if (responseType === "Duration") {
+                      return rootNode.getDurationValue();
+                    } else if (responseType === "DateOnly") {
+                      return rootNode.getDateOnlyValue();
+                    } else if (responseType === "TimeOnly") {
+                      return rootNode.getTimeOnlyValue();
+                    } else {
+                      throw new Error("unexpected type to deserialize");
+                    }
+                  } finally {
+                    deserializeSpan.end();
+                  }
+                });
+            }
+          } finally {
+            await this.purgeResponseBody(response);
+          }
+        }
+      });
+    };
+    this.sendNoResponseContent = (requestInfo, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "sendNoResponseContent", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        }
+        try {
+          await this.throwIfFailedResponse(response, errorMappings, span);
+        } finally {
+          await this.purgeResponseBody(response);
+        }
+      });
+    };
+    this.sendEnum = (requestInfo, enumObject, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "sendEnum", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        } else {
+          try {
+            await this.throwIfFailedResponse(response, errorMappings, span);
+            if (this.shouldReturnUndefined(response))
+              return void 0;
+            const rootNode = await this.getRootParseNode(response);
+            return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getEnumValue", (deserializeSpan) => {
+              try {
+                span.setAttribute(_FetchRequestAdapter.responseTypeAttributeKey, "enum");
+                const result = rootNode.getEnumValue(enumObject);
+                return result;
+              } finally {
+                deserializeSpan.end();
+              }
+            });
+          } finally {
+            await this.purgeResponseBody(response);
+          }
+        }
+      });
+    };
+    this.sendCollectionOfEnum = (requestInfo, enumObject, errorMappings) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      return this.startTracingSpan(requestInfo, "sendCollectionOfEnum", async (span) => {
+        const response = await this.getHttpResponseMessage(requestInfo, span);
+        const responseHandler = this.getResponseHandler(requestInfo);
+        if (responseHandler) {
+          span.addEvent(_FetchRequestAdapter.eventResponseHandlerInvokedKey);
+          return await responseHandler.handleResponse(response, errorMappings);
+        } else {
+          try {
+            await this.throwIfFailedResponse(response, errorMappings, span);
+            if (this.shouldReturnUndefined(response))
+              return void 0;
+            const rootNode = await this.getRootParseNode(response);
+            return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getCollectionOfEnumValues", (deserializeSpan) => {
+              try {
+                const result = rootNode.getCollectionOfEnumValues(enumObject);
+                span.setAttribute(_FetchRequestAdapter.responseTypeAttributeKey, "enum[]");
+                return result;
+              } finally {
+                deserializeSpan.end();
+              }
+            });
+          } finally {
+            await this.purgeResponseBody(response);
+          }
+        }
+      });
+    };
+    this.enableBackingStore = (backingStoreFactory2) => {
+      if (this.parseNodeFactory instanceof ParseNodeFactoryRegistry) {
+        this.parseNodeFactory = enableBackingStoreForParseNodeFactory(this.parseNodeFactory, this.parseNodeFactory);
+      } else {
+        throw new Error("parseNodeFactory is not a ParseNodeFactoryRegistry");
+      }
+      if (this.serializationWriterFactory instanceof SerializationWriterFactoryRegistry && this.parseNodeFactory instanceof ParseNodeFactoryRegistry) {
+        this.serializationWriterFactory = enableBackingStoreForSerializationWriterFactory(this.serializationWriterFactory, this.parseNodeFactory, this.serializationWriterFactory);
+      } else {
+        throw new Error("serializationWriterFactory is not a SerializationWriterFactoryRegistry or parseNodeFactory is not a ParseNodeFactoryRegistry");
+      }
+      if (!this.serializationWriterFactory || !this.parseNodeFactory)
+        throw new Error("unable to enable backing store");
+      if (backingStoreFactory2) {
+        this.backingStoreFactory = backingStoreFactory2;
+      }
+    };
+    this.getRootParseNode = (response) => {
+      return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getRootParseNode", async (span) => {
+        try {
+          const payload = await response.arrayBuffer();
+          const responseContentType = this.getResponseContentType(response);
+          if (!responseContentType)
+            throw new Error("no response content type found for deserialization");
+          return this.parseNodeFactory.getRootParseNode(responseContentType, payload);
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.shouldReturnUndefined = (response) => {
+      return response.status === 204 || response.status === 304 || !response.body;
+    };
+    this.purgeResponseBody = async (response) => {
+      if (!response.bodyUsed && response.body) {
+        await response.arrayBuffer();
+      }
+    };
+    this.throwIfFailedResponse = (response, errorMappings, spanForAttributes) => {
+      return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("throwIfFailedResponse", async (span) => {
+        var _a2, _b, _c;
+        try {
+          if (response.ok || response.status >= 300 && response.status < 400 && !response.headers.has(_FetchRequestAdapter.locationHeaderName))
+            return;
+          spanForAttributes.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: "received_error_response"
+          });
+          const statusCode = response.status;
+          const responseHeaders = {};
+          response.headers.forEach((value, key) => {
+            responseHeaders[key] = value.split(",");
+          });
+          const factory = errorMappings ? (_c = (_b = (_a2 = errorMappings[statusCode]) !== null && _a2 !== void 0 ? _a2 : statusCode >= 400 && statusCode < 500 ? errorMappings._4XX : void 0) !== null && _b !== void 0 ? _b : statusCode >= 500 && statusCode < 600 ? errorMappings._5XX : void 0) !== null && _c !== void 0 ? _c : errorMappings.XXX : void 0;
+          if (!factory) {
+            spanForAttributes.setAttribute(_FetchRequestAdapter.errorMappingFoundAttributeName, false);
+            const error = new DefaultApiError("the server returned an unexpected status code and no error class is registered for this code " + statusCode);
+            error.responseStatusCode = statusCode;
+            error.responseHeaders = responseHeaders;
+            spanForAttributes.recordException(error);
+            throw error;
+          }
+          spanForAttributes.setAttribute(_FetchRequestAdapter.errorMappingFoundAttributeName, true);
+          const rootNode = await this.getRootParseNode(response);
+          let deserializedError = trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getObjectValue", (deserializeSpan) => {
+            try {
+              return rootNode.getObjectValue(factory);
+            } finally {
+              deserializeSpan.end();
+            }
+          });
+          spanForAttributes.setAttribute(_FetchRequestAdapter.errorBodyFoundAttributeName, !!deserializedError);
+          if (!deserializedError)
+            deserializedError = new DefaultApiError("unexpected error type" + typeof deserializedError);
+          const errorObject = deserializedError;
+          errorObject.responseStatusCode = statusCode;
+          errorObject.responseHeaders = responseHeaders;
+          spanForAttributes.recordException(errorObject);
+          throw errorObject;
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.getHttpResponseMessage = (requestInfo, spanForAttributes, claims) => {
+      return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getHttpResponseMessage", async (span) => {
+        try {
+          if (!requestInfo) {
+            throw new Error("requestInfo cannot be null");
+          }
+          this.setBaseUrlForRequestInformation(requestInfo);
+          const additionalContext = {};
+          if (claims) {
+            additionalContext.claims = claims;
+          }
+          await this.authenticationProvider.authenticateRequest(requestInfo, additionalContext);
+          const request = await this.getRequestFromRequestInformation(requestInfo, spanForAttributes);
+          if (this.observabilityOptions) {
+            requestInfo.addRequestOptions([this.observabilityOptions]);
+          }
+          let response = await this.httpClient.executeFetch(requestInfo.URL, request, requestInfo.getRequestOptions());
+          response = await this.retryCAEResponseIfRequired(requestInfo, response, spanForAttributes, claims);
+          if (response) {
+            const responseContentLength = response.headers.get("Content-Length");
+            if (responseContentLength) {
+              spanForAttributes.setAttribute("http.response.body.size", parseInt(responseContentLength, 10));
+            }
+            const responseContentType = response.headers.get("Content-Type");
+            if (responseContentType) {
+              spanForAttributes.setAttribute("http.response.header.content-type", responseContentType);
+            }
+            spanForAttributes.setAttribute("http.response.status_code", response.status);
+          }
+          return response;
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.retryCAEResponseIfRequired = async (requestInfo, response, spanForAttributes, claims) => {
+      return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("retryCAEResponseIfRequired", async (span) => {
+        try {
+          const responseClaims = this.getClaimsFromResponse(response, claims);
+          if (responseClaims) {
+            span.addEvent(_FetchRequestAdapter.authenticateChallengedEventKey);
+            spanForAttributes.setAttribute("http.request.resend_count", 1);
+            await this.purgeResponseBody(response);
+            return await this.getHttpResponseMessage(requestInfo, spanForAttributes, responseClaims);
+          }
+          return response;
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.getClaimsFromResponse = (response, claims) => {
+      if (response.status === 401 && !claims) {
+        const rawAuthenticateHeader = response.headers.get("WWW-Authenticate");
+        if (rawAuthenticateHeader && /^Bearer /gi.test(rawAuthenticateHeader)) {
+          const rawParameters = rawAuthenticateHeader.replace(/^Bearer /gi, "").split(",");
+          for (const rawParameter of rawParameters) {
+            const trimmedParameter = rawParameter.trim();
+            if (/claims="[^"]+"/gi.test(trimmedParameter)) {
+              return trimmedParameter.replace(/claims="([^"]+)"/gi, "$1");
+            }
+          }
+        }
+      }
+      return void 0;
+    };
+    this.setBaseUrlForRequestInformation = (requestInfo) => {
+      requestInfo.pathParameters.baseurl = this.baseUrl;
+    };
+    this.getRequestFromRequestInformation = (requestInfo, spanForAttributes) => {
+      return trace.getTracer(this.observabilityOptions.getTracerInstrumentationName()).startActiveSpan("getRequestFromRequestInformation", async (span) => {
+        var _a2, _b;
+        try {
+          const method = (_a2 = requestInfo.httpMethod) === null || _a2 === void 0 ? void 0 : _a2.toString();
+          const uri = requestInfo.URL;
+          spanForAttributes.setAttribute("http.request.method", method !== null && method !== void 0 ? method : "");
+          const uriContainsScheme = uri.includes("://");
+          const schemeSplatUri = uri.split("://");
+          if (uriContainsScheme) {
+            spanForAttributes.setAttribute("server.address", schemeSplatUri[0]);
+          }
+          const uriWithoutScheme = uriContainsScheme ? schemeSplatUri[1] : uri;
+          spanForAttributes.setAttribute("url.scheme", uriWithoutScheme.split("/")[0]);
+          if (this.observabilityOptions.includeEUIIAttributes) {
+            spanForAttributes.setAttribute("url.full", decodeURIComponent(uri));
+          }
+          const requestContentLength = requestInfo.headers.tryGetValue("Content-Length");
+          if (requestContentLength) {
+            spanForAttributes.setAttribute("http.response.body.size", parseInt(requestContentLength[0], 10));
+          }
+          const requestContentType = requestInfo.headers.tryGetValue("Content-Type");
+          if (requestContentType) {
+            spanForAttributes.setAttribute("http.request.header.content-type", requestContentType);
+          }
+          const headers = {};
+          (_b = requestInfo.headers) === null || _b === void 0 ? void 0 : _b.forEach((_, key) => {
+            headers[key.toString().toLocaleLowerCase()] = this.foldHeaderValue(requestInfo.headers.tryGetValue(key));
+          });
+          const request = {
+            method,
+            headers,
+            body: requestInfo.content
+          };
+          return request;
+        } finally {
+          span.end();
+        }
+      });
+    };
+    this.foldHeaderValue = (value) => {
+      if (!value || value.length < 1) {
+        return "";
+      } else if (value.length === 1) {
+        return value[0];
+      } else {
+        return value.reduce((acc, val) => acc + val, ",");
+      }
+    };
+    this.convertToNativeRequest = async (requestInfo) => {
+      if (!requestInfo) {
+        throw new Error("requestInfo cannot be null");
+      }
+      await this.authenticationProvider.authenticateRequest(requestInfo, void 0);
+      return this.startTracingSpan(requestInfo, "convertToNativeRequest", async (span) => {
+        const request = await this.getRequestFromRequestInformation(requestInfo, span);
+        return request;
+      });
+    };
+    if (!authenticationProvider) {
+      throw new Error("authentication provider cannot be null");
+    }
+    if (!parseNodeFactory) {
+      throw new Error("parse node factory cannot be null");
+    }
+    if (!serializationWriterFactory) {
+      throw new Error("serialization writer factory cannot be null");
+    }
+    if (!httpClient) {
+      throw new Error("http client cannot be null");
+    }
+    if (!observabilityOptions) {
+      throw new Error("observability options cannot be null");
+    } else {
+      this.observabilityOptions = new ObservabilityOptionsImpl(observabilityOptions);
+    }
+  }
+};
+FetchRequestAdapter.responseTypeAttributeKey = "com.microsoft.kiota.response.type";
+FetchRequestAdapter.eventResponseHandlerInvokedKey = "com.microsoft.kiota.response_handler_invoked";
+FetchRequestAdapter.errorMappingFoundAttributeName = "com.microsoft.kiota.error.mapping_found";
+FetchRequestAdapter.errorBodyFoundAttributeName = "com.microsoft.kiota.error.body_found";
+FetchRequestAdapter.locationHeaderName = "Location";
+FetchRequestAdapter.authenticateChallengedEventKey = "com.microsoft.kiota.authenticate_challenge_received";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/utils/headersUtil.js
+var getRequestHeader = (options, key) => {
+  if (options && options.headers) {
+    return options.headers[key];
+  }
+  return void 0;
+};
+var setRequestHeader = (options, key, value) => {
+  if (options) {
+    if (!options.headers) {
+      options.headers = {};
+    }
+    options.headers[key] = value;
+  }
+};
+var deleteRequestHeader = (options, key) => {
+  if (options) {
+    if (!options.headers) {
+      options.headers = {};
+    }
+    delete options.headers[key];
+  }
+};
+var appendRequestHeader = (options, key, value, separator = ", ") => {
+  if (options) {
+    if (!options.headers) {
+      options.headers = {};
+    }
+    if (!options.headers[key]) {
+      options.headers[key] = value;
+    } else {
+      options.headers[key] += `${separator}${value}`;
+    }
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/authorizationHandler.js
+var AuthorizationHandler = class _AuthorizationHandler {
+  constructor(authenticationProvider) {
+    this.authenticationProvider = authenticationProvider;
+    this.getClaimsFromResponse = (response, claims) => {
+      if (response.status === 401 && !claims) {
+        const rawAuthenticateHeader = response.headers.get("WWW-Authenticate");
+        if (rawAuthenticateHeader && /^Bearer /gi.test(rawAuthenticateHeader)) {
+          const rawParameters = rawAuthenticateHeader.replace(/^Bearer /gi, "").split(",");
+          for (const rawParameter of rawParameters) {
+            const trimmedParameter = rawParameter.trim();
+            if (/claims="[^"]+"/gi.test(trimmedParameter)) {
+              return trimmedParameter.replace(/claims="([^"]+)"/gi, "$1");
+            }
+          }
+        }
+      }
+      return void 0;
+    };
+    if (!authenticationProvider) {
+      throw new Error("authenticationProvider cannot be undefined");
+    }
+  }
+  execute(url, requestInit, requestOptions) {
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("authorizationHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.authorization.enable", true);
+          return this.executeInternal(url, requestInit, requestOptions, span);
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.executeInternal(url, requestInit, requestOptions, void 0);
+  }
+  async executeInternal(url, fetchRequestInit, requestOptions, span) {
+    var _a2, _b;
+    if (this.authorizationIsPresent(fetchRequestInit)) {
+      span === null || span === void 0 ? void 0 : span.setAttribute("com.microsoft.kiota.handler.authorization.token_present", true);
+      return await this.next.execute(url, fetchRequestInit, requestOptions);
+    }
+    const token = await this.authenticateRequest(url);
+    setRequestHeader(fetchRequestInit, _AuthorizationHandler.AUTHORIZATION_HEADER, `Bearer ${token}`);
+    const response = await ((_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(url, fetchRequestInit, requestOptions));
+    if (!response) {
+      throw new Error("Response is undefined");
+    }
+    if (response.status !== 401) {
+      return response;
+    }
+    const claims = this.getClaimsFromResponse(response);
+    if (!claims) {
+      return response;
+    }
+    span === null || span === void 0 ? void 0 : span.addEvent("com.microsoft.kiota.handler.authorization.challenge_received");
+    const claimsToken = await this.authenticateRequest(url, claims);
+    setRequestHeader(fetchRequestInit, _AuthorizationHandler.AUTHORIZATION_HEADER, `Bearer ${claimsToken}`);
+    span === null || span === void 0 ? void 0 : span.setAttribute("http.request.resend_count", 1);
+    const retryResponse = await ((_b = this.next) === null || _b === void 0 ? void 0 : _b.execute(url, fetchRequestInit, requestOptions));
+    if (!retryResponse) {
+      throw new Error("Response is undefined");
+    }
+    return retryResponse;
+  }
+  authorizationIsPresent(request) {
+    if (!request) {
+      return false;
+    }
+    const authorizationHeader = getRequestHeader(request, _AuthorizationHandler.AUTHORIZATION_HEADER);
+    return authorizationHeader !== void 0 && authorizationHeader !== null;
+  }
+  async authenticateRequest(url, claims) {
+    const additionalAuthenticationContext = {};
+    if (claims) {
+      additionalAuthenticationContext.claims = claims;
+    }
+    return await this.authenticationProvider.accessTokenProvider.getAuthorizationToken(url, additionalAuthenticationContext);
+  }
+};
+AuthorizationHandler.AUTHORIZATION_HEADER = "Authorization";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/ChaosHandlerData.js
+var methodStatusCode = {
+  GET: [429, 500, 502, 503, 504],
+  POST: [429, 500, 502, 503, 504, 507],
+  PUT: [429, 500, 502, 503, 504, 507],
+  PATCH: [429, 500, 502, 503, 504],
+  DELETE: [429, 500, 502, 503, 504, 507]
+};
+var httpStatusCode = {
+  100: "Continue",
+  101: "Switching Protocols",
+  102: "Processing",
+  103: "Early Hints",
+  200: "OK",
+  201: "Created",
+  202: "Accepted",
+  203: "Non-Authoritative Information",
+  204: "No Content",
+  205: "Reset Content",
+  206: "Partial Content",
+  207: "Multi-Status",
+  208: "Already Reported",
+  226: "IM Used",
+  300: "Multiple Choices",
+  301: "Moved Permanently",
+  302: "Found",
+  303: "See Other",
+  304: "Not Modified",
+  305: "Use Proxy",
+  307: "Temporary Redirect",
+  308: "Permanent Redirect",
+  400: "Bad Request",
+  401: "Unauthorized",
+  402: "Payment Required",
+  403: "Forbidden",
+  404: "Not Found",
+  405: "Method Not Allowed",
+  406: "Not Acceptable",
+  407: "Proxy Authentication Required",
+  408: "Request Timeout",
+  409: "Conflict",
+  410: "Gone",
+  411: "Length Required",
+  412: "Precondition Failed",
+  413: "Payload Too Large",
+  414: "URI Too Long",
+  415: "Unsupported Media Type",
+  416: "Range Not Satisfiable",
+  417: "Expectation Failed",
+  421: "Misdirected Request",
+  422: "Unprocessable Entity",
+  423: "Locked",
+  424: "Failed Dependency",
+  425: "Too Early",
+  426: "Upgrade Required",
+  428: "Precondition Required",
+  429: "Too Many Requests",
+  431: "Request Header Fields Too Large",
+  451: "Unavailable For Legal Reasons",
+  500: "Internal Server Error",
+  501: "Not Implemented",
+  502: "Bad Gateway",
+  503: "Service Unavailable",
+  504: "Gateway Timeout",
+  505: "HTTP Version Not Supported",
+  506: "Variant Also Negotiates",
+  507: "Insufficient Storage",
+  508: "Loop Detected",
+  510: "Not Extended",
+  511: "Network Authentication Required"
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/chaosStrategy.js
+var ChaosStrategy;
+(function(ChaosStrategy2) {
+  ChaosStrategy2[ChaosStrategy2["MANUAL"] = 0] = "MANUAL";
+  ChaosStrategy2[ChaosStrategy2["RANDOM"] = 1] = "RANDOM";
+})(ChaosStrategy || (ChaosStrategy = {}));
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/chaosHandler.js
+var ChaosHandler = class _ChaosHandler {
+  /**
+   *
+   * To create an instance of ChaosHandler
+   * @param [options] - The chaos handler options instance
+   * @param manualMap - The Map passed by user containing url-statusCode info
+   */
+  constructor(options, manualMap) {
+    this.options = {
+      chaosStrategy: ChaosStrategy.RANDOM,
+      statusMessage: "A random status message",
+      chaosPercentage: 10
+    };
+    const chaosOptions = Object.assign(this.options, options);
+    if (chaosOptions.chaosPercentage > 100 || chaosOptions.chaosPercentage < 0) {
+      throw new Error("Chaos Percentage must be set to a value between 0 and 100.");
+    }
+    this.options = chaosOptions;
+    this.manualMap = manualMap !== null && manualMap !== void 0 ? manualMap : /* @__PURE__ */ new Map();
+  }
+  /**
+   * Fetches a random status code for the RANDOM mode from the predefined array
+   * @param requestMethod - the API method for the request
+   * @returns a random status code from a given set of status codes
+   */
+  generateRandomStatusCode(requestMethod) {
+    const statusCodeArray = methodStatusCode[requestMethod];
+    return statusCodeArray[Math.floor(Math.random() * statusCodeArray.length)];
+  }
+  /**
+   * Strips out the host url and returns the relative url only
+   * @param chaosHandlerOptions - The ChaosHandlerOptions object
+   * @param urlMethod - the complete URL
+   * @returns the string as relative URL
+   */
+  getRelativeURL(chaosHandlerOptions, urlMethod) {
+    const baseUrl = chaosHandlerOptions.baseUrl;
+    if (baseUrl === void 0) {
+      return urlMethod;
+    }
+    return urlMethod.replace(baseUrl, "").trim();
+  }
+  /**
+   * Gets a status code from the options or a randomly generated status code
+   * @param chaosHandlerOptions - The ChaosHandlerOptions object
+   * @param requestURL - the URL for the request
+   * @param requestMethod - the API method for the request
+   * @returns generated statusCode
+   */
+  getStatusCode(chaosHandlerOptions, requestURL, requestMethod) {
+    if (chaosHandlerOptions.chaosStrategy === ChaosStrategy.MANUAL) {
+      if (chaosHandlerOptions.statusCode !== void 0) {
+        return chaosHandlerOptions.statusCode;
+      } else {
+        const relativeURL = this.getRelativeURL(chaosHandlerOptions, requestURL);
+        const definedResponses = this.manualMap.get(relativeURL);
+        if (definedResponses !== void 0) {
+          const mapCode = definedResponses.get(requestMethod);
+          if (mapCode !== void 0) {
+            return mapCode;
+          }
+        } else {
+          this.manualMap.forEach((value, key) => {
+            var _a2;
+            const regexURL = new RegExp(key + "$");
+            if (regexURL.test(relativeURL)) {
+              const responseCode = (_a2 = this.manualMap.get(key)) === null || _a2 === void 0 ? void 0 : _a2.get(requestMethod);
+              if (responseCode !== void 0) {
+                return responseCode;
+              }
+            }
+          });
+        }
+      }
+    }
+    return this.generateRandomStatusCode(requestMethod);
+  }
+  /**
+   * Generates a respondy for the chaoe response
+   * @param chaosHandlerOptions - The ChaosHandlerOptions object
+   * @param statusCode - the status code for the response
+   * @returns the response body
+   */
+  createResponseBody(chaosHandlerOptions, statusCode) {
+    if (chaosHandlerOptions.responseBody) {
+      return chaosHandlerOptions.responseBody;
+    }
+    let body;
+    if (statusCode >= 400) {
+      const codeMessage = httpStatusCode[statusCode];
+      const errMessage = chaosHandlerOptions.statusMessage;
+      body = {
+        error: {
+          code: codeMessage,
+          message: errMessage
+        }
+      };
+    } else {
+      body = {};
+    }
+    return body;
+  }
+  /**
+   * Composes a new chaotic response code with the configured parameters
+   * @param url The url of the request
+   * @param fetchRequestInit The fetch request init object
+   * @returns a response object with the configured parameters
+   */
+  createChaosResponse(url, fetchRequestInit) {
+    var _a2;
+    if (fetchRequestInit.method === void 0) {
+      throw new Error("Request method must be defined.");
+    }
+    const requestMethod = fetchRequestInit.method;
+    const statusCode = this.getStatusCode(this.options, url, requestMethod);
+    const responseBody = this.createResponseBody(this.options, statusCode);
+    const stringBody = typeof responseBody === "string" ? responseBody : JSON.stringify(responseBody);
+    return {
+      url,
+      body: stringBody,
+      status: statusCode,
+      statusText: this.options.statusMessage,
+      headers: (_a2 = this.options.headers) !== null && _a2 !== void 0 ? _a2 : {}
+    };
+  }
+  execute(url, requestInit, requestOptions) {
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("chaosHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.chaos.enable", true);
+          return this.runChaos(url, requestInit, requestOptions);
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.runChaos(url, requestInit, requestOptions);
+  }
+  runChaos(url, requestInit, requestOptions, span) {
+    if (Math.floor(Math.random() * 100) < this.options.chaosPercentage) {
+      span === null || span === void 0 ? void 0 : span.addEvent(_ChaosHandler.chaosHandlerTriggeredEventKey);
+      return Promise.resolve(this.createChaosResponse(url, requestInit));
+    } else {
+      if (!this.next) {
+        throw new Error("Please set the next middleware to continue the request");
+      }
+      return this.next.execute(url, requestInit, requestOptions);
+    }
+  }
+};
+ChaosHandler.chaosHandlerTriggeredEventKey = "com.microsoft.kiota.chaos_handler_triggered";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/compressionHandlerOptions.js
+var CompressionHandlerOptionsKey = "CompressionHandlerOptionsKey";
+var CompressionHandlerOptions = class {
+  /**
+   * Create a new instance of the CompressionHandlerOptions class
+   * @param config the configuration to apply to the compression handler options.
+   */
+  constructor(config) {
+    var _a2;
+    this._enableCompression = (_a2 = config === null || config === void 0 ? void 0 : config.enableCompression) !== null && _a2 !== void 0 ? _a2 : true;
+  }
+  /**
+   * @inheritdoc
+   */
+  getKey() {
+    return CompressionHandlerOptionsKey;
+  }
+  /**
+   * Returns whether the compression handler is enabled or not.
+   * @returns whether the compression handler is enabled or not.
+   */
+  get ShouldCompress() {
+    return this._enableCompression;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/compressionHandler.js
+var CompressionHandler = class _CompressionHandler {
+  /**
+   * Creates a new instance of the CompressionHandler class
+   * @param handlerOptions The options for the compression handler.
+   * @returns An instance of the CompressionHandler class
+   */
+  constructor(handlerOptions = new CompressionHandlerOptions()) {
+    this.handlerOptions = handlerOptions;
+    if (!handlerOptions) {
+      throw new Error("handlerOptions cannot be undefined");
+    }
+  }
+  /**
+   * @inheritdoc
+   */
+  execute(url, requestInit, requestOptions) {
+    let currentOptions = this.handlerOptions;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[CompressionHandlerOptionsKey]) {
+      currentOptions = requestOptions[CompressionHandlerOptionsKey];
+    }
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("compressionHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.compression.enable", currentOptions.ShouldCompress);
+          return this.executeInternal(currentOptions, url, requestInit, requestOptions, span);
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.executeInternal(currentOptions, url, requestInit, requestOptions);
+  }
+  async executeInternal(options, url, requestInit, requestOptions, span) {
+    var _a2, _b, _c, _d;
+    if (!options.ShouldCompress || this.contentRangeBytesIsPresent(requestInit.headers) || this.contentEncodingIsPresent(requestInit.headers) || requestInit.body === null || requestInit.body === void 0) {
+      return (_b = (_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(url, requestInit, requestOptions)) !== null && _b !== void 0 ? _b : Promise.reject(new Error("Response is undefined"));
+    }
+    span === null || span === void 0 ? void 0 : span.setAttribute("http.request.body.compressed", true);
+    const unCompressedBody = requestInit.body;
+    const unCompressedBodySize = this.getRequestBodySize(unCompressedBody);
+    const compressedBody = await this.compressRequestBody(unCompressedBody);
+    setRequestHeader(requestInit, _CompressionHandler.CONTENT_ENCODING_HEADER, "gzip");
+    requestInit.body = compressedBody.compressedBody;
+    span === null || span === void 0 ? void 0 : span.setAttribute("http.request.body.size", compressedBody.size);
+    let response = await ((_c = this.next) === null || _c === void 0 ? void 0 : _c.execute(url, requestInit, requestOptions));
+    if (!response) {
+      throw new Error("Response is undefined");
+    }
+    if (response.status === 415) {
+      deleteRequestHeader(requestInit, _CompressionHandler.CONTENT_ENCODING_HEADER);
+      requestInit.body = unCompressedBody;
+      span === null || span === void 0 ? void 0 : span.setAttribute("http.request.body.compressed", false);
+      span === null || span === void 0 ? void 0 : span.setAttribute("http.request.body.size", unCompressedBodySize);
+      response = await ((_d = this.next) === null || _d === void 0 ? void 0 : _d.execute(url, requestInit, requestOptions));
+    }
+    return response !== void 0 && response !== null ? Promise.resolve(response) : Promise.reject(new Error("Response is undefined"));
+  }
+  contentRangeBytesIsPresent(header) {
+    var _a2;
+    if (!header) {
+      return false;
+    }
+    const contentRange = getRequestHeader(header, _CompressionHandler.CONTENT_RANGE_HEADER);
+    return (_a2 = contentRange === null || contentRange === void 0 ? void 0 : contentRange.toLowerCase().includes("bytes")) !== null && _a2 !== void 0 ? _a2 : false;
+  }
+  contentEncodingIsPresent(header) {
+    if (!header) {
+      return false;
+    }
+    return getRequestHeader(header, _CompressionHandler.CONTENT_ENCODING_HEADER) !== void 0;
+  }
+  getRequestBodySize(body) {
+    if (!body) {
+      return 0;
+    }
+    if (typeof body === "string") {
+      return body.length;
+    }
+    if (body instanceof Blob) {
+      return body.size;
+    }
+    if (body instanceof ArrayBuffer) {
+      return body.byteLength;
+    }
+    if (ArrayBuffer.isView(body)) {
+      return body.byteLength;
+    }
+    if (inNodeEnv() && Buffer.isBuffer(body)) {
+      return body.byteLength;
+    }
+    throw new Error("Unsupported body type");
+  }
+  readBodyAsBytes(body) {
+    if (!body) {
+      return { stream: new ReadableStream(), size: 0 };
+    }
+    const uint8ArrayToStream = (uint8Array) => {
+      return new ReadableStream({
+        start(controller) {
+          controller.enqueue(uint8Array);
+          controller.close();
+        }
+      });
+    };
+    if (typeof body === "string") {
+      return { stream: uint8ArrayToStream(new TextEncoder().encode(body)), size: body.length };
+    }
+    if (body instanceof Blob) {
+      return { stream: body.stream(), size: body.size };
+    }
+    if (body instanceof ArrayBuffer) {
+      return { stream: uint8ArrayToStream(new Uint8Array(body)), size: body.byteLength };
+    }
+    if (ArrayBuffer.isView(body)) {
+      return { stream: uint8ArrayToStream(new Uint8Array(body.buffer, body.byteOffset, body.byteLength)), size: body.byteLength };
+    }
+    throw new Error("Unsupported body type");
+  }
+  async compressRequestBody(body) {
+    const compressionData = this.readBodyAsBytes(body);
+    const compressedBody = await this.compressUsingCompressionStream(compressionData.stream);
+    return {
+      compressedBody: compressedBody.body,
+      size: compressedBody.size
+    };
+  }
+  async compressUsingCompressionStream(uint8ArrayStream) {
+    const compressionStream = new CompressionStream("gzip");
+    const compressedStream = uint8ArrayStream.pipeThrough(compressionStream);
+    const reader = compressedStream.getReader();
+    const compressedChunks = [];
+    let totalLength = 0;
+    let result = await reader.read();
+    while (!result.done) {
+      const chunk = result.value;
+      compressedChunks.push(chunk);
+      totalLength += chunk.length;
+      result = await reader.read();
+    }
+    const compressedArray = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const chunk of compressedChunks) {
+      compressedArray.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return {
+      body: compressedArray.buffer,
+      size: compressedArray.length
+    };
+  }
+};
+CompressionHandler.CONTENT_RANGE_HEADER = "Content-Range";
+CompressionHandler.CONTENT_ENCODING_HEADER = "Content-Encoding";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/headersInspectionOptions.js
+var HeadersInspectionOptionsKey = "HeadersInspectionOptionsKey";
+var HeadersInspectionOptions = class {
+  /**
+   * Gets the request headers
+   * @returns the request headers
+   */
+  getRequestHeaders() {
+    return this.requestHeaders;
+  }
+  /**
+   * Gets the response headers
+   * @returns the response headers
+   */
+  getResponseHeaders() {
+    return this.responseHeaders;
+  }
+  /**
+   *
+   * To create an instance of HeadersInspectionOptions
+   * @param [options] - The headers inspection options value
+   * @returns An instance of HeadersInspectionOptions
+   * @example const options = new HeadersInspectionOptions({ inspectRequestHeaders: true, inspectResponseHeaders: true });
+   */
+  constructor(options = {}) {
+    var _a2, _b;
+    this.requestHeaders = new Headers2();
+    this.responseHeaders = new Headers2();
+    this.inspectRequestHeaders = (_a2 = options.inspectRequestHeaders) !== null && _a2 !== void 0 ? _a2 : false;
+    this.inspectResponseHeaders = (_b = options.inspectResponseHeaders) !== null && _b !== void 0 ? _b : false;
+  }
+  getKey() {
+    return HeadersInspectionOptionsKey;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/headersInspectionHandler.js
+var HeadersInspectionHandler = class {
+  /**
+   *
+   * Creates new instance of HeadersInspectionHandler
+   * @param _options The options for inspecting the headers
+   */
+  constructor(_options = new HeadersInspectionOptions()) {
+    this._options = _options;
+  }
+  execute(url, requestInit, requestOptions) {
+    let currentOptions = this._options;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[HeadersInspectionOptionsKey]) {
+      currentOptions = requestOptions[HeadersInspectionOptionsKey];
+    }
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("retryHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.headersInspection.enable", true);
+          return this.executeInternal(url, requestInit, requestOptions, currentOptions);
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.executeInternal(url, requestInit, requestOptions, currentOptions);
+  }
+  async executeInternal(url, requestInit, requestOptions, currentOptions) {
+    if (!this.next) {
+      throw new Error("next middleware is undefined.");
+    }
+    if (currentOptions.inspectRequestHeaders && requestInit.headers) {
+      for (const [key, value] of requestInit.headers) {
+        currentOptions.getRequestHeaders().add(key, value);
+      }
+    }
+    const response = await this.next.execute(url, requestInit, requestOptions);
+    if (currentOptions.inspectResponseHeaders && response.headers) {
+      for (const [key, value] of response.headers.entries()) {
+        currentOptions.getResponseHeaders().add(key, value);
+      }
+    }
+    return response;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/parametersNameDecodingOptions.js
+var ParametersNameDecodingHandlerOptionsKey = "RetryHandlerOptionKey";
+var ParametersNameDecodingHandlerOptions = class {
+  getKey() {
+    return ParametersNameDecodingHandlerOptionsKey;
+  }
+  /**
+   *
+   * To create an instance of ParametersNameDecodingHandlerOptions
+   * @param [options] - The optional parameters
+   * @returns An instance of ParametersNameDecodingHandlerOptions
+   * @example ParametersNameDecodingHandlerOptions({ enable: true, charactersToDecode: [".", "-", "~", "$"] });
+   */
+  constructor(options = {}) {
+    var _a2, _b;
+    this.enable = (_a2 = options.enable) !== null && _a2 !== void 0 ? _a2 : true;
+    this.charactersToDecode = (_b = options.charactersToDecode) !== null && _b !== void 0 ? _b : [".", "-", "~", "$"];
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/parametersNameDecodingHandler.js
+var ParametersNameDecodingHandler = class {
+  /**
+   *
+   * To create an instance of ParametersNameDecodingHandler
+   * @param [options] - The parameters name decoding handler options value
+   */
+  constructor(options = new ParametersNameDecodingHandlerOptions()) {
+    this.options = options;
+    if (!options) {
+      throw new Error("The options parameter is required.");
+    }
+  }
+  /**
+   * To execute the current middleware
+   * @param url - The url to be fetched
+   * @param requestInit - The request init object
+   * @param requestOptions - The request options
+   * @returns A Promise that resolves to nothing
+   */
+  execute(url, requestInit, requestOptions) {
+    let currentOptions = this.options;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[ParametersNameDecodingHandlerOptionsKey]) {
+      currentOptions = requestOptions[ParametersNameDecodingHandlerOptionsKey];
+    }
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("parametersNameDecodingHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.parameters_name_decoding.enable", currentOptions.enable);
+          return this.decodeParameters(url, requestInit, currentOptions, requestOptions);
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.decodeParameters(url, requestInit, currentOptions, requestOptions);
+  }
+  decodeParameters(url, requestInit, currentOptions, requestOptions) {
+    var _a2, _b;
+    let updatedUrl = url;
+    if (currentOptions && currentOptions.enable && url.includes("%") && currentOptions.charactersToDecode && currentOptions.charactersToDecode.length > 0) {
+      currentOptions.charactersToDecode.forEach((character) => {
+        updatedUrl = updatedUrl.replace(new RegExp(`%${character.charCodeAt(0).toString(16)}`, "gi"), character);
+      });
+    }
+    return (_b = (_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(updatedUrl, requestInit, requestOptions)) !== null && _b !== void 0 ? _b : Promise.reject(new Error("The next middleware is not set."));
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/redirectHandlerOptions.js
+var RedirectHandlerOptionKey = "RedirectHandlerOption";
+var RedirectHandlerOptions = class _RedirectHandlerOptions {
+  /**
+   *
+   * To create an instance of RedirectHandlerOptions
+   * @param [options] - The redirect handler options instance
+   * @returns An instance of RedirectHandlerOptions
+   * @throws Error if maxRedirects is more than 20 or less than 0
+   * @example	const options = new RedirectHandlerOptions({ maxRedirects: 5 });
+   */
+  constructor(options = {}) {
+    var _a2, _b, _c;
+    if (options.maxRedirects && options.maxRedirects > _RedirectHandlerOptions.MAX_MAX_REDIRECTS) {
+      const error = new Error(`MaxRedirects should not be more than ${_RedirectHandlerOptions.MAX_MAX_REDIRECTS}`);
+      error.name = "MaxLimitExceeded";
+      throw error;
+    }
+    if (options.maxRedirects !== void 0 && options.maxRedirects < 0) {
+      const error = new Error(`MaxRedirects should not be negative`);
+      error.name = "MinExpectationNotMet";
+      throw error;
+    }
+    this.maxRedirects = (_a2 = options.maxRedirects) !== null && _a2 !== void 0 ? _a2 : _RedirectHandlerOptions.DEFAULT_MAX_REDIRECTS;
+    this.shouldRedirect = (_b = options.shouldRedirect) !== null && _b !== void 0 ? _b : _RedirectHandlerOptions.defaultShouldRetry;
+    this.scrubSensitiveHeaders = (_c = options.scrubSensitiveHeaders) !== null && _c !== void 0 ? _c : _RedirectHandlerOptions.defaultScrubSensitiveHeaders;
+  }
+  getKey() {
+    return RedirectHandlerOptionKey;
+  }
+};
+RedirectHandlerOptions.DEFAULT_MAX_REDIRECTS = 5;
+RedirectHandlerOptions.MAX_MAX_REDIRECTS = 20;
+RedirectHandlerOptions.defaultShouldRetry = () => true;
+RedirectHandlerOptions.defaultScrubSensitiveHeaders = (headers, originalUrl, newUrl) => {
+  if (!headers || !originalUrl || !newUrl) {
+    return;
+  }
+  try {
+    const originalUri = new URL(originalUrl);
+    const newUri = new URL(newUrl);
+    const isDifferentHostOrScheme = originalUri.host.toLowerCase() !== newUri.host.toLowerCase() || originalUri.protocol.toLowerCase() !== newUri.protocol.toLowerCase();
+    if (isDifferentHostOrScheme) {
+      for (const key of Object.keys(headers)) {
+        const lower = key.toLowerCase();
+        if (lower === "authorization" || lower === "cookie" || lower === "proxy-authorization") {
+          delete headers[key];
+        }
+      }
+    }
+  } catch (_a2) {
+    return;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/redirectHandler.js
+var RedirectHandler = class _RedirectHandler {
+  /**
+   *
+   *
+   * To create an instance of RedirectHandler
+   * @param [options] - The redirect handler options instance
+   * @returns An instance of RedirectHandler
+   */
+  constructor(options = new RedirectHandlerOptions()) {
+    this.options = options;
+    if (!options) {
+      throw new Error("The options parameter is required.");
+    }
+  }
+  /**
+   *
+   * To check whether the response has the redirect status code or not
+   * @param response - The response object
+   * @returns A boolean representing whether the response contains the redirect status code or not
+   */
+  isRedirect(response) {
+    return _RedirectHandler.REDIRECT_STATUS_CODES.has(response.status);
+  }
+  /**
+   *
+   * To check whether the response has location header or not
+   * @param response - The response object
+   * @returns A boolean representing the whether the response has location header or not
+   */
+  hasLocationHeader(response) {
+    return response.headers.has(_RedirectHandler.LOCATION_HEADER);
+  }
+  /**
+   *
+   * To get the redirect url from location header in response object
+   * @param response - The response object
+   * @returns A redirect url from location header
+   */
+  getLocationHeader(response) {
+    return response.headers.get(_RedirectHandler.LOCATION_HEADER);
+  }
+  /**
+   *
+   * To check whether the given url is a relative url or not
+   * @param url - The url string value
+   * @returns A boolean representing whether the given url is a relative url or not
+   */
+  isRelativeURL(url) {
+    return !url.includes("://");
+  }
+  /**
+   * To execute the next middleware and to handle in case of redirect response returned by the server
+   * @param url - The url string value
+   * @param fetchRequestInit - The Fetch RequestInit object
+   * @param redirectCount - The redirect count value
+   * @param currentOptions - The redirect handler options instance
+   * @param requestOptions - The request options
+   * @param tracerName - The name to use for the tracer
+   * @returns A promise that resolves to nothing
+   */
+  async executeWithRedirect(url, fetchRequestInit, redirectCount, currentOptions, requestOptions, tracerName) {
+    var _a2;
+    const response = await ((_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(url, fetchRequestInit, requestOptions));
+    if (!response) {
+      throw new Error("Response is undefined");
+    }
+    if (redirectCount < currentOptions.maxRedirects && this.isRedirect(response) && this.hasLocationHeader(response) && currentOptions.shouldRedirect(response)) {
+      ++redirectCount;
+      const redirectUrl = this.getLocationHeader(response);
+      if (!redirectUrl) {
+        return response;
+      }
+      const newUrl = this.isRelativeURL(redirectUrl) ? new URL(redirectUrl, url).toString() : redirectUrl;
+      if (fetchRequestInit.headers) {
+        currentOptions.scrubSensitiveHeaders(fetchRequestInit.headers, url, newUrl);
+      }
+      if (response.status === _RedirectHandler.STATUS_CODE_SEE_OTHER) {
+        fetchRequestInit.method = HttpMethod.GET;
+        delete fetchRequestInit.body;
+      }
+      url = newUrl;
+      if (tracerName) {
+        return trace.getTracer(tracerName).startActiveSpan(`redirectHandler - redirect ${redirectCount}`, (span) => {
+          try {
+            span.setAttribute("com.microsoft.kiota.handler.redirect.count", redirectCount);
+            span.setAttribute("http.response.status_code", response.status);
+            return this.executeWithRedirect(url, fetchRequestInit, redirectCount, currentOptions, requestOptions);
+          } finally {
+            span.end();
+          }
+        });
+      }
+      return await this.executeWithRedirect(url, fetchRequestInit, redirectCount, currentOptions, requestOptions);
+    } else {
+      return response;
+    }
+  }
+  /**
+   * Executes the request and returns a promise resolving the response.
+   * @param url - The url for the request
+   * @param requestInit - The Fetch RequestInit object.
+   * @param requestOptions - The request options.
+   * @returns A Promise that resolves to the response.
+   */
+  execute(url, requestInit, requestOptions) {
+    const redirectCount = 0;
+    let currentOptions = this.options;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[RedirectHandlerOptionKey]) {
+      currentOptions = requestOptions[RedirectHandlerOptionKey];
+    }
+    requestInit.redirect = _RedirectHandler.MANUAL_REDIRECT;
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("redirectHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.redirect.enable", true);
+          return this.executeWithRedirect(url, requestInit, redirectCount, currentOptions, requestOptions, obsOptions.getTracerInstrumentationName());
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.executeWithRedirect(url, requestInit, redirectCount, currentOptions, requestOptions);
+  }
+};
+RedirectHandler.REDIRECT_STATUS_CODES = /* @__PURE__ */ new Set([
+  301,
+  // Moved Permanently
+  302,
+  // Found
+  303,
+  // See Other
+  307,
+  // Temporary Permanently
+  308
+  // Moved Permanently
+]);
+RedirectHandler.STATUS_CODE_SEE_OTHER = 303;
+RedirectHandler.LOCATION_HEADER = "Location";
+RedirectHandler.MANUAL_REDIRECT = "manual";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/retryHandlerOptions.js
+var RetryHandlerOptionKey = "RetryHandlerOptionKey";
+var RetryHandlerOptions = class _RetryHandlerOptions {
+  /**
+   *
+   * To create an instance of RetryHandlerOptions
+   * @param options - The RetryHandlerOptionsParams object
+   * @returns An instance of RetryHandlerOptions
+   * @example	const options = new RetryHandlerOptions({ maxRetries: 4 });
+   */
+  constructor(options = {}) {
+    var _a2, _b, _c;
+    if (options.delay !== void 0 && options.delay > _RetryHandlerOptions.MAX_DELAY) {
+      throw this.createError(`Delay should not be more than ${_RetryHandlerOptions.MAX_DELAY}`, "MaxLimitExceeded");
+    }
+    if (options.maxRetries !== void 0 && options.maxRetries > _RetryHandlerOptions.MAX_MAX_RETRIES) {
+      throw this.createError(`MaxRetries should not be more than ${_RetryHandlerOptions.MAX_MAX_RETRIES}`, "MaxLimitExceeded");
+    }
+    if (options.delay !== void 0 && options.delay < 0) {
+      throw this.createError(`Delay should not be negative`, "MinExpectationNotMet");
+    }
+    if (options.maxRetries !== void 0 && options.maxRetries < 0) {
+      throw this.createError(`MaxRetries should not be negative`, "MinExpectationNotMet");
+    }
+    this.delay = Math.min((_a2 = options.delay) !== null && _a2 !== void 0 ? _a2 : _RetryHandlerOptions.DEFAULT_DELAY, _RetryHandlerOptions.MAX_DELAY);
+    this.maxRetries = Math.min((_b = options.maxRetries) !== null && _b !== void 0 ? _b : _RetryHandlerOptions.DEFAULT_MAX_RETRIES, _RetryHandlerOptions.MAX_MAX_RETRIES);
+    this.shouldRetry = (_c = options.shouldRetry) !== null && _c !== void 0 ? _c : _RetryHandlerOptions.defaultShouldRetry;
+  }
+  /**
+   *
+   * Creates an error object with a message and name
+   * @param message - The error message
+   * @param name - The error name
+   * @returns An error object
+   */
+  createError(message, name) {
+    const error = new Error(message);
+    error.name = name;
+    return error;
+  }
+  /**
+   *
+   * To get the maximum delay
+   * @returns A maximum delay
+   */
+  getMaxDelay() {
+    return _RetryHandlerOptions.MAX_DELAY;
+  }
+  getKey() {
+    return RetryHandlerOptionKey;
+  }
+};
+RetryHandlerOptions.DEFAULT_DELAY = 3;
+RetryHandlerOptions.DEFAULT_MAX_RETRIES = 3;
+RetryHandlerOptions.MAX_DELAY = 180;
+RetryHandlerOptions.MAX_MAX_RETRIES = 10;
+RetryHandlerOptions.defaultShouldRetry = () => true;
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/retryHandler.js
+var RetryHandler = class _RetryHandler {
+  /**
+   *
+   * To create an instance of RetryHandler
+   * @param [options] - The retry handler options value
+   * @returns An instance of RetryHandler
+   */
+  constructor(options = new RetryHandlerOptions()) {
+    this.options = options;
+    if (!options) {
+      throw new Error("The options parameter is required.");
+    }
+  }
+  /**
+   *
+   *
+   * To check whether the response has the retry status code
+   * @param response - The response object
+   * @returns Whether the response has retry status code or not
+   */
+  isRetry(response) {
+    return _RetryHandler.RETRY_STATUS_CODES.has(response.status);
+  }
+  /**
+   *
+   * To check whether the payload is buffered or not
+   * @param options - The options of a request
+   * @returns Whether the payload is buffered or not
+   */
+  isBuffered(options) {
+    var _a2;
+    const method = options.method;
+    const isPutPatchOrPost = method === HttpMethod.PUT || method === HttpMethod.PATCH || method === HttpMethod.POST;
+    if (isPutPatchOrPost) {
+      const isStream = ((_a2 = getRequestHeader(options, "content-type")) === null || _a2 === void 0 ? void 0 : _a2.toLowerCase()) === "application/octet-stream";
+      if (isStream) {
+        return false;
+      }
+    }
+    return true;
+  }
+  /**
+   *
+   * To get the delay for a retry
+   * @param response - The response object
+   * @param retryAttempts - The current attempt count
+   * @param delay - The delay value in seconds
+   * @returns A delay for a retry
+   */
+  getDelay(response, retryAttempts, delay) {
+    const getRandomness = () => Number(Math.random().toFixed(3));
+    const retryAfter = response.headers !== void 0 ? response.headers.get(_RetryHandler.RETRY_AFTER_HEADER) : null;
+    let newDelay;
+    if (retryAfter !== null) {
+      if (Number.isNaN(Number(retryAfter))) {
+        newDelay = Math.round((new Date(retryAfter).getTime() - Date.now()) / 1e3);
+      } else {
+        newDelay = Number(retryAfter);
+      }
+    } else {
+      newDelay = retryAttempts >= 2 ? this.getExponentialBackOffTime(retryAttempts) + delay + getRandomness() : delay + getRandomness();
+    }
+    return Math.min(newDelay, this.options.getMaxDelay() + getRandomness());
+  }
+  /**
+   *
+   * To get an exponential back off value
+   * @param attempts - The current attempt count
+   * @returns An exponential back off value
+   */
+  getExponentialBackOffTime(attempts) {
+    return Math.round(1 / 2 * (2 ** attempts - 1));
+  }
+  /**
+   * To add delay for the execution
+   * @param delaySeconds - The delay value in seconds
+   * @returns A Promise that resolves to nothing
+   */
+  async sleep(delaySeconds) {
+    const delayMilliseconds = delaySeconds * 1e3;
+    return new Promise((resolve) => setTimeout(resolve, delayMilliseconds));
+  }
+  /**
+   * To execute the middleware with retries
+   * @param url - The request url
+   * @param fetchRequestInit - The request options
+   * @param retryAttempts - The current attempt count
+   * @param currentOptions - The current request options for the retry handler.
+   * @param requestOptions - The retry middleware options instance
+   * @param tracerName - The name to use for the tracer
+   * @returns A Promise that resolves to nothing
+   */
+  async executeWithRetry(url, fetchRequestInit, retryAttempts, currentOptions, requestOptions, tracerName) {
+    var _a2;
+    const response = await ((_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(url, fetchRequestInit, requestOptions));
+    if (!response) {
+      throw new Error("Response is undefined");
+    }
+    if (retryAttempts < currentOptions.maxRetries && this.isRetry(response) && this.isBuffered(fetchRequestInit) && currentOptions.shouldRetry(currentOptions.delay, retryAttempts, url, fetchRequestInit, response)) {
+      ++retryAttempts;
+      setRequestHeader(fetchRequestInit, _RetryHandler.RETRY_ATTEMPT_HEADER, retryAttempts.toString());
+      let delay = null;
+      if (response) {
+        delay = this.getDelay(response, retryAttempts, currentOptions.delay);
+        await this.sleep(delay);
+      }
+      if (tracerName) {
+        return await trace.getTracer(tracerName).startActiveSpan(`retryHandler - attempt ${retryAttempts}`, (span) => {
+          try {
+            span.setAttribute("http.request.resend_count", retryAttempts);
+            if (delay) {
+              span.setAttribute("http.request.resend_delay", delay);
+            }
+            span.setAttribute("http.response.status_code", response.status);
+            return this.executeWithRetry(url, fetchRequestInit, retryAttempts, currentOptions, requestOptions);
+          } finally {
+            span.end();
+          }
+        });
+      }
+      return await this.executeWithRetry(url, fetchRequestInit, retryAttempts, currentOptions, requestOptions);
+    } else {
+      return response;
+    }
+  }
+  /**
+   * To execute the current middleware
+   * @param url - The request url
+   * @param requestInit - The request options
+   * @param requestOptions - The request options
+   * @returns A Promise that resolves to nothing
+   */
+  execute(url, requestInit, requestOptions) {
+    const retryAttempts = 0;
+    let currentOptions = this.options;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[RetryHandlerOptionKey]) {
+      currentOptions = requestOptions[RetryHandlerOptionKey];
+    }
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("retryHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.retry.enable", true);
+          return this.executeWithRetry(url, requestInit, retryAttempts, currentOptions, requestOptions, obsOptions.getTracerInstrumentationName());
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.executeWithRetry(url, requestInit, retryAttempts, currentOptions, requestOptions);
+  }
+};
+RetryHandler.RETRY_STATUS_CODES = /* @__PURE__ */ new Set([
+  429,
+  // Too many requests
+  503,
+  // Service unavailable
+  504
+  // Gateway timeout
+]);
+RetryHandler.RETRY_ATTEMPT_HEADER = "Retry-Attempt";
+RetryHandler.RETRY_AFTER_HEADER = "Retry-After";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/version.js
+var libraryVersion = "1.0.0-preview.24";
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/userAgentHandlerOptions.js
+var UserAgentHandlerOptionsKey = "UserAgentHandlerOptionKey";
+var UserAgentHandlerOptions = class {
+  getKey() {
+    return UserAgentHandlerOptionsKey;
+  }
+  /**
+   *
+   * To create an instance of UserAgentHandlerOptions
+   * @param [options] - The options for the UserAgentHandler
+   * @example	const options = new UserAgentHandlerOptions({ enable: false });
+   */
+  constructor(options = {}) {
+    var _a2, _b, _c;
+    this.enable = (_a2 = options.enable) !== null && _a2 !== void 0 ? _a2 : true;
+    this.productName = (_b = options.productName) !== null && _b !== void 0 ? _b : "kiota-typescript";
+    this.productVersion = (_c = options.productVersion) !== null && _c !== void 0 ? _c : libraryVersion;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/userAgentHandler.js
+var USER_AGENT_HEADER_KEY = "User-Agent";
+var UserAgentHandler = class {
+  /**
+   * To create an instance of UserAgentHandler
+   * @param _options - The options for the middleware
+   */
+  constructor(_options = new UserAgentHandlerOptions()) {
+    this._options = _options;
+  }
+  /** @inheritdoc */
+  execute(url, requestInit, requestOptions) {
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("userAgentHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.useragent.enable", true);
+          return this.addValue(url, requestInit, requestOptions);
+        } finally {
+          span.end();
+        }
+      });
+    } else {
+      return this.addValue(url, requestInit, requestOptions);
+    }
+  }
+  async addValue(url, requestInit, requestOptions) {
+    var _a2;
+    let currentOptions = this._options;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[UserAgentHandlerOptionsKey]) {
+      currentOptions = requestOptions[UserAgentHandlerOptionsKey];
+    }
+    if (currentOptions.enable) {
+      const additionalValue = `${currentOptions.productName}/${currentOptions.productVersion}`;
+      const currentValue = getRequestHeader(requestInit, USER_AGENT_HEADER_KEY);
+      if (!(currentValue === null || currentValue === void 0 ? void 0 : currentValue.includes(additionalValue))) {
+        appendRequestHeader(requestInit, USER_AGENT_HEADER_KEY, additionalValue, " ");
+      }
+    }
+    const response = await ((_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(url, requestInit, requestOptions));
+    if (!response)
+      throw new Error("No response returned by the next middleware");
+    return response;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/options/urlReplaceHandlerOptions.js
+var UrlReplaceHandlerOptionsKey = "UrlReplaceHandlerOptionsKey";
+var UrlReplaceHandlerOptions = class {
+  /**
+   * Create a new instance of the UrlReplaceHandlerOptions class
+   * @param config the configuration to apply to the url replace handler options.
+   */
+  constructor(config) {
+    var _a2, _b;
+    if (config) {
+      this._urlReplacements = (_a2 = config.urlReplacements) !== null && _a2 !== void 0 ? _a2 : {};
+      this._enabled = (_b = config.enabled) !== null && _b !== void 0 ? _b : true;
+    } else {
+      this._urlReplacements = {};
+      this._enabled = true;
+    }
+  }
+  /**
+   * @inheritdoc
+   */
+  getKey() {
+    return UrlReplaceHandlerOptionsKey;
+  }
+  /**
+   * Returns whether the url replace handler is enabled or not.
+   * @returns whether the url replace handler is enabled or not.
+   */
+  get enabled() {
+    return this._enabled;
+  }
+  /**
+   * Returns the url replacements combinations.
+   * @returns the url replacements combinations.
+   */
+  get urlReplacements() {
+    return this._urlReplacements;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/urlReplaceHandler.js
+var UrlReplaceHandler = class {
+  /**
+   *
+   * Creates a new instance of the UrlReplaceHandler class
+   * @param handlerOptions The options for the url replace handler.
+   * @returns An instance of the UrlReplaceHandler class
+   */
+  constructor(handlerOptions = new UrlReplaceHandlerOptions()) {
+    this.handlerOptions = handlerOptions;
+    if (!handlerOptions) {
+      throw new Error("handlerOptions cannot be undefined");
+    }
+  }
+  /**
+   * @inheritdoc
+   */
+  execute(url, requestInit, requestOptions) {
+    let currentOptions = this.handlerOptions;
+    if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions[UrlReplaceHandlerOptionsKey]) {
+      currentOptions = requestOptions[UrlReplaceHandlerOptionsKey];
+    }
+    const obsOptions = getObservabilityOptionsFromRequest(requestOptions);
+    if (obsOptions) {
+      return trace.getTracer(obsOptions.getTracerInstrumentationName()).startActiveSpan("urlReplaceHandler - execute", (span) => {
+        try {
+          span.setAttribute("com.microsoft.kiota.handler.urlReplace.enable", currentOptions.enabled);
+          return this.replaceTokensInUrl(currentOptions, url, requestInit, requestOptions);
+        } finally {
+          span.end();
+        }
+      });
+    }
+    return this.replaceTokensInUrl(currentOptions, url, requestInit, requestOptions);
+  }
+  replaceTokensInUrl(options, url, requestInit, requestOptions) {
+    var _a2;
+    if (options.enabled) {
+      Object.keys(options.urlReplacements).forEach((replacementKey) => {
+        url = url.replace(replacementKey, options.urlReplacements[replacementKey]);
+      });
+    }
+    const response = (_a2 = this.next) === null || _a2 === void 0 ? void 0 : _a2.execute(url, requestInit, requestOptions);
+    if (!response) {
+      throw new Error("Response is undefined");
+    }
+    return response;
+  }
+};
+
+// node_modules/@microsoft/kiota-http-fetchlibrary/dist/es/src/middlewares/middlewareFactory.js
+var MiddlewareFactory = class _MiddlewareFactory {
+  /**
+   * @param customFetch - The custom fetch implementation
+   * Returns the default middleware chain an array with the  middleware handlers
+   * @returns an array of the middleware handlers of the default middleware chain
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  static getDefaultMiddlewares(customFetch = (...args) => fetch(...args)) {
+    return [new RetryHandler(), new RedirectHandler(), new ParametersNameDecodingHandler(), new UserAgentHandler(), new HeadersInspectionHandler(), new UrlReplaceHandler(), new CustomFetchHandler(customFetch)];
+  }
+  /**
+   * @param customFetch - The custom fetch implementation
+   * Returns the default middleware chain + performance middleware
+   * @returns an array of the middleware handlers of the default + performance middleware chain
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  static getPerformanceMiddlewares(customFetch = (...args) => fetch(...args)) {
+    const middlewares = _MiddlewareFactory.getDefaultMiddlewares(customFetch);
+    middlewares.splice(middlewares.length - 3, 0, new CompressionHandler());
+    return middlewares;
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/models/index.js
+function createAuthFromDiscriminatorValue(parseNode) {
+  return deserializeIntoAuth;
+}
+function createBaseClientRepresentationFromDiscriminatorValue(parseNode) {
+  if (!parseNode)
+    throw new Error("parseNode cannot be undefined");
+  const mappingValueNode = parseNode?.getChildNode("protocol");
+  if (mappingValueNode) {
+    const mappingValue = mappingValueNode.getStringValue();
+    if (mappingValue) {
+      switch (mappingValue) {
+        case "openid-connect":
+          return deserializeIntoOIDCClientRepresentation;
+        case "saml":
+          return deserializeIntoSAMLClientRepresentation;
+      }
+    }
+  }
+  return deserializeIntoBaseClientRepresentation;
+}
+function deserializeIntoAuth(auth = {}) {
+  return {
+    "certificate": (n) => {
+      auth.certificate = n.getStringValue();
+    },
+    "method": (n) => {
+      auth.method = n.getStringValue();
+    },
+    "secret": (n) => {
+      auth.secret = n.getStringValue();
+    }
+  };
+}
+function deserializeIntoBaseClientRepresentation(baseClientRepresentation = {}) {
+  return {
+    "appUrl": (n) => {
+      baseClientRepresentation.appUrl = n.getStringValue();
+    },
+    "clientId": (n) => {
+      baseClientRepresentation.clientId = n.getStringValue();
+    },
+    "createdTimestamp": (n) => {
+      baseClientRepresentation.createdTimestamp = n.getNumberValue();
+    },
+    "description": (n) => {
+      baseClientRepresentation.description = n.getStringValue();
+    },
+    "displayName": (n) => {
+      baseClientRepresentation.displayName = n.getStringValue();
+    },
+    "enabled": (n) => {
+      baseClientRepresentation.enabled = n.getBooleanValue();
+    },
+    "protocol": (n) => {
+      baseClientRepresentation.protocol = n.getStringValue();
+    },
+    "redirectUris": (n) => {
+      baseClientRepresentation.redirectUris = n.getCollectionOfPrimitiveValues("string");
+    },
+    "roles": (n) => {
+      baseClientRepresentation.roles = n.getCollectionOfPrimitiveValues("string");
+    },
+    "updatedTimestamp": (n) => {
+      baseClientRepresentation.updatedTimestamp = n.getNumberValue();
+    },
+    "uuid": (n) => {
+      baseClientRepresentation.uuid = n.getStringValue();
+    }
+  };
+}
+function deserializeIntoOIDCClientRepresentation(oIDCClientRepresentation = {}) {
+  return {
+    ...deserializeIntoBaseClientRepresentation(oIDCClientRepresentation),
+    "auth": (n) => {
+      oIDCClientRepresentation.auth = n.getObjectValue(createAuthFromDiscriminatorValue);
+    },
+    "loginFlows": (n) => {
+      oIDCClientRepresentation.loginFlows = n.getCollectionOfEnumValues(FlowObject);
+    },
+    "serviceAccountRoles": (n) => {
+      oIDCClientRepresentation.serviceAccountRoles = n.getCollectionOfPrimitiveValues("string");
+    },
+    "webOrigins": (n) => {
+      oIDCClientRepresentation.webOrigins = n.getCollectionOfPrimitiveValues("string");
+    }
+  };
+}
+function deserializeIntoSAMLClientRepresentation(sAMLClientRepresentation = {}) {
+  return {
+    ...deserializeIntoBaseClientRepresentation(sAMLClientRepresentation),
+    "allowEcpFlow": (n) => {
+      sAMLClientRepresentation.allowEcpFlow = n.getBooleanValue();
+    },
+    "clientSignatureRequired": (n) => {
+      sAMLClientRepresentation.clientSignatureRequired = n.getBooleanValue();
+    },
+    "forceNameIdFormat": (n) => {
+      sAMLClientRepresentation.forceNameIdFormat = n.getBooleanValue();
+    },
+    "forcePostBinding": (n) => {
+      sAMLClientRepresentation.forcePostBinding = n.getBooleanValue();
+    },
+    "frontChannelLogout": (n) => {
+      sAMLClientRepresentation.frontChannelLogout = n.getBooleanValue();
+    },
+    "includeAuthnStatement": (n) => {
+      sAMLClientRepresentation.includeAuthnStatement = n.getBooleanValue();
+    },
+    "nameIdFormat": (n) => {
+      sAMLClientRepresentation.nameIdFormat = n.getEnumValue(NameIdFormatObject);
+    },
+    "signAssertions": (n) => {
+      sAMLClientRepresentation.signAssertions = n.getBooleanValue();
+    },
+    "signatureAlgorithm": (n) => {
+      sAMLClientRepresentation.signatureAlgorithm = n.getEnumValue(SignatureAlgorithmObject);
+    },
+    "signatureCanonicalizationMethod": (n) => {
+      sAMLClientRepresentation.signatureCanonicalizationMethod = n.getStringValue();
+    },
+    "signDocuments": (n) => {
+      sAMLClientRepresentation.signDocuments = n.getBooleanValue();
+    },
+    "signingCertificate": (n) => {
+      sAMLClientRepresentation.signingCertificate = n.getStringValue();
+    }
+  };
+}
+function serializeAuth(writer, auth = {}, isSerializingDerivedType = false) {
+  if (!auth || isSerializingDerivedType) {
+    return;
+  }
+  writer.writeStringValue("certificate", auth.certificate);
+  writer.writeStringValue("method", auth.method);
+  writer.writeStringValue("secret", auth.secret);
+  writer.writeAdditionalData(auth.additionalData);
+}
+function serializeBaseClientRepresentation(writer, baseClientRepresentation = {}, isSerializingDerivedType = false) {
+  if (!baseClientRepresentation || isSerializingDerivedType) {
+    return;
+  }
+  writer.writeStringValue("appUrl", baseClientRepresentation.appUrl);
+  writer.writeStringValue("clientId", baseClientRepresentation.clientId);
+  writer.writeStringValue("description", baseClientRepresentation.description);
+  writer.writeStringValue("displayName", baseClientRepresentation.displayName);
+  writer.writeBooleanValue("enabled", baseClientRepresentation.enabled);
+  writer.writeStringValue("protocol", baseClientRepresentation.protocol);
+  writer.writeCollectionOfPrimitiveValues("redirectUris", baseClientRepresentation.redirectUris);
+  writer.writeCollectionOfPrimitiveValues("roles", baseClientRepresentation.roles);
+  writer.writeAdditionalData(baseClientRepresentation.additionalData);
+  switch (baseClientRepresentation.protocol) {
+    case "openid-connect":
+      serializeOIDCClientRepresentation(writer, baseClientRepresentation, true);
+      break;
+    case "saml":
+      serializeSAMLClientRepresentation(writer, baseClientRepresentation, true);
+      break;
+  }
+}
+function serializeOIDCClientRepresentation(writer, oIDCClientRepresentation = {}, isSerializingDerivedType = false) {
+  if (!oIDCClientRepresentation || isSerializingDerivedType) {
+    return;
+  }
+  serializeBaseClientRepresentation(writer, oIDCClientRepresentation, isSerializingDerivedType);
+  writer.writeObjectValue("auth", oIDCClientRepresentation.auth, serializeAuth);
+  if (oIDCClientRepresentation.loginFlows)
+    writer.writeCollectionOfEnumValues("loginFlows", oIDCClientRepresentation.loginFlows);
+  writer.writeCollectionOfPrimitiveValues("serviceAccountRoles", oIDCClientRepresentation.serviceAccountRoles);
+  writer.writeCollectionOfPrimitiveValues("webOrigins", oIDCClientRepresentation.webOrigins);
+}
+function serializeSAMLClientRepresentation(writer, sAMLClientRepresentation = {}, isSerializingDerivedType = false) {
+  if (!sAMLClientRepresentation || isSerializingDerivedType) {
+    return;
+  }
+  serializeBaseClientRepresentation(writer, sAMLClientRepresentation, isSerializingDerivedType);
+  writer.writeBooleanValue("allowEcpFlow", sAMLClientRepresentation.allowEcpFlow);
+  writer.writeBooleanValue("clientSignatureRequired", sAMLClientRepresentation.clientSignatureRequired);
+  writer.writeBooleanValue("forceNameIdFormat", sAMLClientRepresentation.forceNameIdFormat);
+  writer.writeBooleanValue("forcePostBinding", sAMLClientRepresentation.forcePostBinding);
+  writer.writeBooleanValue("frontChannelLogout", sAMLClientRepresentation.frontChannelLogout);
+  writer.writeBooleanValue("includeAuthnStatement", sAMLClientRepresentation.includeAuthnStatement);
+  writer.writeEnumValue("nameIdFormat", sAMLClientRepresentation.nameIdFormat);
+  writer.writeBooleanValue("signAssertions", sAMLClientRepresentation.signAssertions);
+  writer.writeEnumValue("signatureAlgorithm", sAMLClientRepresentation.signatureAlgorithm);
+  writer.writeStringValue("signatureCanonicalizationMethod", sAMLClientRepresentation.signatureCanonicalizationMethod);
+  writer.writeBooleanValue("signDocuments", sAMLClientRepresentation.signDocuments);
+  writer.writeStringValue("signingCertificate", sAMLClientRepresentation.signingCertificate);
+}
+var FlowObject = {
+  STANDARD: "STANDARD",
+  IMPLICIT: "IMPLICIT",
+  DIRECT_GRANT: "DIRECT_GRANT",
+  SERVICE_ACCOUNT: "SERVICE_ACCOUNT",
+  TOKEN_EXCHANGE: "TOKEN_EXCHANGE",
+  DEVICE: "DEVICE",
+  CIBA: "CIBA"
+};
+var NameIdFormatObject = {
+  Username: "username",
+  Email: "email",
+  Persistent: "persistent",
+  Transient: "transient"
+};
+var SignatureAlgorithmObject = {
+  RSA_SHA1: "RSA_SHA1",
+  RSA_SHA256: "RSA_SHA256",
+  RSA_SHA256_MGF1: "RSA_SHA256_MGF1",
+  RSA_SHA512: "RSA_SHA512",
+  RSA_SHA512_MGF1: "RSA_SHA512_MGF1",
+  DSA_SHA1: "DSA_SHA1"
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/admin/api/item/clients/v2/item/index.js
+function serializeV2PatchRequestBody(writer, v2PatchRequestBody = {}, isSerializingDerivedType = false) {
+  if (!v2PatchRequestBody || isSerializingDerivedType) {
+    return;
+  }
+  writer.writeAdditionalData(v2PatchRequestBody.additionalData);
+}
+var V2ItemRequestBuilderUriTemplate = "{+baseurl}/admin/api/{realmName}/clients/v2/{id}";
+var V2ItemRequestBuilderRequestsMetadata = {
+  delete: {
+    uriTemplate: V2ItemRequestBuilderUriTemplate,
+    adapterMethodName: "sendNoResponseContent"
+  },
+  get: {
+    uriTemplate: V2ItemRequestBuilderUriTemplate,
+    responseBodyContentType: "application/json",
+    adapterMethodName: "send",
+    responseBodyFactory: createBaseClientRepresentationFromDiscriminatorValue
+  },
+  patch: {
+    uriTemplate: V2ItemRequestBuilderUriTemplate,
+    responseBodyContentType: "application/json",
+    adapterMethodName: "send",
+    responseBodyFactory: createBaseClientRepresentationFromDiscriminatorValue,
+    requestBodyContentType: "application/merge-patch+json",
+    requestBodySerializer: serializeV2PatchRequestBody,
+    requestInformationContentSetMethod: "setContentFromParsable"
+  },
+  put: {
+    uriTemplate: V2ItemRequestBuilderUriTemplate,
+    responseBodyContentType: "application/json",
+    adapterMethodName: "send",
+    responseBodyFactory: createBaseClientRepresentationFromDiscriminatorValue,
+    requestBodyContentType: "application/json",
+    requestBodySerializer: serializeBaseClientRepresentation,
+    requestInformationContentSetMethod: "setContentFromParsable"
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/admin/api/item/clients/v2/index.js
+var V2RequestBuilderUriTemplate = "{+baseurl}/admin/api/{realmName}/clients/v2{?fields,limit*,offset*,q*,sort*}";
+var V2RequestBuilderNavigationMetadata = {
+  byId: {
+    requestsMetadata: V2ItemRequestBuilderRequestsMetadata,
+    pathParametersMappings: ["id"]
+  }
+};
+var V2RequestBuilderRequestsMetadata = {
+  get: {
+    uriTemplate: V2RequestBuilderUriTemplate,
+    responseBodyContentType: "application/json",
+    adapterMethodName: "sendCollection",
+    responseBodyFactory: createBaseClientRepresentationFromDiscriminatorValue
+  },
+  post: {
+    uriTemplate: V2RequestBuilderUriTemplate,
+    responseBodyContentType: "application/json",
+    adapterMethodName: "send",
+    responseBodyFactory: createBaseClientRepresentationFromDiscriminatorValue,
+    requestBodyContentType: "application/json",
+    requestBodySerializer: serializeBaseClientRepresentation,
+    requestInformationContentSetMethod: "setContentFromParsable"
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/admin/api/item/clients/index.js
+var ClientsRequestBuilderNavigationMetadata = {
+  v2: {
+    requestsMetadata: V2RequestBuilderRequestsMetadata,
+    navigationMetadata: V2RequestBuilderNavigationMetadata
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/admin/api/item/index.js
+var WithRealmNameItemRequestBuilderNavigationMetadata = {
+  clients: {
+    navigationMetadata: ClientsRequestBuilderNavigationMetadata
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/admin/api/index.js
+var ApiRequestBuilderNavigationMetadata = {
+  byRealmName: {
+    navigationMetadata: WithRealmNameItemRequestBuilderNavigationMetadata,
+    pathParametersMappings: ["realmName"]
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/admin/index.js
+var AdminRequestBuilderNavigationMetadata = {
+  api: {
+    navigationMetadata: ApiRequestBuilderNavigationMetadata
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-form/dist/es/src/formParseNode.js
+var FormParseNode = class _FormParseNode {
+  /**
+   *  Creates a new instance of FormParseNode
+   * @param _rawString the raw string to parse
+   * @param backingStoreFactory the factory to create backing stores
+   */
+  constructor(_rawString, backingStoreFactory) {
+    this._rawString = _rawString;
+    this.backingStoreFactory = backingStoreFactory;
+    this._fields = {};
+    this.getStringValue = () => this.getStringValueFromRaw(this._rawString);
+    this.getChildNode = (identifier) => {
+      if (this._fields[identifier]) {
+        return new _FormParseNode(this._fields[identifier], this.backingStoreFactory);
+      }
+      return void 0;
+    };
+    this.getBooleanValue = () => this.getBooleanValueFromRaw(this._rawString);
+    this.getNumberValue = () => this.getNumberValueFromRaw(this._rawString);
+    this.getGuidValue = () => this.getGuidValueFromRaw(this._rawString);
+    this.getDateValue = () => this.getDateValueFromRaw(this._rawString);
+    this.getDateOnlyValue = () => this.getDateOnlyValueFromRaw(this._rawString);
+    this.getTimeOnlyValue = () => this.getTimeOnlyValueFromRaw(this._rawString);
+    this.getDurationValue = () => this.getDurationValueFromRaw(this._rawString);
+    this.getCollectionOfPrimitiveValues = (primitiveType) => {
+      const values = this._rawString.split(",");
+      return values.map((x) => {
+        switch (primitiveType) {
+          case "boolean":
+            return this.getBooleanValueFromRaw(x);
+          case "number":
+            return this.getNumberValueFromRaw(x);
+          case "Date":
+            return this.getDateValueFromRaw(x);
+          case "DateOnly":
+            return this.getDateOnlyValueFromRaw(x);
+          case "TimeOnly":
+            return this.getTimeOnlyValueFromRaw(x);
+          case "Duration":
+            return this.getDurationValueFromRaw(x);
+          case "string":
+            return this.getStringValueFromRaw(x);
+          default:
+            throw new Error(`encountered an unsupported type during deserialization ${primitiveType}`);
+        }
+      });
+    };
+    this.getCollectionOfObjectValues = (parsableFactory) => {
+      throw new Error(`serialization of collections is not supported with URI encoding`);
+    };
+    this.getObjectValue = (parsableFactory) => {
+      const temp = {};
+      const enableBackingStore = isBackingStoreEnabled(parsableFactory(this)(temp));
+      const value = enableBackingStore && this.backingStoreFactory ? new Proxy(temp, createBackedModelProxyHandler(this.backingStoreFactory)) : temp;
+      if (this.onBeforeAssignFieldValues) {
+        this.onBeforeAssignFieldValues(value);
+      }
+      this.assignFieldValues(value, parsableFactory);
+      if (this.onAfterAssignFieldValues) {
+        this.onAfterAssignFieldValues(value);
+      }
+      return value;
+    };
+    this.getCollectionOfEnumValues = (type) => {
+      const rawValues = this.getStringValue();
+      if (!rawValues) {
+        return [];
+      }
+      return rawValues.split(",").map((x) => getEnumValueFromStringValue(x, type));
+    };
+    this.getEnumValue = (type) => {
+      const rawValue = this.getStringValue();
+      if (!rawValue) {
+        return void 0;
+      }
+      return getEnumValueFromStringValue(rawValue, type);
+    };
+    if (!_rawString) {
+      throw new Error("rawString cannot be undefined");
+    }
+    _rawString.split("&").map((x) => x.split("=")).filter((x) => x.length === 2).forEach((x) => {
+      const key = this.normalizeKey(x[0]);
+      if (this._fields[key]) {
+        this._fields[key] += "," + x[1];
+      } else {
+        this._fields[key] = x[1];
+      }
+    });
+  }
+  normalizeKey(key) {
+    return decodeURIComponent(key).trim();
+  }
+  getStringValueFromRaw(value) {
+    return decodeURIComponent(value);
+  }
+  getBooleanValueFromRaw(value) {
+    const decoded = this.getStringValueFromRaw(value).toLowerCase();
+    if (decoded === "true" || decoded === "1") {
+      return true;
+    } else if (decoded === "false" || decoded === "0") {
+      return false;
+    }
+    return void 0;
+  }
+  getNumberValueFromRaw(value) {
+    return parseFloat(this.getStringValueFromRaw(value));
+  }
+  getGuidValueFromRaw(value) {
+    return parseGuidString(this.getStringValueFromRaw(value));
+  }
+  getDateValueFromRaw(value) {
+    return new Date(Date.parse(this.getStringValueFromRaw(value)));
+  }
+  getDateOnlyValueFromRaw(value) {
+    return DateOnly.parse(this.getStringValueFromRaw(value));
+  }
+  getTimeOnlyValueFromRaw(value) {
+    return TimeOnly.parse(this.getStringValueFromRaw(value));
+  }
+  getDurationValueFromRaw(value) {
+    return Duration.parse(this.getStringValueFromRaw(value));
+  }
+  getByteArrayValue() {
+    throw new Error("serialization of byt arrays is not supported with URI encoding");
+  }
+  assignFieldValues(model, parsableFactory) {
+    const fields = parsableFactory(this)(model);
+    Object.entries(this._fields).filter((x) => !/^null$/i.test(x[1])).forEach(([k, v]) => {
+      const deserializer = fields[k];
+      if (deserializer) {
+        deserializer(new _FormParseNode(v, this.backingStoreFactory));
+      } else {
+        model[k] = v;
+      }
+    });
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-form/dist/es/src/formSerializationWriter.js
+var FormSerializationWriter = class _FormSerializationWriter {
+  constructor() {
+    this.writer = [];
+    this.depth = -1;
+    this.writeStringValue = (key, value) => {
+      if (value === null) {
+        value = "null";
+      }
+      if (key && value) {
+        this.writePropertyName(key);
+        this.writer.push(`=${encodeURIComponent(value)}`);
+        this.writer.push(_FormSerializationWriter.propertySeparator);
+      }
+    };
+    this.writePropertyName = (key) => {
+      this.writer.push(encodeURIComponent(key));
+    };
+    this.shouldWriteValueOrNull = (key, value) => {
+      if (value === null) {
+        this.writeNullValue(key);
+        return false;
+      }
+      return true;
+    };
+    this.writeBooleanValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value !== void 0 && this.writeStringValue(key, `${value}`);
+      }
+    };
+    this.writeNumberValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value && this.writeStringValue(key, `${value}`);
+      }
+    };
+    this.writeGuidValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value && this.writeStringValue(key, value.toString());
+      }
+    };
+    this.writeDateValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value && this.writeStringValue(key, value.toISOString());
+      }
+    };
+    this.writeDateOnlyValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value && this.writeStringValue(key, value.toString());
+      }
+    };
+    this.writeTimeOnlyValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value && this.writeStringValue(key, value.toString());
+      }
+    };
+    this.writeDurationValue = (key, value) => {
+      if (this.shouldWriteValueOrNull(key, value)) {
+        value && this.writeStringValue(key, value.toString());
+      }
+    };
+    this.writeNullValue = (key) => {
+      key && this.writeStringValue(key, null);
+    };
+    this.writeCollectionOfPrimitiveValues = (_key, _values) => {
+      if (_key && _values) {
+        _values.forEach((val) => {
+          this.writeAnyValue(_key, val);
+        });
+      }
+    };
+    this.writeCollectionOfObjectValues = (_key, _values) => {
+      throw new Error(`serialization of collections is not supported with URI encoding`);
+    };
+    this.writeObjectValue = (key, value, serializerMethod) => {
+      var _a2, _b, _c;
+      if (++this.depth > 0) {
+        throw new Error(`serialization of nested objects is not supported with URI encoding`);
+      }
+      if (!this.shouldWriteValueOrNull(key, value)) {
+        return;
+      }
+      if (value) {
+        if (key) {
+          this.writePropertyName(key);
+        }
+        (_a2 = this.onBeforeObjectSerialization) === null || _a2 === void 0 ? void 0 : _a2.call(this, value);
+        (_b = this.onStartObjectSerialization) === null || _b === void 0 ? void 0 : _b.call(this, value, this);
+        serializerMethod(this, value);
+        (_c = this.onAfterObjectSerialization) === null || _c === void 0 ? void 0 : _c.call(this, value);
+        if (this.writer.length > 0 && this.writer[this.writer.length - 1] === _FormSerializationWriter.propertySeparator) {
+          this.writer.pop();
+        }
+        key && this.writer.push(_FormSerializationWriter.propertySeparator);
+      }
+    };
+    this.writeEnumValue = (key, ...values) => {
+      if (values.length > 0) {
+        const rawValues = values.filter((x) => x !== void 0).map((x) => `${x}`);
+        if (rawValues.length > 0) {
+          this.writeStringValue(key, rawValues.reduce((x, y) => `${x}, ${y}`));
+        }
+      }
+    };
+    this.writeCollectionOfEnumValues = (key, values) => {
+      if (key && values && values.length > 0) {
+        const rawValues = values.filter((x) => x !== void 0).map((x) => `${x}`);
+        if (rawValues.length > 0) {
+          this.writeCollectionOfPrimitiveValues(key, rawValues);
+        }
+      }
+    };
+    this.getSerializedContent = () => {
+      return this.convertStringToArrayBuffer(this.writer.join(``));
+    };
+    this.convertStringToArrayBuffer = (str) => {
+      const encoder = new TextEncoder();
+      const encodedString = encoder.encode(str);
+      return encodedString.buffer;
+    };
+    this.writeAdditionalData = (additionalData) => {
+      if (additionalData === void 0)
+        return;
+      for (const key in additionalData) {
+        this.writeAnyValue(key, additionalData[key]);
+      }
+    };
+    this.writeAnyValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value !== void 0) {
+        const valueType = typeof value;
+        if (valueType === "boolean") {
+          this.writeBooleanValue(key, value);
+        } else if (valueType === "string") {
+          this.writeStringValue(key, value);
+        } else if (value instanceof Date) {
+          this.writeDateValue(key, value);
+        } else if (value instanceof DateOnly) {
+          this.writeDateOnlyValue(key, value);
+        } else if (value instanceof TimeOnly) {
+          this.writeTimeOnlyValue(key, value);
+        } else if (value instanceof Duration) {
+          this.writeDurationValue(key, value);
+        } else if (valueType === "number") {
+          this.writeNumberValue(key, value);
+        } else {
+          throw new Error(`encountered unknown ${value} value type during serialization ${valueType} for key ${key}`);
+        }
+      }
+    };
+  }
+  writeByteArrayValue(key, value) {
+    throw new Error("serialization of byt arrays is not supported with URI encoding");
+  }
+};
+FormSerializationWriter.propertySeparator = `&`;
+
+// node_modules/@microsoft/kiota-serialization-form/dist/es/src/formParseNodeFactory.js
+var FormParseNodeFactory = class {
+  /**
+   * Creates an instance of JsonParseNode.
+   * @param backingStoreFactory - The factory to create backing stores.
+   */
+  constructor(backingStoreFactory) {
+    this.backingStoreFactory = backingStoreFactory;
+  }
+  getValidContentType() {
+    return "application/x-www-form-urlencoded";
+  }
+  getRootParseNode(contentType, content) {
+    if (!content) {
+      throw new Error("content cannot be undefined of empty");
+    } else if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new FormParseNode(this.convertArrayBufferToString(content), this.backingStoreFactory);
+  }
+  convertArrayBufferToString(content) {
+    const decoder = new TextDecoder();
+    return decoder.decode(content);
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-form/dist/es/src/formSerializationWriterFactory.js
+var FormSerializationWriterFactory = class {
+  getValidContentType() {
+    return "application/x-www-form-urlencoded";
+  }
+  getSerializationWriter(contentType) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new FormSerializationWriter();
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-json/dist/es/src/jsonParseNode.js
+var JsonParseNode = class _JsonParseNode {
+  /**
+   * Creates an instance of JsonParseNode.
+   * @param _jsonNode - The JSON node to parse.
+   * @param backingStoreFactory - The factory to create backing stores.
+   */
+  constructor(_jsonNode, backingStoreFactory) {
+    this._jsonNode = _jsonNode;
+    this.backingStoreFactory = backingStoreFactory;
+    this.getStringValue = () => this.getStringValueFromRaw(this._jsonNode);
+    this.getChildNode = (identifier) => this._jsonNode && typeof this._jsonNode === "object" && this._jsonNode[identifier] !== void 0 ? new _JsonParseNode(this._jsonNode[identifier], this.backingStoreFactory) : void 0;
+    this.getBooleanValue = () => typeof this._jsonNode === "boolean" ? this._jsonNode : void 0;
+    this.getNumberValue = () => typeof this._jsonNode === "number" ? this._jsonNode : void 0;
+    this.getGuidValue = () => this.getGuidValueFromRaw(this._jsonNode);
+    this.getDateValue = () => this.getDateValueFromRaw(this._jsonNode);
+    this.getDateOnlyValue = () => this.getDateOnlyValueFromRaw(this._jsonNode);
+    this.getTimeOnlyValue = () => this.getTimeOnlyValueFromRaw(this._jsonNode);
+    this.getDurationValue = () => this.getDurationValueFromRaw(this._jsonNode);
+    this.getCollectionOfPrimitiveValues = (primitiveType) => {
+      if (!Array.isArray(this._jsonNode)) {
+        return void 0;
+      }
+      return this._jsonNode.map((x) => this.getPrimitiveValue(x, primitiveType));
+    };
+    this.getPrimitiveValue = (value, primitiveType) => {
+      if (value === null) {
+        return null;
+      }
+      switch (primitiveType) {
+        case "boolean":
+          if (typeof value !== "boolean") {
+            throw new Error(`encountered an unsupported type during deserialization ${typeof value}`);
+          }
+          return value;
+        case "number":
+          if (typeof value !== "number") {
+            throw new Error(`encountered an unsupported type during deserialization ${typeof value}`);
+          }
+          return value;
+        case "Date":
+          return this.getDateValueFromRaw(value);
+        case "DateOnly":
+          return this.getDateOnlyValueFromRaw(value);
+        case "TimeOnly":
+          return this.getTimeOnlyValueFromRaw(value);
+        case "Duration":
+          return this.getDurationValueFromRaw(value);
+        case "string":
+          if (typeof value !== "string") {
+            throw new Error(`encountered an unsupported type during deserialization ${typeof value}`);
+          }
+          return value;
+        default:
+          throw new Error(`encountered an unsupported type during deserialization ${primitiveType}`);
+      }
+    };
+    this.getCollectionOfObjectValues = (method) => {
+      if (!Array.isArray(this._jsonNode)) {
+        return void 0;
+      }
+      return this._jsonNode ? this._jsonNode.map((x) => new _JsonParseNode(x, this.backingStoreFactory)).map((x) => x.getObjectValue(method)) : void 0;
+    };
+    this.getObjectValue = (parsableFactory) => {
+      const temp = {};
+      if (isUntypedNode(parsableFactory(this)(temp))) {
+        const valueType = typeof this._jsonNode;
+        let value = temp;
+        if (valueType === "boolean") {
+          value = createUntypedBoolean(this._jsonNode);
+        } else if (valueType === "string") {
+          value = createUntypedString(this._jsonNode);
+        } else if (valueType === "number") {
+          value = createUntypedNumber(this._jsonNode);
+        } else if (Array.isArray(this._jsonNode)) {
+          const nodes = [];
+          this._jsonNode.forEach((x) => {
+            nodes.push(new _JsonParseNode(x, this.backingStoreFactory).getObjectValue(createUntypedNodeFromDiscriminatorValue));
+          });
+          value = createUntypedArray(nodes);
+        } else if (this._jsonNode && valueType === "object") {
+          const properties = {};
+          Object.entries(this._jsonNode).forEach(([k, v]) => {
+            properties[k] = new _JsonParseNode(v, this.backingStoreFactory).getObjectValue(createUntypedNodeFromDiscriminatorValue);
+          });
+          value = createUntypedObject(properties);
+        } else if (!this._jsonNode) {
+          value = createUntypedNull();
+        }
+        return value;
+      }
+      const enableBackingStore = isBackingStoreEnabled(parsableFactory(this)(temp));
+      const objectValue = enableBackingStore && this.backingStoreFactory ? new Proxy(temp, createBackedModelProxyHandler(this.backingStoreFactory)) : temp;
+      if (this.onBeforeAssignFieldValues) {
+        this.onBeforeAssignFieldValues(objectValue);
+      }
+      this.assignFieldValues(objectValue, parsableFactory);
+      if (this.onAfterAssignFieldValues) {
+        this.onAfterAssignFieldValues(objectValue);
+      }
+      return objectValue;
+    };
+    this.assignFieldValues = (model, parsableFactory) => {
+      const fields = parsableFactory(this)(model);
+      if (!this._jsonNode)
+        return;
+      Object.entries(this._jsonNode).forEach(([k, v]) => {
+        var _a2;
+        const deserializer = fields[k];
+        if (deserializer) {
+          deserializer(new _JsonParseNode(v, this.backingStoreFactory));
+        } else {
+          const modelDataHolder = model;
+          (_a2 = modelDataHolder.additionalData) !== null && _a2 !== void 0 ? _a2 : modelDataHolder.additionalData = {};
+          modelDataHolder.additionalData[k] = v;
+        }
+      });
+    };
+    this.getCollectionOfEnumValues = (type) => {
+      if (Array.isArray(this._jsonNode)) {
+        return this._jsonNode.map((x) => {
+          if (typeof x === "string") {
+            return getEnumValueFromStringValue(x, type);
+          }
+          return void 0;
+        }).filter((value) => value !== void 0);
+      }
+      return [];
+    };
+    this.getEnumValue = (type) => {
+      const rawValue = this.getStringValue();
+      if (!rawValue) {
+        return void 0;
+      }
+      return getEnumValueFromStringValue(rawValue, type);
+    };
+  }
+  getStringValueFromRaw(value) {
+    return typeof value === "string" ? value : void 0;
+  }
+  getGuidValueFromRaw(value) {
+    return parseGuidString(this.getStringValueFromRaw(value));
+  }
+  getDateValueFromRaw(value) {
+    if (value instanceof Date) {
+      return new Date(value.getTime());
+    }
+    if (typeof value === "number") {
+      return new Date(value);
+    }
+    if (typeof value === "string") {
+      return new Date(value);
+    }
+    return void 0;
+  }
+  getDateOnlyValueFromRaw(value) {
+    return value instanceof DateOnly ? value : DateOnly.parse(this.getStringValueFromRaw(value));
+  }
+  getTimeOnlyValueFromRaw(value) {
+    return value instanceof TimeOnly ? value : TimeOnly.parse(this.getStringValueFromRaw(value));
+  }
+  getDurationValueFromRaw(value) {
+    return value instanceof Duration ? value : Duration.parse(this.getStringValueFromRaw(value));
+  }
+  getByteArrayValue() {
+    const strValue = this.getStringValue();
+    if (strValue && strValue.length > 0) {
+      return inNodeEnv() ? new Uint8Array(Buffer.from(strValue, "base64")).buffer : new TextEncoder().encode(strValue).buffer;
+    }
+    return void 0;
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-json/dist/es/src/jsonSerializationWriter.js
+var JsonSerializationWriter = class _JsonSerializationWriter {
+  constructor() {
+    this.writer = [];
+    this.shouldWriteValueOrNull = (key, value) => {
+      if (value === null) {
+        this.writeNullValue(key);
+        return false;
+      }
+      return true;
+    };
+    this.writeStringValue = (key, value) => {
+      if (value === void 0) {
+        return;
+      }
+      if (this.shouldWriteValueOrNull(key, value)) {
+        key && this.writePropertyName(key);
+        this.writer.push(JSON.stringify(value));
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.writePropertyName = (key) => {
+      this.writer.push(`"${key}":`);
+    };
+    this.writeBooleanValue = (key, value) => {
+      if (value === void 0) {
+        return;
+      }
+      if (this.shouldWriteValueOrNull(key, value)) {
+        key && this.writePropertyName(key);
+        this.writer.push(`${value}`);
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.writeNumberValue = (key, value) => {
+      if (value === void 0) {
+        return;
+      }
+      if (this.shouldWriteValueOrNull(key, value)) {
+        key && this.writePropertyName(key);
+        this.writer.push(`${value}`);
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.writeGuidValue = (key, value) => {
+      if (value === void 0) {
+        return;
+      }
+      if (this.shouldWriteValueOrNull(key, value)) {
+        key && this.writePropertyName(key);
+        this.writer.push(`"${value}"`);
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.writeDateValue = (key, value) => this.writeStringValue(key, value === null ? null : value === null || value === void 0 ? void 0 : value.toISOString());
+    this.writeDateOnlyValue = (key, value) => this.writeStringValue(key, value === null ? null : value === null || value === void 0 ? void 0 : value.toString());
+    this.writeTimeOnlyValue = (key, value) => this.writeStringValue(key, value === null ? null : value === null || value === void 0 ? void 0 : value.toString());
+    this.writeDurationValue = (key, value) => this.writeStringValue(key, value === null ? null : value === null || value === void 0 ? void 0 : value.toString());
+    this.writeNullValue = (key) => {
+      key && this.writePropertyName(key);
+      this.writer.push(`null`);
+      key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+    };
+    this.writeCollectionOfPrimitiveValues = (key, values) => {
+      if (!this.shouldWriteValueOrNull(key, values)) {
+        return;
+      }
+      if (values) {
+        key && this.writePropertyName(key);
+        this.startArray();
+        values.forEach((v, idx) => {
+          this.writeAnyValue(void 0, v);
+          idx + 1 < values.length && this.writer.push(_JsonSerializationWriter.propertySeparator);
+        });
+        this.endArray();
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.writeCollectionOfObjectValues = (key, values, serializerMethod) => {
+      if (!this.shouldWriteValueOrNull(key, values)) {
+        return;
+      }
+      if (values) {
+        key && this.writePropertyName(key);
+        this.startArray();
+        values.forEach((v) => {
+          this.writeObjectValue(void 0, v, serializerMethod);
+          this.writer.push(_JsonSerializationWriter.propertySeparator);
+        });
+        if (values.length > 0) {
+          this.writer.pop();
+        }
+        this.endArray();
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.startObject = () => {
+      this.writer.push(`{`);
+    };
+    this.endObject = () => {
+      this.writer.push(`}`);
+    };
+    this.startArray = () => {
+      this.writer.push(`[`);
+    };
+    this.endArray = () => {
+      this.writer.push(`]`);
+    };
+    this.removeLastSeparator = () => {
+      if (this.writer.length > 0 && this.writer[this.writer.length - 1] === _JsonSerializationWriter.propertySeparator) {
+        this.writer.pop();
+      }
+    };
+    this.writeEnumValue = (key, ...values) => {
+      if (values.length > 0) {
+        const rawValues = values.filter((x) => x !== void 0).map((x) => `${x}`);
+        if (rawValues.length > 0) {
+          this.writeStringValue(key, rawValues.reduce((x, y) => `${x}, ${y}`));
+        }
+      }
+    };
+    this.writeCollectionOfEnumValues = (key, values) => {
+      if (values && values.length > 0) {
+        const rawValues = values.filter((x) => x !== void 0).map((x) => `${x}`);
+        if (rawValues.length === 0) {
+          return;
+        }
+        key && this.writePropertyName(key);
+        this.writer.push(JSON.stringify(rawValues));
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      }
+    };
+    this.getSerializedContent = () => {
+      return this.convertStringToArrayBuffer(this.writer.join(``));
+    };
+    this.convertStringToArrayBuffer = (str) => {
+      const encoder = new TextEncoder();
+      const encodedString = encoder.encode(str);
+      return encodedString.buffer;
+    };
+    this.writeAdditionalData = (additionalData) => {
+      if (additionalData === void 0)
+        return;
+      for (const key in additionalData) {
+        if (Object.prototype.hasOwnProperty.call(additionalData, key)) {
+          this.writeAnyValue(key, additionalData[key]);
+        }
+      }
+    };
+    this.writeNonParsableObjectValue = (key, value) => {
+      if (key) {
+        this.writePropertyName(key);
+      }
+      this.writer.push(JSON.stringify(value), _JsonSerializationWriter.propertySeparator);
+    };
+    this.writeAnyValue = (key, value) => {
+      if (value === void 0) {
+        return;
+      }
+      if (!this.shouldWriteValueOrNull(key, value)) {
+        return;
+      }
+      const valueType = typeof value;
+      if (valueType === "boolean") {
+        this.writeBooleanValue(key, value);
+      } else if (valueType === "string") {
+        this.writeStringValue(key, value);
+      } else if (value instanceof Date) {
+        this.writeDateValue(key, value);
+      } else if (value instanceof DateOnly) {
+        this.writeDateOnlyValue(key, value);
+      } else if (value instanceof TimeOnly) {
+        this.writeTimeOnlyValue(key, value);
+      } else if (value instanceof Duration) {
+        this.writeDurationValue(key, value);
+      } else if (valueType === "number") {
+        this.writeNumberValue(key, value);
+      } else if (Array.isArray(value)) {
+        this.writeCollectionOfPrimitiveValues(key, value);
+      } else if (valueType === "object") {
+        this.writeNonParsableObjectValue(key, value);
+      } else {
+        throw new Error(`encountered unknown value type during serialization ${valueType}`);
+      }
+    };
+  }
+  writeByteArrayValue(key, value) {
+    if (!value) {
+      return;
+    }
+    const b64 = inNodeEnv() ? Buffer.from(value).toString("base64") : btoa(new TextDecoder().decode(value));
+    this.writeStringValue(key, b64);
+  }
+  writeObjectValue(key, value, serializerMethod) {
+    var _a2, _b, _c;
+    if (value === void 0) {
+      return;
+    }
+    if (!this.shouldWriteValueOrNull(key, value)) {
+      return;
+    }
+    if (isUntypedNode(value)) {
+      const untypedNode = value;
+      if (isUntypedBoolean(untypedNode)) {
+        this.writeBooleanValue(key, untypedNode.getValue());
+      } else if (isUntypedString(untypedNode)) {
+        this.writeStringValue(key, untypedNode.getValue());
+      } else if (isUntypedNull(untypedNode)) {
+        this.writeNullValue(key);
+      } else if (isUntypedNumber(untypedNode)) {
+        this.writeNumberValue(key, untypedNode.getValue());
+      } else if (isUntypedObject(untypedNode)) {
+        const objectValue = untypedNode.getValue();
+        if (objectValue === void 0)
+          return;
+        if (key)
+          this.writePropertyName(key);
+        this.startObject();
+        for (const vKey in objectValue) {
+          if (Object.prototype.hasOwnProperty.call(objectValue, vKey)) {
+            this.writeObjectValue(vKey, objectValue[vKey], serializerMethod);
+          }
+        }
+        this.removeLastSeparator();
+        this.endObject();
+        if (key)
+          this.writer.push(_JsonSerializationWriter.propertySeparator);
+      } else if (isUntypedArray(untypedNode)) {
+        if (key) {
+          this.writePropertyName(key);
+        }
+        const arrValue = untypedNode.getValue();
+        this.startArray();
+        arrValue.forEach((v, idx) => {
+          this.writeObjectValue(void 0, v, serializerMethod);
+          idx + 1 < arrValue.length && this.writer.push(_JsonSerializationWriter.propertySeparator);
+        });
+        this.removeLastSeparator();
+        this.endArray();
+        key && this.writer.push(_JsonSerializationWriter.propertySeparator);
+      } else {
+        this.writeAnyValue(key, untypedNode.getValue());
+      }
+      return;
+    }
+    if (key)
+      this.writePropertyName(key);
+    (_a2 = this.onBeforeObjectSerialization) === null || _a2 === void 0 ? void 0 : _a2.call(this, value);
+    this.startObject();
+    (_b = this.onStartObjectSerialization) === null || _b === void 0 ? void 0 : _b.call(this, value, this);
+    serializerMethod === null || serializerMethod === void 0 ? void 0 : serializerMethod(this, value);
+    (_c = this.onAfterObjectSerialization) === null || _c === void 0 ? void 0 : _c.call(this, value);
+    this.removeLastSeparator();
+    this.endObject();
+    if (key)
+      this.writer.push(_JsonSerializationWriter.propertySeparator);
+  }
+};
+JsonSerializationWriter.propertySeparator = `,`;
+
+// node_modules/@microsoft/kiota-serialization-json/dist/es/src/jsonParseNodeFactory.js
+var JsonParseNodeFactory = class {
+  /**
+   * Creates an instance of JsonParseNode.
+   * @param backingStoreFactory - The factory to create backing stores.
+   */
+  constructor(backingStoreFactory) {
+    this.backingStoreFactory = backingStoreFactory;
+  }
+  getValidContentType() {
+    return "application/json";
+  }
+  getRootParseNode(contentType, content) {
+    if (!content) {
+      throw new Error("content cannot be undefined of empty");
+    } else if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new JsonParseNode(this.convertArrayBufferToJson(content), this.backingStoreFactory);
+  }
+  convertArrayBufferToJson(content) {
+    const decoder = new TextDecoder();
+    const contentAsStr = decoder.decode(content);
+    return JSON.parse(contentAsStr);
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-json/dist/es/src/jsonSerializationWriterFactory.js
+var JsonSerializationWriterFactory = class {
+  getValidContentType() {
+    return "application/json";
+  }
+  getSerializationWriter(contentType) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new JsonSerializationWriter();
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-multipart/dist/es/src/multipartSerializationWriter.js
+var MultipartSerializationWriter = class {
+  constructor() {
+    this.writer = new ArrayBuffer(0);
+    this.writeStringValue = (key, value) => {
+      if (key) {
+        this.writeRawStringValue(key);
+      }
+      if (value) {
+        if (key) {
+          this.writeRawStringValue(": ");
+        }
+        this.writeRawStringValue(value);
+      }
+    };
+    this.writeRawStringValue = (value) => {
+      if (value) {
+        this.writeByteArrayValue(void 0, new TextEncoder().encode(value).buffer);
+      }
+    };
+    this.writeBooleanValue = (key, value) => {
+      throw new Error(`serialization of boolean values is not supported with multipart`);
+    };
+    this.writeNumberValue = (key, value) => {
+      throw new Error(`serialization of number values is not supported with multipart`);
+    };
+    this.writeGuidValue = (key, value) => {
+      throw new Error(`serialization of guid values is not supported with multipart`);
+    };
+    this.writeDateValue = (key, value) => {
+      throw new Error(`serialization of date values is not supported with multipart`);
+    };
+    this.writeDateOnlyValue = (key, value) => {
+      throw new Error(`serialization of date only values is not supported with multipart`);
+    };
+    this.writeTimeOnlyValue = (key, value) => {
+      throw new Error(`serialization of time only values is not supported with multipart`);
+    };
+    this.writeDurationValue = (key, value) => {
+      throw new Error(`serialization of duration values is not supported with multipart`);
+    };
+    this.writeNullValue = (key) => {
+      throw new Error(`serialization of null values is not supported with multipart`);
+    };
+    this.writeCollectionOfPrimitiveValues = (_key, _values) => {
+      throw new Error(`serialization of collections is not supported with multipart`);
+    };
+    this.writeCollectionOfObjectValues = (_key, _values) => {
+      throw new Error(`serialization of collections is not supported with multipart`);
+    };
+    this.writeObjectValue = (key, value, serializerMethod) => {
+      var _a2, _b, _c;
+      if (!value) {
+        throw new Error(`value cannot be undefined`);
+      }
+      if (!(value instanceof MultipartBody)) {
+        throw new Error(`expected MultipartBody instance`);
+      }
+      if (!serializerMethod) {
+        throw new Error(`serializer method cannot be undefined`);
+      }
+      (_a2 = this.onBeforeObjectSerialization) === null || _a2 === void 0 ? void 0 : _a2.call(this, value);
+      (_b = this.onStartObjectSerialization) === null || _b === void 0 ? void 0 : _b.call(this, value, this);
+      serializerMethod(this, value);
+      (_c = this.onAfterObjectSerialization) === null || _c === void 0 ? void 0 : _c.call(this, value);
+    };
+    this.writeEnumValue = (key, ...values) => {
+      throw new Error(`serialization of enum values is not supported with multipart`);
+    };
+    this.writeCollectionOfEnumValues = (key, values) => {
+      throw new Error(`serialization of collection of enum values is not supported with multipart`);
+    };
+    this.getSerializedContent = () => {
+      return this.writer;
+    };
+    this.writeAdditionalData = (additionalData) => {
+      throw new Error(`serialization of additional data is not supported with multipart`);
+    };
+  }
+  writeByteArrayValue(key, value) {
+    if (!value) {
+      throw new Error("value cannot be undefined");
+    }
+    const previousValue = this.writer;
+    this.writer = new ArrayBuffer(previousValue.byteLength + value.byteLength);
+    const pipe = new Uint8Array(this.writer);
+    pipe.set(new Uint8Array(previousValue), 0);
+    pipe.set(new Uint8Array(value), previousValue.byteLength);
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-multipart/dist/es/src/multipartSerializationWriterFactory.js
+var MultipartSerializationWriterFactory = class {
+  getValidContentType() {
+    return "multipart/form-data";
+  }
+  getSerializationWriter(contentType) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new MultipartSerializationWriter();
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-text/dist/es/src/textParseNode.js
+var TextParseNode = class _TextParseNode {
+  constructor(text) {
+    this.text = text;
+    this.getStringValue = () => this.text;
+    this.getChildNode = (identifier) => {
+      throw new Error(_TextParseNode.noStructuredDataMessage);
+    };
+    this.getBooleanValue = () => {
+      var _a2;
+      const value = (_a2 = this.getStringValue()) === null || _a2 === void 0 ? void 0 : _a2.toLowerCase();
+      if (value === "true" || value === "1") {
+        return true;
+      } else if (value === "false" || value === "0") {
+        return false;
+      }
+      return void 0;
+    };
+    this.getNumberValue = () => Number(this.text);
+    this.getGuidValue = () => parseGuidString(this.text);
+    this.getDateValue = () => new Date(Date.parse(this.text));
+    this.getDateOnlyValue = () => DateOnly.parse(this.getStringValue());
+    this.getTimeOnlyValue = () => TimeOnly.parse(this.getStringValue());
+    this.getDurationValue = () => Duration.parse(this.getStringValue());
+    this.getCollectionOfPrimitiveValues = (primitiveType) => {
+      return this.text.split(",").map((x) => {
+        const node = new _TextParseNode(x);
+        switch (primitiveType) {
+          case "boolean":
+            return node.getBooleanValue();
+          case "number":
+            return node.getNumberValue();
+          case "Date":
+            return node.getDateValue();
+          case "DateOnly":
+            return node.getDateOnlyValue();
+          case "TimeOnly":
+            return node.getTimeOnlyValue();
+          case "Duration":
+            return node.getDurationValue();
+          case "string":
+            return node.getStringValue();
+          default:
+            throw new Error(`encountered an unsupported type during deserialization ${primitiveType}`);
+        }
+      });
+    };
+    this.getCollectionOfEnumValues = (type) => {
+      throw new Error(_TextParseNode.noStructuredDataMessage);
+    };
+    this.getEnumValue = (type) => {
+      const rawValue = this.getStringValue();
+      if (!rawValue) {
+        return void 0;
+      }
+      return getEnumValueFromStringValue(rawValue, type);
+    };
+    if (this.text && this.text.length > 1 && this.text.startsWith('"') && this.text.endsWith('"')) {
+      this.text = this.text.substring(1, this.text.length - 2);
+    }
+  }
+  getByteArrayValue() {
+    const strValue = this.getStringValue();
+    if (strValue && strValue.length > 0) {
+      return inNodeEnv() ? new Uint8Array(Buffer.from(strValue, "base64")).buffer : new TextEncoder().encode(strValue).buffer;
+    }
+    return void 0;
+  }
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  getCollectionOfObjectValues(parsableFactory) {
+    throw new Error(_TextParseNode.noStructuredDataMessage);
+  }
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  getObjectValue(parsableFactory) {
+    throw new Error(_TextParseNode.noStructuredDataMessage);
+  }
+};
+TextParseNode.noStructuredDataMessage = "text does not support structured data";
+
+// node_modules/@microsoft/kiota-serialization-text/dist/es/src/textSerializationWriter.js
+var TextSerializationWriter = class _TextSerializationWriter {
+  constructor() {
+    this.writer = [];
+    this.writeStringValue = (key, value) => {
+      if (key || key !== "") {
+        throw new Error(_TextSerializationWriter.noStructuredDataMessage);
+      }
+      if (value !== void 0) {
+        if (this.writer.length > 0) {
+          throw new Error("a value was already written for this serialization writer, text content only supports a single value");
+        } else {
+          const isNullValue = value === null;
+          this.writer.push(isNullValue ? "null" : value);
+        }
+      }
+    };
+    this.writeBooleanValue = (key, value) => {
+      if (value !== void 0) {
+        this.writeStringValue(key, `${value}`);
+      }
+    };
+    this.writeNumberValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value) {
+        this.writeStringValue(key, `${value}`);
+      }
+    };
+    this.writeGuidValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value) {
+        this.writeStringValue(key, `"${value}"`);
+      }
+    };
+    this.writeDateValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value) {
+        this.writeStringValue(key, `"${value.toISOString()}"`);
+      }
+    };
+    this.writeDateOnlyValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value) {
+        this.writeStringValue(key, `"${value.toString()}"`);
+      }
+    };
+    this.writeTimeOnlyValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value) {
+        this.writeStringValue(key, `"${value.toString()}"`);
+      }
+    };
+    this.writeDurationValue = (key, value) => {
+      if (value === null) {
+        return this.writeNullValue(key);
+      }
+      if (value) {
+        this.writeStringValue(key, `"${value.toString()}"`);
+      }
+    };
+    this.writeNullValue = (key) => {
+      this.writeStringValue(key, `null`);
+    };
+    this.writeCollectionOfPrimitiveValues = (key, values) => {
+      throw new Error(_TextSerializationWriter.noStructuredDataMessage);
+    };
+    this.writeCollectionOfObjectValues = (key, values, serializerMethod) => {
+      throw new Error(_TextSerializationWriter.noStructuredDataMessage);
+    };
+    this.writeObjectValue = (key, value, serializerMethod) => {
+      throw new Error(_TextSerializationWriter.noStructuredDataMessage);
+    };
+    this.writeEnumValue = (key, ...values) => {
+      if (values.length > 0) {
+        const rawValues = values.filter((x) => x !== void 0).map((x) => `${x}`);
+        if (rawValues.length > 0) {
+          this.writeStringValue(key, rawValues.reduce((x, y) => `${x},${y}`));
+        }
+      }
+    };
+    this.writeCollectionOfEnumValues = (key, values) => {
+      this.writeEnumValue(key, values);
+    };
+    this.getSerializedContent = () => {
+      return this.convertStringToArrayBuffer(this.writer.join(``));
+    };
+    this.convertStringToArrayBuffer = (str) => {
+      const encoder = new TextEncoder();
+      const encodedString = encoder.encode(str);
+      return encodedString.buffer;
+    };
+    this.writeAdditionalData = (value) => {
+      throw new Error(_TextSerializationWriter.noStructuredDataMessage);
+    };
+  }
+  writeByteArrayValue(key, value) {
+    if (!value) {
+      return;
+    }
+    const b64 = inNodeEnv() ? Buffer.from(value).toString("base64") : btoa(new TextDecoder().decode(value));
+    this.writeStringValue(key, b64);
+  }
+};
+TextSerializationWriter.noStructuredDataMessage = "text does not support structured data";
+
+// node_modules/@microsoft/kiota-serialization-text/dist/es/src/textParseNodeFactory.js
+var TextParseNodeFactory = class {
+  /**
+   * Creates an instance of TextParseNode.
+   * @param backingStoreFactory - The factory to create backing stores.
+   */
+  constructor(backingStoreFactory) {
+    this.backingStoreFactory = backingStoreFactory;
+  }
+  getValidContentType() {
+    return "text/plain";
+  }
+  getRootParseNode(contentType, content) {
+    if (!content) {
+      throw new Error("content cannot be undefined of empty");
+    } else if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new TextParseNode(this.convertArrayBufferToText(content));
+  }
+  convertArrayBufferToText(arrayBuffer) {
+    const decoder = new TextDecoder();
+    return decoder.decode(arrayBuffer);
+  }
+};
+
+// node_modules/@microsoft/kiota-serialization-text/dist/es/src/textSerializationWriterFactory.js
+var TextSerializationWriterFactory = class {
+  getValidContentType() {
+    return "text/plain";
+  }
+  getSerializationWriter(contentType) {
+    if (!contentType) {
+      throw new Error("content type cannot be undefined or empty");
+    } else if (this.getValidContentType() !== contentType) {
+      throw new Error(`expected a ${this.getValidContentType()} content type`);
+    }
+    return new TextSerializationWriter();
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/generated/adminClient.js
+function createAdminClient(requestAdapter) {
+  if (requestAdapter === void 0) {
+    throw new Error("requestAdapter cannot be undefined");
+  }
+  const serializationWriterFactory = requestAdapter.getSerializationWriterFactory();
+  const parseNodeFactoryRegistry = requestAdapter.getParseNodeFactory();
+  const backingStoreFactory = requestAdapter.getBackingStoreFactory();
+  if (parseNodeFactoryRegistry.registerDefaultDeserializer) {
+    parseNodeFactoryRegistry.registerDefaultDeserializer(JsonParseNodeFactory, backingStoreFactory);
+    parseNodeFactoryRegistry.registerDefaultDeserializer(TextParseNodeFactory, backingStoreFactory);
+    parseNodeFactoryRegistry.registerDefaultDeserializer(FormParseNodeFactory, backingStoreFactory);
+  }
+  if (serializationWriterFactory.registerDefaultSerializer) {
+    serializationWriterFactory.registerDefaultSerializer(JsonSerializationWriterFactory);
+    serializationWriterFactory.registerDefaultSerializer(TextSerializationWriterFactory);
+    serializationWriterFactory.registerDefaultSerializer(FormSerializationWriterFactory);
+    serializationWriterFactory.registerDefaultSerializer(MultipartSerializationWriterFactory);
+  }
+  const pathParameters = {
+    "baseurl": requestAdapter.baseUrl
+  };
+  return apiClientProxifier(requestAdapter, pathParameters, AdminClientNavigationMetadata, void 0);
+}
+var AdminClientNavigationMetadata = {
+  admin: {
+    navigationMetadata: AdminRequestBuilderNavigationMetadata
+  }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/resources/clientsV2.js
+var KeycloakAuthProvider = class {
+  #getAccessToken;
+  constructor(getAccessToken) {
+    this.#getAccessToken = getAccessToken;
+  }
+  async authenticateRequest(request) {
+    const token = await this.#getAccessToken();
+    if (token) {
+      request.headers.add("Authorization", `Bearer ${token}`);
+    }
+  }
+};
+function createClientsV2Endpoint(client) {
+  const authProvider = new KeycloakAuthProvider(() => client.getAccessToken());
+  const adapter = new FetchRequestAdapter(authProvider);
+  adapter.baseUrl = client.baseUrl;
+  const adminClient = createAdminClient(adapter);
+  return adminClient.admin.api.byRealmName(client.realmName).clients.v2;
+}
+var ClientsV2 = class {
+  #client;
+  constructor(client) {
+    this.#client = client;
+  }
+  /**
+   * Get the clients v2 endpoint for the currently configured realm.
+   * Returns a fluent API builder for client operations.
+   *
+   * @returns The clients v2 endpoint
+   */
+  api() {
+    return createClientsV2Endpoint(this.#client);
+  }
+};
+
 // node_modules/@keycloak/keycloak-admin-client/lib/resources/clients.js
 var Clients = class extends Resource {
+  /**
+   * Clients v2 API - New versioned API with OpenAPI-generated client.
+   */
+  #v2;
+  #client;
   find = this.makeRequest({
     method: "GET"
   });
@@ -2488,11 +7505,17 @@ var Clients = class extends Resource {
     urlParamKeys: ["id"],
     queryParamKeys: ["scope"]
   });
+  evaluateGenerateSamlResponse = this.makeRequest({
+    method: "GET",
+    path: "/{id}/evaluate-scopes/generate-example-saml-response",
+    urlParamKeys: ["id"],
+    queryParamKeys: ["scope", "userId"]
+  });
   evaluateGenerateAccessToken = this.makeRequest({
     method: "GET",
     path: "/{id}/evaluate-scopes/generate-example-access-token",
     urlParamKeys: ["id"],
-    queryParamKeys: ["scope", "userId"]
+    queryParamKeys: ["scope", "userId", "audience"]
   });
   evaluateGenerateUserInfo = this.makeRequest({
     method: "GET",
@@ -2625,10 +7648,16 @@ var Clients = class extends Resource {
     path: "/{id}/authz/resource-server/policy/{type}",
     urlParamKeys: ["id", "type"]
   });
-  findOnePolicy = this.makeRequest({
+  findOnePolicyWithType = this.makeRequest({
     method: "GET",
     path: "/{id}/authz/resource-server/policy/{type}/{policyId}",
     urlParamKeys: ["id", "type", "policyId"],
+    catchNotFound: true
+  });
+  findOnePolicy = this.makeRequest({
+    method: "GET",
+    path: "/{id}/authz/resource-server/policy/{policyId}",
+    urlParamKeys: ["id", "policyId"],
     catchNotFound: true
   });
   listDependentPolicies = this.makeRequest({
@@ -2647,22 +7676,25 @@ var Clients = class extends Resource {
     urlParamKeys: ["id"]
   });
   async createOrUpdatePolicy(payload) {
-    const policyFound = await this.findPolicyByName({
-      id: payload.id,
-      name: payload.policyName
-    });
-    if (policyFound) {
+    try {
+      const policyFound = await this.findPolicyByName({
+        id: payload.id,
+        name: payload.policyName
+      });
       await this.updatePolicy({
         id: payload.id,
         policyId: policyFound.id,
         type: payload.policy.type
       }, payload.policy);
-      return this.findPolicyByName({
+      return await this.findPolicyByName({
         id: payload.id,
         name: payload.policyName
       });
-    } else {
-      return this.createPolicy({ id: payload.id, type: payload.policy.type }, payload.policy);
+    } catch (error) {
+      if (error instanceof NetworkError && error.response.status === 404) {
+        return this.createPolicy({ id: payload.id, type: payload.policy.type }, payload.policy);
+      }
+      throw error;
     }
   }
   /**
@@ -2692,6 +7724,11 @@ var Clients = class extends Resource {
     method: "GET",
     path: "/{id}/authz/resource-server/resource/{resourceName}/scopes",
     urlParamKeys: ["id", "resourceName"]
+  });
+  listPermissionScope = this.makeRequest({
+    method: "GET",
+    path: "/{id}/authz/resource-server/permission/scope",
+    urlParamKeys: ["id"]
   });
   createAuthorizationScope = this.makeUpdateRequest({
     method: "POST",
@@ -2791,11 +7828,19 @@ var Clients = class extends Resource {
     path: "/{id}/certificates/{attr}",
     urlParamKeys: ["id", "attr"]
   });
+  /**
+   * @deprecated Clients should generate their own key pairs and upload only the
+   *             public key/certificate. The private key is no longer stored on the server.
+   */
   generateKey = this.makeRequest({
     method: "POST",
     path: "/{id}/certificates/{attr}/generate",
     urlParamKeys: ["id", "attr"]
   });
+  /**
+   * @deprecated Private keys are no longer stored on the server. The downloaded
+   *             keystore will only contain the certificate.
+   */
   downloadKey = this.makeUpdateRequest({
     method: "POST",
     path: "/{id}/certificates/{attr}/download",
@@ -2804,6 +7849,10 @@ var Clients = class extends Resource {
       accept: "application/octet-stream"
     }
   });
+  /**
+   * @deprecated Clients should generate their own key pairs and upload only the
+   *             public key/certificate.
+   */
   generateAndDownloadKey = this.makeUpdateRequest({
     method: "POST",
     path: "/{id}/certificates/{attr}/generate-and-download",
@@ -2812,6 +7861,9 @@ var Clients = class extends Resource {
       accept: "application/octet-stream"
     }
   });
+  /**
+   * @deprecated Use {@link uploadCertificate} instead.
+   */
   uploadKey = this.makeUpdateRequest({
     method: "POST",
     path: "/{id}/certificates/{attr}/upload",
@@ -2840,6 +7892,56 @@ var Clients = class extends Resource {
       }),
       getBaseUrl: () => client.baseUrl
     });
+    this.#client = client;
+    this.#v2 = new ClientsV2(client);
+  }
+  /**
+   * Get the clients v2 API endpoint for the currently configured realm.
+   * Returns a fluent API builder for client operations using the new versioned API.
+   *
+   * Note: This API is experimental and must be explicitly enabled by setting
+   * `enableExperimentalApis: true` in the client configuration.
+   *
+   * @example
+   * ```typescript
+   * // Enable experimental APIs in client configuration
+   * const kcAdminClient = new KeycloakAdminClient({
+   *   baseUrl: "http://localhost:8080",
+   *   enableExperimentalApis: true,
+   * });
+   *
+   * // List all clients
+   * const clients = await kcAdminClient.clients.v2().get();
+   *
+   * // Get a single client by clientId
+   * const client = await kcAdminClient.clients.v2().byId("my-client").get();
+   *
+   * // Create a new client
+   * await kcAdminClient.clients.v2().post({
+   *   clientId: "my-client",
+   *   protocol: "openid-connect",
+   *   enabled: true,
+   * });
+   *
+   * // Update a client
+   * await kcAdminClient.clients.v2().byId("my-client").put({
+   *   clientId: "my-client",
+   *   protocol: "openid-connect",
+   *   description: "Updated description",
+   * });
+   *
+   * // Delete a client
+   * await kcAdminClient.clients.v2().byId("my-client").delete();
+   * ```
+   *
+   * @returns A promise that resolves to the clients v2 endpoint
+   * @throws Error if experimental APIs are not enabled
+   */
+  v2() {
+    if (!this.#client.enableExperimentalApis) {
+      throw new Error("The v2 API is experimental and not enabled. To use it, set `enableExperimentalApis: true` in the KeycloakAdminClient configuration.");
+    }
+    return this.#v2.api();
   }
   /**
    * Find single protocol mapper by name.
@@ -3107,7 +8209,16 @@ var Components = class extends Resource {
 // node_modules/@keycloak/keycloak-admin-client/lib/resources/groups.js
 var Groups = class extends Resource {
   find = this.makeRequest({
-    method: "GET"
+    method: "GET",
+    queryParamKeys: [
+      "search",
+      "q",
+      "exact",
+      "briefRepresentation",
+      "populateHierarchy",
+      "first",
+      "max"
+    ]
   });
   create = this.makeRequest({
     method: "POST",
@@ -3140,17 +8251,6 @@ var Groups = class extends Resource {
     path: "/count"
   });
   /**
-   * Set or create child.
-   * This will just set the parent if it exists. Create it and set the parent if the group doesn’t exist.
-   * @deprecated Use `createChildGroup` or `updateChildGroup` instead.
-   */
-  setOrCreateChild = this.makeUpdateRequest({
-    method: "POST",
-    path: "/{id}/children",
-    urlParamKeys: ["id"],
-    returnResourceIdInLocationHeader: { field: "id" }
-  });
-  /**
    * Creates a child group on the specified parent group. If the group already exists, then an error is returned.
    */
   createChildGroup = this.makeUpdateRequest({
@@ -3169,13 +8269,21 @@ var Groups = class extends Resource {
     urlParamKeys: ["id"]
   });
   /**
+   * Finds all subgroups on the specified parent group matching the provided parameters.
+   */
+  listSubGroups = this.makeRequest({
+    method: "GET",
+    path: "/{parentId}/children",
+    urlParamKeys: ["parentId"],
+    queryParamKeys: ["search", "first", "max", "briefRepresentation"]
+  });
+  /**
    * Members
    */
   listMembers = this.makeRequest({
     method: "GET",
     path: "/{id}/members",
-    urlParamKeys: ["id"],
-    catchNotFound: true
+    urlParamKeys: ["id"]
   });
   /**
    * Role mappings
@@ -3223,6 +8331,11 @@ var Groups = class extends Resource {
     path: "/{id}/role-mappings/clients/{clientUniqueId}",
     urlParamKeys: ["id", "clientUniqueId"]
   });
+  listOrgGroups = this.makeRequest({
+    method: "GET",
+    path: "/../members/{id}/groups",
+    urlParamKeys: ["id"]
+  });
   addClientRoleMappings = this.makeRequest({
     method: "POST",
     path: "/{id}/role-mappings/clients/{clientUniqueId}",
@@ -3258,14 +8371,33 @@ var Groups = class extends Resource {
     path: "/{id}/management/permissions",
     urlParamKeys: ["id"]
   });
-  constructor(client) {
+  addMemberToOrgGroup = this.makeRequest({
+    method: "PUT",
+    path: "/{groupId}/members/{userId}",
+    urlParamKeys: ["groupId", "userId"]
+  });
+  removeMemberFromOrgGroup = this.makeRequest({
+    method: "DELETE",
+    path: "/{groupId}/members/{userId}",
+    urlParamKeys: ["groupId", "userId"]
+  });
+  #orgId;
+  getOrgId() {
+    return this.#orgId;
+  }
+  isOrgGroups() {
+    return !!this.#orgId;
+  }
+  constructor(client, orgId) {
     super(client, {
-      path: "/admin/realms/{realm}/groups",
+      path: `/admin/realms/{realm}/${orgId ? "organizations/{orgId}/" : ""}groups`,
       getUrlParams: () => ({
-        realm: client.realmName
+        realm: client.realmName,
+        orgId
       }),
       getBaseUrl: () => client.baseUrl
     });
+    this.#orgId = orgId;
   }
 };
 
@@ -3289,6 +8421,10 @@ var IdentityProviders = class extends Resource {
     path: "/instances/{alias}",
     urlParamKeys: ["alias"],
     catchNotFound: true
+  });
+  uploadCertificate = this.makeUpdateRequest({
+    method: "POST",
+    path: "/upload-certificate"
   });
   update = this.makeUpdateRequest({
     method: "PUT",
@@ -3350,6 +8486,11 @@ var IdentityProviders = class extends Resource {
   listPermissions = this.makeRequest({
     method: "GET",
     path: "/instances/{alias}/management/permissions",
+    urlParamKeys: ["alias"]
+  });
+  reloadKeys = this.makeRequest({
+    method: "GET",
+    path: "/instances/{alias}/reload-keys",
     urlParamKeys: ["alias"]
   });
   constructor(client) {
@@ -3541,7 +8682,8 @@ var Realms = class extends Resource {
   deleteSession = this.makeRequest({
     method: "DELETE",
     path: "/{realm}/sessions/{session}",
-    urlParamKeys: ["realm", "session"]
+    urlParamKeys: ["realm", "session"],
+    queryParamKeys: ["isOffline"]
   });
   pushRevocation = this.makeRequest({
     method: "POST",
@@ -3596,6 +8738,190 @@ var Realms = class extends Resource {
       getBaseUrl: () => client.baseUrl
     });
   }
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/resources/organizations.js
+var Organizations = class extends Resource {
+  /**
+   * Organizations
+   */
+  #client;
+  constructor(client) {
+    super(client, {
+      path: "/admin/realms/{realm}/organizations",
+      getUrlParams: () => ({
+        realm: client.realmName
+      }),
+      getBaseUrl: () => client.baseUrl
+    });
+    this.#client = client;
+  }
+  find = this.makeRequest({
+    method: "GET",
+    path: "/"
+  });
+  count = this.makeRequest({
+    method: "GET",
+    path: "/count"
+  });
+  findOne = this.makeRequest({
+    method: "GET",
+    path: "/{id}",
+    urlParamKeys: ["id"]
+  });
+  create = this.makeRequest({
+    method: "POST",
+    returnResourceIdInLocationHeader: { field: "id" }
+  });
+  delById = this.makeRequest({
+    method: "DELETE",
+    path: "/{id}",
+    urlParamKeys: ["id"]
+  });
+  updateById = this.makeUpdateRequest({
+    method: "PUT",
+    path: "/{id}",
+    urlParamKeys: ["id"]
+  });
+  listMembers = this.makeRequest({
+    method: "GET",
+    path: "/{orgId}/members",
+    urlParamKeys: ["orgId"]
+  });
+  addMember = this.makeRequest({
+    method: "POST",
+    path: "/{orgId}/members",
+    urlParamKeys: ["orgId"],
+    payloadKey: "userId"
+  });
+  delMember = this.makeRequest({
+    method: "DELETE",
+    path: "/{orgId}/members/{userId}",
+    urlParamKeys: ["orgId", "userId"]
+  });
+  getMember = this.makeRequest({
+    method: "GET",
+    path: "/{orgId}/members/{userId}",
+    urlParamKeys: ["orgId", "userId"]
+  });
+  updateMembershipType = this.makeUpdateRequest({
+    method: "PUT",
+    path: "/{orgId}/members/{userId}/membership-type",
+    urlParamKeys: ["orgId", "userId"]
+  });
+  memberOrganizations = this.makeRequest({
+    method: "GET",
+    path: "/members/{userId}/organizations",
+    urlParamKeys: ["userId"]
+  });
+  invite = this.makeUpdateRequest({
+    method: "POST",
+    path: "/{orgId}/members/invite-user",
+    urlParamKeys: ["orgId"],
+    queryParamKeys: ["clientId"],
+    keyTransform: {
+      clientId: "client_id"
+    }
+  });
+  inviteExistingUser = this.makeUpdateRequest({
+    method: "POST",
+    path: "/{orgId}/members/invite-existing-user",
+    urlParamKeys: ["orgId"]
+  });
+  listIdentityProviders = this.makeRequest({
+    method: "GET",
+    path: "/{orgId}/identity-providers",
+    urlParamKeys: ["orgId"]
+  });
+  linkIdp = this.makeRequest({
+    method: "POST",
+    path: "/{orgId}/identity-providers",
+    urlParamKeys: ["orgId"],
+    payloadKey: "alias"
+  });
+  updateIdentityProviderLink = this.makeUpdateRequest({
+    method: "PUT",
+    path: "/{orgId}/identity-providers/{alias}",
+    urlParamKeys: ["orgId", "alias"]
+  });
+  unLinkIdp = this.makeRequest({
+    method: "DELETE",
+    path: "/{orgId}/identity-providers/{alias}",
+    urlParamKeys: ["orgId", "alias"]
+  });
+  // Organization Invitations Management
+  listInvitations = this.makeRequest({
+    method: "GET",
+    path: "/{orgId}/invitations",
+    urlParamKeys: ["orgId"]
+  });
+  findInvitation = this.makeRequest({
+    method: "GET",
+    path: "/{orgId}/invitations/{invitationId}",
+    urlParamKeys: ["orgId", "invitationId"]
+  });
+  resendInvitation = this.makeRequest({
+    method: "POST",
+    path: "/{orgId}/invitations/{invitationId}/resend",
+    urlParamKeys: ["orgId", "invitationId"]
+  });
+  deleteInvitation = this.makeRequest({
+    method: "DELETE",
+    path: "/{orgId}/invitations/{invitationId}",
+    urlParamKeys: ["orgId", "invitationId"]
+  });
+  groups = (orgId) => new Groups(this.#client, orgId);
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/resources/workflows.js
+var Workflows = class extends Resource {
+  constructor(client) {
+    super(client, {
+      path: "/admin/realms/{realm}/workflows",
+      getUrlParams: () => ({
+        realm: client.realmName
+      }),
+      getBaseUrl: () => client.baseUrl
+    });
+  }
+  find = this.makeRequest({
+    method: "GET",
+    path: "/"
+  });
+  findOne = this.makeRequest({
+    method: "GET",
+    path: "/{id}",
+    urlParamKeys: ["id"],
+    queryParamKeys: ["includeId"],
+    catchNotFound: true
+  });
+  scheduled = this.makeRequest({
+    method: "GET",
+    path: "/scheduled/{userId}",
+    urlParamKeys: ["userId"],
+    catchNotFound: true
+  });
+  update = this.makeUpdateRequest({
+    method: "PUT",
+    path: "/{id}",
+    urlParamKeys: ["id"]
+  });
+  create = this.makeRequest({
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    returnResourceIdInLocationHeader: { field: "id" }
+  });
+  createAsYaml = this.makeRequest({
+    method: "POST",
+    headers: { "Content-Type": "application/yaml", Accept: "application/yaml" },
+    returnResourceIdInLocationHeader: { field: "id" },
+    payloadKey: "yaml"
+  });
+  delById = this.makeRequest({
+    method: "DELETE",
+    path: "/{id}",
+    urlParamKeys: ["id"]
+  });
 };
 
 // node_modules/@keycloak/keycloak-admin-client/lib/resources/roles.js
@@ -3709,13 +9035,128 @@ var Roles = class extends Resource {
 var ServerInfo = class extends Resource {
   constructor(client) {
     super(client, {
-      path: "/admin/serverinfo",
+      path: "/",
       getBaseUrl: () => client.baseUrl
     });
   }
   find = this.makeRequest({
     method: "GET",
-    path: "/"
+    path: "/admin/serverinfo"
+  });
+  findEffectiveMessageBundles = this.makeRequest({
+    method: "GET",
+    path: "/resources/{realm}/{themeType}/{locale}",
+    urlParamKeys: ["realm", "themeType", "locale"],
+    queryParamKeys: ["theme", "source"]
+  });
+};
+
+// node_modules/@keycloak/keycloak-admin-client/lib/resources/ssf.js
+var Ssf = class extends Resource {
+  constructor(client) {
+    super(client, {
+      path: "/admin/realms/{realm}/ssf",
+      getUrlParams: () => ({
+        realm: client.realmName
+      }),
+      getBaseUrl: () => client.baseUrl
+    });
+  }
+  getConfig = this.makeRequest({
+    method: "GET",
+    path: "/config"
+  });
+  getEventStats = this.makeRequest({
+    method: "GET",
+    path: "/events/stats"
+  });
+  deleteEvents = this.makeRequest({
+    method: "DELETE",
+    path: "/events",
+    queryParamKeys: ["status", "olderThan"]
+  });
+  deleteQueuedEvents = this.makeRequest({
+    method: "DELETE",
+    path: "/events/queued"
+  });
+  findClientStream = this.makeRequest({
+    method: "GET",
+    path: "/clients/{clientId}/stream",
+    urlParamKeys: ["clientId"],
+    catchNotFound: true
+  });
+  createClientStream = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/stream",
+    urlParamKeys: ["clientId"]
+  });
+  updateClientStream = this.makeUpdateRequest({
+    method: "PATCH",
+    path: "/clients/{clientId}/stream",
+    urlParamKeys: ["clientId"]
+  });
+  deleteClientStream = this.makeRequest({
+    method: "DELETE",
+    path: "/clients/{clientId}/stream",
+    urlParamKeys: ["clientId"]
+  });
+  verifyClientStream = this.makeRequest({
+    method: "POST",
+    path: "/clients/{clientId}/stream/verify",
+    urlParamKeys: ["clientId"]
+  });
+  updateClientStreamStatus = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/stream/status",
+    urlParamKeys: ["clientId"]
+  });
+  addSubject = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/subjects/add",
+    urlParamKeys: ["clientId"]
+  });
+  removeSubject = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/subjects/remove",
+    urlParamKeys: ["clientId"]
+  });
+  ignoreSubject = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/subjects/ignore",
+    urlParamKeys: ["clientId"]
+  });
+  checkSubject = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/subjects/check",
+    urlParamKeys: ["clientId"],
+    catchNotFound: true
+  });
+  emitEvent = this.makeUpdateRequest({
+    method: "POST",
+    path: "/clients/{clientId}/events/emit",
+    urlParamKeys: ["clientId"]
+  });
+  findPendingEvent = this.makeRequest({
+    method: "GET",
+    path: "/clients/{clientId}/pending-events/{jti}",
+    urlParamKeys: ["clientId", "jti"],
+    catchNotFound: true
+  });
+  getClientEventStats = this.makeRequest({
+    method: "GET",
+    path: "/clients/{clientId}/events/stats",
+    urlParamKeys: ["clientId"]
+  });
+  deleteClientEvents = this.makeRequest({
+    method: "DELETE",
+    path: "/clients/{clientId}/events",
+    urlParamKeys: ["clientId"],
+    queryParamKeys: ["status", "olderThan"]
+  });
+  deleteClientQueuedEvents = this.makeRequest({
+    method: "DELETE",
+    path: "/clients/{clientId}/events/queued",
+    urlParamKeys: ["clientId"]
   });
 };
 
@@ -3758,6 +9199,10 @@ var Users = class extends Resource {
   updateProfile = this.makeRequest({
     method: "PUT",
     path: "/profile"
+  });
+  getProfileMetadata = this.makeRequest({
+    method: "GET",
+    path: "/profile/metadata"
   });
   /**
    * role mappings
@@ -4000,6 +9445,73 @@ var Users = class extends Resource {
     path: "/{id}/consents/{clientId}",
     urlParamKeys: ["id", "clientId"]
   });
+  /**
+   * list verifiable credentials for a user
+   */
+  listVerifiableCredentials = this.makeRequest({
+    method: "GET",
+    path: "/{id}/vc/credentials",
+    urlParamKeys: ["id"]
+  });
+  /**
+   * create a verifiable credential for a user
+   */
+  createVerifiableCredential = this.makeUpdateRequest({
+    method: "POST",
+    path: "/{id}/vc/credentials",
+    urlParamKeys: ["id"]
+  });
+  /**
+   * revoke a verifiable credential from a user
+   */
+  revokeVerifiableCredential = this.makeRequest({
+    method: "DELETE",
+    path: "/{id}/vc/credentials/{credentialScopeName}",
+    urlParamKeys: ["id", "credentialScopeName"]
+  });
+  /**
+   * update a verifiable credential for a user (refreshes user attributes snapshot and increments revision)
+   */
+  updateVerifiableCredential = this.makeRequest({
+    method: "PUT",
+    path: "/{id}/vc/credentials/{credentialScopeName}",
+    urlParamKeys: ["id", "credentialScopeName"]
+  });
+  /**
+   * Send credential offer of specified verifiable credential to this user by email.
+   * An email contains a link the user can click to see the page with credential offer, from which he can obtain verifiable credential to his wallet.
+   */
+  sendVerifiableCredentialOffer = this.makeUpdateRequest({
+    method: "PUT",
+    path: "/{id}/vc/credentials/send-credential-offer",
+    urlParamKeys: ["id"],
+    queryParamKeys: ["lifespan", "redirectUri", "clientId"],
+    keyTransform: {
+      clientId: "client_id",
+      redirectUri: "redirect_uri"
+    }
+  });
+  /**
+   * list issued verifiable credentials for a user
+   */
+  listIssuedVerifiableCredentials = this.makeRequest({
+    method: "GET",
+    path: "/{id}/vc/issued-credentials",
+    urlParamKeys: ["id"]
+  });
+  /**
+   * revoke an issued verifiable credential
+   */
+  revokeIssuedVerifiableCredential = this.makeRequest({
+    method: "DELETE",
+    path: "/{id}/vc/issued-credentials/{credentialId}",
+    urlParamKeys: ["id", "credentialId"]
+  });
+  getUnmanagedAttributes = this.makeRequest({
+    method: "GET",
+    path: "/{id}/unmanagedAttributes",
+    urlParamKeys: ["id"]
+  });
   constructor(client) {
     super(client, {
       path: "/admin/realms/{realm}/users",
@@ -4064,7 +9576,8 @@ var WhoAmI = class extends Resource {
   }
   find = this.makeRequest({
     method: "GET",
-    path: "/whoami"
+    path: "/whoami",
+    queryParamKeys: ["currentRealm"]
   });
 };
 
@@ -4109,10 +9622,12 @@ var toBase64 = (input) => bytesToBase64(new TextEncoder().encode(input));
 var encodeRFC3986URIComponent = (input) => encodeURIComponent(input).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
 var encodeFormURIComponent = (data) => encodeRFC3986URIComponent(data).replaceAll("%20", "+");
 var getToken = async (settings) => {
-  const baseUrl = settings.baseUrl || defaultBaseUrl;
-  const realmName = settings.realmName || defaultRealm;
-  const url = `${baseUrl}/realms/${realmName}/protocol/openid-connect/token`;
-  const credentials = settings.credentials || {};
+  const url = new URL(settings.baseUrl ?? defaultBaseUrl);
+  const pathTemplate = parseTemplate("/realms/{realmName}/protocol/openid-connect/token");
+  url.pathname = joinPath(url.pathname, pathTemplate.expand({
+    realmName: settings.realmName ?? defaultRealm
+  }));
+  const credentials = settings.credentials ?? {};
   const payload = stringifyQueryParams({
     username: credentials.username,
     password: credentials.password,
@@ -4144,13 +9659,64 @@ var getToken = async (settings) => {
   return camelize(data);
 };
 
+// node_modules/@keycloak/keycloak-admin-client/lib/utils/decode.js
+function decodeToken(token) {
+  const [, payload] = token?.split(".") || [];
+  if (typeof payload !== "string") {
+    return {};
+  }
+  let decoded;
+  try {
+    decoded = base64UrlDecode(payload);
+  } catch (error) {
+    throw new Error("Unable to decode token, payload is not a valid Base64URL value.", { cause: error });
+  }
+  try {
+    return JSON.parse(decoded);
+  } catch (error) {
+    throw new Error("Unable to decode token, payload is not a valid JSON value.", { cause: error });
+  }
+}
+function base64UrlDecode(input) {
+  let output = input.replaceAll("-", "+").replaceAll("_", "/");
+  switch (output.length % 4) {
+    case 0:
+      break;
+    case 2:
+      output += "==";
+      break;
+    case 3:
+      output += "=";
+      break;
+    default:
+      throw new Error("Input is not of the correct length.");
+  }
+  try {
+    return b64DecodeUnicode(output);
+  } catch {
+    return atob(output);
+  }
+}
+function b64DecodeUnicode(input) {
+  return decodeURIComponent(atob(input).replace(/(.)/g, (m, p) => {
+    let code = p.charCodeAt(0).toString(16).toUpperCase();
+    if (code.length < 2) {
+      code = "0" + code;
+    }
+    return "%" + code;
+  }));
+}
+
 // node_modules/@keycloak/keycloak-admin-client/lib/client.js
+var MIN_VALIDITY = 5;
 var KeycloakAdminClient = class {
   // Resources
   users;
   userStorageProvider;
   groups;
   roles;
+  organizations;
+  workflows;
   clients;
   realms;
   clientScopes;
@@ -4162,23 +9728,34 @@ var KeycloakAdminClient = class {
   attackDetection;
   authenticationManagement;
   cache;
+  ssf;
   // Members
   baseUrl;
   realmName;
+  scope;
   accessToken;
   refreshToken;
-  requestOptions;
-  globalRequestArgOptions;
-  tokenProvider;
+  timeout;
+  enableExperimentalApis;
+  #requestOptions;
+  #globalRequestArgOptions;
+  #tokenProvider;
+  #accessTokenDecoded;
+  #refreshTokenDecoded;
+  #credentials;
   constructor(connectionConfig) {
     this.baseUrl = connectionConfig?.baseUrl || defaultBaseUrl;
     this.realmName = connectionConfig?.realmName || defaultRealm;
-    this.requestOptions = connectionConfig?.requestOptions;
-    this.globalRequestArgOptions = connectionConfig?.requestArgOptions;
+    this.timeout = connectionConfig?.timeout;
+    this.enableExperimentalApis = connectionConfig?.enableExperimentalApis ?? false;
+    this.#requestOptions = connectionConfig?.requestOptions;
+    this.#globalRequestArgOptions = connectionConfig?.requestArgOptions;
     this.users = new Users(this);
     this.userStorageProvider = new UserStorageProvider(this);
     this.groups = new Groups(this);
     this.roles = new Roles(this);
+    this.organizations = new Organizations(this);
+    this.workflows = new Workflows(this);
     this.clients = new Clients(this);
     this.realms = new Realms(this);
     this.clientScopes = new ClientScopes(this);
@@ -4190,37 +9767,85 @@ var KeycloakAdminClient = class {
     this.whoAmI = new WhoAmI(this);
     this.attackDetection = new AttackDetection(this);
     this.cache = new Cache(this);
+    this.ssf = new Ssf(this);
   }
   async auth(credentials) {
-    const { accessToken, refreshToken } = await getToken({
+    const { accessToken, refreshToken } = await getToken(this.#getTokenSettings(credentials));
+    this.#credentials = credentials;
+    this.setAccessToken(accessToken);
+    this.setRefreshToken(refreshToken);
+  }
+  #getTokenSettings(credentials) {
+    return {
       baseUrl: this.baseUrl,
       realmName: this.realmName,
+      scope: this.scope,
       credentials,
-      requestOptions: this.requestOptions
-    });
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
+      requestOptions: {
+        ...this.#requestOptions,
+        ...this.timeout ? { signal: AbortSignal.timeout(this.timeout) } : {}
+      }
+    };
   }
   registerTokenProvider(provider) {
-    if (this.tokenProvider) {
+    if (this.#tokenProvider) {
       throw new Error("An existing token provider was already registered.");
     }
-    this.tokenProvider = provider;
+    this.#tokenProvider = provider;
   }
   setAccessToken(token) {
     this.accessToken = token;
+    this.#accessTokenDecoded = decodeToken(token);
+  }
+  setRefreshToken(token) {
+    this.refreshToken = token;
+    this.#refreshTokenDecoded = token ? decodeToken(token) : void 0;
   }
   async getAccessToken() {
-    if (this.tokenProvider) {
-      return this.tokenProvider.getAccessToken();
+    if (this.#tokenProvider) {
+      return this.#tokenProvider.getAccessToken();
+    }
+    if (this.isTokenExpired()) {
+      await this.#refreshAccessToken();
     }
     return this.accessToken;
   }
+  async #refreshAccessToken() {
+    if (!this.refreshToken || !this.#credentials) {
+      throw new Error("Cannot refresh token: missing refresh token or credentials");
+    }
+    if (this.isRefreshTokenExpired()) {
+      throw new Error("Cannot refresh token: refresh token has expired");
+    }
+    const { accessToken, refreshToken } = await getToken(this.#getTokenSettings({
+      grantType: "refresh_token",
+      clientId: this.#credentials.clientId,
+      clientSecret: this.#credentials.clientSecret,
+      refreshToken: this.refreshToken
+    }));
+    this.setAccessToken(accessToken);
+    if (refreshToken) {
+      this.setRefreshToken(refreshToken);
+    }
+  }
+  isTokenExpired() {
+    return this.#isExpired(this.#accessTokenDecoded);
+  }
+  isRefreshTokenExpired() {
+    return this.#isExpired(this.#refreshTokenDecoded);
+  }
+  #isExpired(token) {
+    if (typeof token?.exp !== "number") {
+      return false;
+    }
+    const expiresIn = token.exp - Math.ceil((/* @__PURE__ */ new Date()).getTime() / 1e3) - MIN_VALIDITY;
+    return expiresIn < 0;
+  }
   getRequestOptions() {
-    return this.requestOptions;
+    return this.#requestOptions;
   }
   getGlobalRequestArgOptions() {
-    return this.globalRequestArgOptions;
+    return this.#globalRequestArgOptions;
   }
   setConfig(connectionConfig) {
     if (typeof connectionConfig.baseUrl === "string" && connectionConfig.baseUrl) {
@@ -4229,7 +9854,7 @@ var KeycloakAdminClient = class {
     if (typeof connectionConfig.realmName === "string" && connectionConfig.realmName) {
       this.realmName = connectionConfig.realmName;
     }
-    this.requestOptions = connectionConfig.requestOptions;
+    this.#requestOptions = connectionConfig.requestOptions;
   }
 };
 
@@ -4243,22 +9868,16 @@ var RequiredActionAlias;
   RequiredActionAlias2["TERMS_AND_CONDITIONS"] = "TERMS_AND_CONDITIONS";
 })(RequiredActionAlias || (RequiredActionAlias = {}));
 
+// node_modules/@keycloak/keycloak-admin-client/lib/defs/organizationInvitationRepresentation.js
+var OrganizationInvitationStatus;
+(function(OrganizationInvitationStatus2) {
+  OrganizationInvitationStatus2["PENDING"] = "PENDING";
+  OrganizationInvitationStatus2["EXPIRED"] = "EXPIRED";
+})(OrganizationInvitationStatus || (OrganizationInvitationStatus = {}));
+
 // node_modules/@keycloak/keycloak-admin-client/lib/index.js
 var lib_default = KeycloakAdminClient;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   Keycloak
 });
-/*! Bundled license information:
-
-lodash-es/lodash.js:
-  (**
-   * @license
-   * Lodash (Custom Build) <https://lodash.com/>
-   * Build: `lodash modularize exports="es" -o ./`
-   * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
-   * Released under MIT license <https://lodash.com/license>
-   * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-   * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-   *)
-*/

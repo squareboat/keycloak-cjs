@@ -1,20 +1,30 @@
 {
   "name": "@squareboat/keycloak-cjs",
-  "version": "22.0.1",
+  "version": "26.8.1",
   "description": "CommonJS Module for Keycloak Admin Client",
   "main": "./index.js",
   "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "LICENSE.MD",
+    "THIRD_PARTY_LICENSES"
+  ],
   "scripts": {
-    "build": "esbuild ./index.ts --platform=node --bundle --format=cjs --outfile=index.js",
+    "build": "node build.js",
     "prepublish:npm": "npm run build",
-    "publish:npm": "npm publish --access public"
+    "publish:npm": "npm publish --access public",
+    "prepublishOnly": "npm run build"
   },
-  "author": "Vinayak Sarawagi <vinayaksarawagi25@gmail.com>",
-  "license": "MIT",
+  "author": "Squareboat <hi@squareboat.com>",
+  "license": "MIT AND Apache-2.0 AND BSD-3-Clause",
   "dependencies": {
-    "@keycloak/keycloak-admin-client": "^22.0.1"
+    "@keycloak/keycloak-admin-client": "26.8.1"
   },
   "devDependencies": {
-    "esbuild": "^0.18.16"
+    "esbuild": "^0.28.2"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
