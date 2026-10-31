@@ -4,14 +4,20 @@
   "description": "CommonJS Module for Keycloak Admin Client",
   "main": "./index.js",
   "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "LICENSE.MD",
+    "THIRD_PARTY_LICENSES"
+  ],
   "scripts": {
-    "build": "esbuild ./index.ts --platform=node --target=node20 --bundle --format=cjs --outfile=index.js",
+    "build": "node build.js",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
     "prepublishOnly": "npm run build"
   },
   "author": "Squareboat <hi@squareboat.com>",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0 AND BSD-3-Clause",
   "dependencies": {
     "@keycloak/keycloak-admin-client": "26.8.1"
   },
